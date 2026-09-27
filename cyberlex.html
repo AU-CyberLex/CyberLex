@@ -1,0 +1,1488 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>CyberLex — Cyber Law &amp; Digital Forensics Studio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#E9EBEF;
+  --surface:#FAFBFC;
+  --surface-2:#F1F3F6;
+  --text:#16243F;
+  --muted:#5A6883;
+  --rule:#C9CEDA;
+  --seal:#8C2F39;
+  --seal-soft:#F3E2E4;
+  --forensic:#14635C;
+  --forensic-soft:#DDEDEA;
+  --amber:#8C6414;
+  --amber-soft:#F5ECD8;
+  --shadow:0 1px 0 var(--rule);
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#0E1520;
+    --surface:#18202D;
+    --surface-2:#141C28;
+    --text:#E4E8EF;
+    --muted:#93A0B8;
+    --rule:#2A3648;
+    --seal:#D07A83;
+    --seal-soft:#331B1F;
+    --forensic:#5FBDB1;
+    --forensic-soft:#122A28;
+    --amber:#D6A745;
+    --amber-soft:#2A2214;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0E1520;
+  --surface:#18202D;
+  --surface-2:#141C28;
+  --text:#E4E8EF;
+  --muted:#93A0B8;
+  --rule:#2A3648;
+  --seal:#D07A83;
+  --seal-soft:#331B1F;
+  --forensic:#5FBDB1;
+  --forensic-soft:#122A28;
+  --amber:#D6A745;
+  --amber-soft:#2A2214;
+}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:calc(72px + env(safe-area-inset-top,0px));-webkit-text-size-adjust:100%}
+body{
+  margin:0;background:var(--bg);color:var(--text);
+  font-family:"IBM Plex Sans",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  font-size:16px;line-height:1.55;
+}
+h1,h2,h3,h4{font-family:"Spectral",Georgia,"Times New Roman",serif;font-weight:500;line-height:1.18;margin:0;letter-spacing:-.005em}
+h1{font-size:clamp(2rem,5.2vw,3.15rem)}
+h2{font-size:clamp(1.45rem,3vw,2rem)}
+h3{font-size:1.2rem}
+p{margin:0 0 .85em}
+a{color:inherit}
+button{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--seal);outline-offset:2px;border-radius:2px}
+.mono{font-family:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace}
+
+/* ---------- masthead ---------- */
+.masthead{
+  position:sticky;top:env(safe-area-inset-top,0px);z-index:40;
+  background:var(--surface);border-bottom:1px solid var(--rule);
+}
+.masthead-in{max-width:1180px;margin:0 auto;padding:.7rem 1.25rem;display:flex;align-items:center;gap:1.25rem;flex-wrap:wrap}
+.brand{display:flex;align-items:baseline;gap:.5rem;text-decoration:none;margin-right:auto}
+.brand b{font-family:"Spectral",serif;font-weight:600;font-size:1.3rem;letter-spacing:-.02em}
+.brand span{font-size:.72rem;color:var(--muted);letter-spacing:.06em}
+nav{display:flex;gap:.15rem;flex-wrap:wrap}
+nav a{
+  text-decoration:none;font-size:.86rem;padding:.4rem .62rem;border-radius:3px;
+  color:var(--muted);border:1px solid transparent;
+}
+nav a:hover{color:var(--text);background:var(--surface-2)}
+nav a.on{color:var(--text);background:var(--surface-2);border-color:var(--rule);font-weight:500}
+.themebtn{background:none;border:1px solid var(--rule);border-radius:3px;padding:.35rem .55rem;cursor:pointer;font-size:.78rem;color:var(--muted)}
+
+/* ---------- layout ---------- */
+.wrap{max-width:1180px;margin:0 auto;padding:2.2rem 1.25rem 5rem}
+.lede{max-width:66ch}
+.view{display:none}
+.view.on{display:block}
+
+.sec-tag{
+  font-family:"IBM Plex Mono",monospace;font-size:.78rem;color:var(--seal);
+  border:1px solid var(--rule);border-radius:2px;padding:.1rem .34rem;background:var(--surface);
+  white-space:nowrap;
+}
+.muted{color:var(--muted)}
+.small{font-size:.85rem}
+
+/* ---------- hero ---------- */
+.hero{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.02fr);gap:2.6rem;align-items:start}
+@media(max-width:880px){.hero{grid-template-columns:1fr;gap:1.8rem}}
+.hero h1{margin-bottom:.9rem}
+.hero .kicker{font-size:.95rem;color:var(--muted);max-width:52ch;margin-bottom:1.4rem}
+.hero-stats{display:flex;gap:1.8rem;flex-wrap:wrap;margin-top:1.6rem;padding-top:1.2rem;border-top:1px solid var(--rule)}
+.hero-stats div b{font-family:"Spectral",serif;font-size:1.5rem;display:block;font-weight:600}
+.hero-stats div span{font-size:.8rem;color:var(--muted)}
+
+/* exhibit card */
+.exhibit{background:var(--surface);border:1px solid var(--rule);border-radius:4px;overflow:hidden}
+.exhibit-head{
+  display:flex;justify-content:space-between;align-items:center;gap:1rem;
+  padding:.6rem .9rem;border-bottom:1px solid var(--rule);background:var(--surface-2);
+}
+.exhibit-head b{font-family:"IBM Plex Mono",monospace;font-size:.8rem;font-weight:500}
+.exhibit-body{padding:1rem .9rem}
+.exhibit textarea{
+  width:100%;min-height:118px;resize:vertical;background:var(--surface-2);
+  border:1px solid var(--rule);border-radius:3px;padding:.65rem .7rem;color:var(--text);
+  font-family:"IBM Plex Mono",monospace;font-size:.83rem;line-height:1.6;
+}
+.hashrow{margin-top:.85rem;font-family:"IBM Plex Mono",monospace;font-size:.74rem;word-break:break-all}
+.hashrow div{padding:.42rem 0;border-top:1px dotted var(--rule);display:grid;grid-template-columns:8.4rem 1fr;gap:.6rem}
+@media(max-width:520px){.hashrow div{grid-template-columns:1fr;gap:.1rem}}
+.hashrow i{font-style:normal;color:var(--muted)}
+.verdict{margin-top:.9rem;padding:.6rem .75rem;border-radius:3px;font-size:.86rem;border:1px solid}
+.verdict.ok{background:var(--forensic-soft);border-color:var(--forensic);color:var(--forensic)}
+.verdict.bad{background:var(--seal-soft);border-color:var(--seal);color:var(--seal)}
+
+/* ---------- generic pieces ---------- */
+.rule-h{display:flex;align-items:baseline;gap:.9rem;margin:3.2rem 0 1.3rem}
+.rule-h:first-child{margin-top:0}
+.rule-h h2{flex:none}
+.rule-h .line{flex:1;height:1px;background:var(--rule)}
+.rule-h .note{font-size:.82rem;color:var(--muted);flex:none}
+
+.grid{display:grid;gap:1px;background:var(--rule);border:1px solid var(--rule);border-radius:4px;overflow:hidden}
+.grid-3{grid-template-columns:repeat(3,1fr)}
+.grid-2{grid-template-columns:repeat(2,1fr)}
+@media(max-width:860px){.grid-3{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:600px){.grid-3,.grid-2{grid-template-columns:1fr}}
+
+.mod{background:var(--surface);padding:1.15rem 1.1rem;text-align:left;border:0;cursor:pointer;display:flex;flex-direction:column;gap:.5rem;min-height:100%}
+.mod:hover{background:var(--surface-2)}
+.mod-top{display:flex;align-items:center;gap:.5rem;justify-content:space-between}
+.mod h3{font-size:1.06rem}
+.mod p{font-size:.85rem;color:var(--muted);margin:0}
+.mod .meta{font-size:.74rem;color:var(--muted);margin-top:auto;padding-top:.5rem;display:flex;gap:.6rem;align-items:center}
+.dot{width:7px;height:7px;border-radius:50%;background:var(--rule);flex:none}
+.dot.done{background:var(--forensic)}
+
+.panel{background:var(--surface);border:1px solid var(--rule);border-radius:4px;padding:1.3rem 1.25rem;margin-bottom:1.1rem}
+.panel h3{margin-bottom:.55rem}
+.panel > p:last-child{margin-bottom:0}
+
+.btn{
+  background:var(--text);color:var(--surface);border:1px solid var(--text);
+  padding:.5rem .95rem;border-radius:3px;cursor:pointer;font-size:.87rem;font-weight:500;
+}
+.btn:hover{opacity:.88}
+.btn.ghost{background:transparent;color:var(--text);border-color:var(--rule)}
+.btn.ghost:hover{background:var(--surface-2);opacity:1}
+.btn.seal{background:var(--seal);border-color:var(--seal);color:#fff}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.btnrow{display:flex;gap:.6rem;flex-wrap:wrap;margin-top:1rem}
+
+.callout{border-left:3px solid var(--amber);background:var(--amber-soft);padding:.8rem .95rem;border-radius:0 3px 3px 0;font-size:.89rem;margin:1rem 0}
+.callout b{color:var(--amber)}
+.callout.law{border-left-color:var(--seal);background:var(--seal-soft)}
+.callout.law b{color:var(--seal)}
+.callout.fx{border-left-color:var(--forensic);background:var(--forensic-soft)}
+.callout.fx b{color:var(--forensic)}
+
+ul.tight{margin:.4rem 0 1rem;padding-left:1.15rem}
+ul.tight li{margin-bottom:.4rem;font-size:.92rem}
+
+/* ---------- module reader ---------- */
+.reader-top{display:flex;align-items:center;gap:.8rem;flex-wrap:wrap;margin-bottom:1.4rem}
+.videoslot{
+  position:relative;background:var(--surface-2);border:1px dashed var(--rule);border-radius:4px;
+  aspect-ratio:16/9;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:.5rem;
+  text-align:center;padding:1rem;
+}
+.videoslot .play{width:54px;height:54px;border-radius:50%;border:1.5px solid var(--seal);display:grid;place-items:center;color:var(--seal)}
+.videoslot small{color:var(--muted);font-size:.8rem;max-width:34ch}
+.videoframe{
+  position:relative;aspect-ratio:16/9;background:#000;border:1px solid var(--rule);
+  border-radius:4px;overflow:hidden;
+}
+.videoframe iframe,.videoframe video{position:absolute;inset:0;width:100%;height:100%;border:0;display:block}
+.vidbar{display:flex;gap:.5rem;align-items:center;margin-top:.6rem;flex-wrap:wrap}
+.vidbar input[type=text]{flex:1;min-width:190px;font-family:"IBM Plex Mono",monospace;font-size:.8rem}
+.two-col{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:1.6rem;align-items:start}
+@media(max-width:860px){.two-col{grid-template-columns:1fr}}
+
+table{width:100%;border-collapse:collapse;font-size:.87rem;margin:.6rem 0 1rem}
+th,td{text-align:left;padding:.5rem .55rem;border-bottom:1px solid var(--rule);vertical-align:top}
+th{font-weight:600;font-size:.78rem;color:var(--muted)}
+
+/* ---------- interactive drills ---------- */
+.opt{
+  display:block;width:100%;text-align:left;background:var(--surface-2);border:1px solid var(--rule);
+  border-radius:3px;padding:.6rem .75rem;margin-bottom:.5rem;cursor:pointer;font-size:.9rem;
+}
+.opt:hover{border-color:var(--muted)}
+.opt.correct{border-color:var(--forensic);background:var(--forensic-soft)}
+.opt.wrong{border-color:var(--seal);background:var(--seal-soft)}
+.opt[disabled]{cursor:default}
+.feedback{font-size:.88rem;padding:.7rem .8rem;border-radius:3px;background:var(--surface-2);border:1px solid var(--rule);margin-top:.3rem}
+
+.chips{display:flex;flex-wrap:wrap;gap:.45rem;margin:.7rem 0}
+.chip{
+  border:1px solid var(--rule);background:var(--surface-2);border-radius:3px;
+  padding:.4rem .65rem;font-size:.84rem;cursor:pointer;
+}
+.chip:hover{border-color:var(--muted)}
+.chip.picked{border-color:var(--forensic);background:var(--forensic-soft);color:var(--forensic)}
+.slotlist{counter-reset:s;margin:.6rem 0 0;padding:0;list-style:none}
+.slotlist li{
+  counter-increment:s;display:flex;gap:.7rem;align-items:center;padding:.45rem .6rem;
+  border:1px solid var(--rule);border-radius:3px;margin-bottom:.4rem;background:var(--surface-2);font-size:.88rem;
+}
+.slotlist li::before{content:counter(s);font-family:"IBM Plex Mono",monospace;font-size:.78rem;color:var(--muted);flex:none}
+.slotlist li.ok{border-color:var(--forensic)}
+.slotlist li.no{border-color:var(--seal)}
+.slotlist li button{margin-left:auto;background:none;border:0;cursor:pointer;color:var(--muted);font-size:1rem;line-height:1;padding:.1rem .2rem}
+
+input[type=text],select{
+  background:var(--surface-2);border:1px solid var(--rule);border-radius:3px;
+  padding:.5rem .6rem;color:var(--text);font:inherit;font-size:.88rem;width:100%;
+}
+
+/* scenario */
+.scene{border:1px solid var(--rule);border-radius:4px;background:var(--surface);overflow:hidden}
+.scene-head{padding:.75rem .95rem;border-bottom:1px solid var(--rule);background:var(--surface-2);display:flex;gap:.7rem;align-items:center;justify-content:space-between;flex-wrap:wrap}
+.scene-body{padding:1.1rem 1rem}
+.scene-narr{font-family:"Spectral",serif;font-size:1.02rem;line-height:1.6;margin-bottom:1rem}
+.trail{font-size:.78rem;color:var(--muted);font-family:"IBM Plex Mono",monospace}
+.score{font-family:"IBM Plex Mono",monospace;font-size:.8rem}
+
+/* flashcards */
+.card-deck{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:.9rem}
+.fcard{
+  background:var(--surface);border:1px solid var(--rule);border-radius:4px;padding:1rem;
+  cursor:pointer;text-align:left;min-height:150px;display:flex;flex-direction:column;gap:.4rem;
+}
+.fcard h4{font-size:1rem;font-family:"Spectral",serif}
+.fcard .cite{font-family:"IBM Plex Mono",monospace;font-size:.74rem;color:var(--muted)}
+.fcard p{font-size:.85rem;margin:0;color:var(--muted)}
+.fcard.flipped{background:var(--surface-2);border-color:var(--forensic)}
+.fcard.flipped p{color:var(--text)}
+
+/* progress */
+.bar{height:6px;background:var(--surface-2);border:1px solid var(--rule);border-radius:99px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--forensic)}
+
+.hexbox{font-family:"IBM Plex Mono",monospace;font-size:.78rem;background:var(--surface-2);border:1px solid var(--rule);border-radius:3px;padding:.7rem;overflow-x:auto;white-space:pre;line-height:1.7}
+
+footer{border-top:1px solid var(--rule);margin-top:3rem;padding:1.6rem 0 0;font-size:.82rem;color:var(--muted)}
+footer p{max-width:70ch}
+
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+
+<header class="masthead">
+  <div class="masthead-in">
+    <a class="brand" href="#home"><b>CyberLex</b><span>Cyber law &amp; digital forensics studio</span></a>
+    <nav id="nav">
+      <a href="#home">Home</a>
+      <a href="#modules">Modules</a>
+      <a href="#lab">Forensics lab</a>
+      <a href="#sims">Simulations</a>
+      <a href="#cases">Case law</a>
+      <a href="#progress">Progress</a>
+    </nav>
+    <button class="themebtn" id="themebtn" type="button">Dark</button>
+  </div>
+</header>
+
+<main class="wrap">
+
+<!-- ================= HOME ================= -->
+<section id="v-home" class="view on">
+  <div class="hero">
+    <div>
+      <h1>Learn cyber law the way it is actually litigated.</h1>
+      <p class="kicker">Nine statutory modules, a working digital forensics lab, and branching investigations built on the IT Act 2000, the DPDP Act 2023, and the Bharatiya Sakshya Adhiniyam 2023. You will not just read section 63 — you will produce the certificate, verify the hash, and watch the exhibit fall apart when the chain of custody breaks.</p>
+      <div class="btnrow">
+        <a class="btn" href="#modules">Open the modules</a>
+        <a class="btn ghost" href="#lab">Go to the forensics lab</a>
+      </div>
+      <div class="hero-stats">
+        <div><b>9</b><span>Statutory modules</span></div>
+        <div><b>6</b><span>Forensic workbenches</span></div>
+        <div><b>3</b><span>Branching investigations</span></div>
+        <div><b>12</b><span>Landmark authorities</span></div>
+      </div>
+    </div>
+
+    <div class="exhibit">
+      <div class="exhibit-head">
+        <b>EXHIBIT P-7 · seized_chat_log.txt</b>
+        <span class="sec-tag">§63 BSA</span>
+      </div>
+      <div class="exhibit-body">
+        <p class="small muted" style="margin-bottom:.6rem">This is the electronic record as produced in court. Edit a single character — a comma, a digit in the timestamp — and watch what the integrity check does to your exhibit.</p>
+        <textarea id="ev" spellcheck="false" aria-label="Seized evidence text">[2026-03-11 22:41:07] user_ramesh: send the client list to my personal id
+[2026-03-11 22:41:55] user_devi: that folder is restricted, you dont have rights
+[2026-03-11 22:43:12] user_ramesh: use my admin creds - RM/882194
+[2026-03-11 22:47:30] SYSTEM: export_clients_full.csv -> ramesh.k@mailfree.example</textarea>
+        <div class="hashrow">
+          <div><i>Hash at seizure</i><span id="h-seize">computing…</span></div>
+          <div><i>Hash now</i><span id="h-now">computing…</span></div>
+          <div><i>Algorithm</i><span>SHA-256 (FIPS 180-4)</span></div>
+        </div>
+        <div class="verdict ok" id="verdict">Integrity intact. The record produced matches the record seized.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="rule-h"><h2>How the studio is built</h2><span class="line"></span></div>
+  <div class="two-col">
+    <div>
+      <div class="panel">
+        <h3>Doctrine, then practice, then failure</h3>
+        <p class="small">Every module runs the same three beats. First the provision — its exact ingredients, punishment, and cognizability. Then a video lesson slot where your faculty recording sits. Then a drill where you apply it to facts that are deliberately ambiguous, because the offence usually turns on the ambiguous element: dishonest intention, actual knowledge, or whether the person had authority.</p>
+      </div>
+      <div class="panel">
+        <h3>The forensics lab is not decoration</h3>
+        <p class="small">Lawyers lose electronic evidence cases on procedure, not on doctrine. The lab teaches the six procedural competencies a cyber law practitioner is expected to cross-examine on: hashing and integrity, order of volatility, file signature verification, chain of custody, the section 63 certificate, and the capability envelope of the standard tools. You will not be running the tools — you will be learning what a report from each one can and cannot prove.</p>
+      </div>
+    </div>
+    <div>
+      <div class="callout law"><b>Jurisdiction.</b> This studio is built on Indian law. Where a provision has been renumbered by the 2023 criminal codes — Evidence Act section 65B becoming Bharatiya Sakshya Adhiniyam section 63, IPC 420 becoming BNS 318 — both numbers are shown, because your examiners and the reported judgments still use the old ones.</div>
+      <div class="callout"><b>Verify the bare act.</b> Statutory text is amended and rules are notified constantly. Treat this studio as a teaching aid, never as a citable source. Check India Code and the judgment itself before you put anything in a memo.</div>
+      <div class="panel">
+        <h3>Your progress is saved on this device</h3>
+        <p class="small" style="margin-bottom:.6rem">Completed modules, drill scores and flipped cards stay in this browser. Nothing is uploaded anywhere.</p>
+        <div class="bar"><i id="home-bar" style="width:0%"></i></div>
+        <p class="small muted" style="margin:.45rem 0 0" id="home-bar-label">0% complete</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= MODULES ================= -->
+<section id="v-modules" class="view">
+  <div id="mod-list">
+    <h2>Statutory modules</h2>
+    <p class="lede small muted">Nine concepts, each anchored to the provision that actually gets charged. Open one to read the ingredients, watch the lesson, and sit the drill.</p>
+    <div class="grid grid-3" id="mod-grid" style="margin-top:1.4rem"></div>
+
+    <div class="rule-h"><h2>Where each module sits in the Act</h2><span class="line"></span></div>
+    <table>
+      <thead><tr><th>Provision</th><th>Offence or subject</th><th>Punishment</th><th>Nature</th></tr></thead>
+      <tbody>
+        <tr><td class="mono">43</td><td>Damage to computer, unauthorised access, data theft</td><td>Civil — compensation, adjudicating officer</td><td>Not an offence</td></tr>
+        <tr><td class="mono">65</td><td>Tampering with computer source documents</td><td>3 years / ₹2 lakh</td><td>Cognizable, bailable</td></tr>
+        <tr><td class="mono">66</td><td>Section 43 acts done dishonestly or fraudulently</td><td>3 years / ₹5 lakh</td><td>Cognizable, bailable</td></tr>
+        <tr><td class="mono">66C</td><td>Identity theft — fraudulent use of another's e-signature, password, unique ID</td><td>3 years + ₹1 lakh</td><td>Cognizable, bailable</td></tr>
+        <tr><td class="mono">66D</td><td>Cheating by personation using a computer resource</td><td>3 years + ₹1 lakh</td><td>Cognizable, bailable</td></tr>
+        <tr><td class="mono">66E</td><td>Capturing or transmitting private area images without consent</td><td>3 years / ₹2 lakh</td><td>Cognizable, bailable</td></tr>
+        <tr><td class="mono">66F</td><td>Cyber terrorism</td><td>Up to imprisonment for life</td><td>Cognizable, non-bailable</td></tr>
+        <tr><td class="mono">67 / 67A / 67B</td><td>Obscene / sexually explicit / child sexual abuse material</td><td>3 / 5 / 5 years, enhanced on repeat</td><td>67A and 67B non-bailable</td></tr>
+        <tr><td class="mono">69, 69A, 69B</td><td>Interception and decryption, blocking, traffic data monitoring</td><td>7 years for non-compliance</td><td>Executive power</td></tr>
+        <tr><td class="mono">72 / 72A</td><td>Breach of confidentiality by an official / disclosure in breach of contract</td><td>2 / 3 years</td><td>72A cognizable</td></tr>
+        <tr><td class="mono">79</td><td>Intermediary exemption from liability</td><td>Safe harbour, conditional</td><td>Defence</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div id="mod-reader" style="display:none"></div>
+</section>
+
+<!-- ================= LAB ================= -->
+<section id="v-lab" class="view">
+  <h2>Forensics lab</h2>
+  <p class="lede small muted">Six workbenches covering the procedural ground a cyber law practitioner is expected to know. Each one ends with the cross-examination question it prepares you to ask.</p>
+
+  <div class="rule-h"><h2>1 · Integrity workbench</h2><span class="line"></span><span class="note">Hashing, SHA-256, tamper detection</span></div>
+  <div class="two-col">
+    <div class="panel">
+      <p class="small">A hash function turns any quantity of data into a fixed-length value. Change one bit of the input and roughly half the output bits flip. That property is why an investigator computes a hash at the moment of seizure and again before production: if the two agree, the record before the court is bit-for-bit the record that was taken.</p>
+      <p class="small">Type anything below and watch the digest change completely. Then set it as the seizure hash and make a small edit.</p>
+      <textarea id="lab-ev" spellcheck="false" aria-label="Sample data to hash" style="width:100%;min-height:80px;background:var(--surface-2);border:1px solid var(--rule);border-radius:3px;padding:.6rem;color:var(--text);font-family:'IBM Plex Mono',monospace;font-size:.82rem">Statement of the complainant, recorded 11 March 2026.</textarea>
+      <div class="hashrow">
+        <div><i>SHA-256</i><span id="lab-h">—</span></div>
+        <div><i>Reference</i><span id="lab-ref">not set</span></div>
+      </div>
+      <div class="btnrow">
+        <button class="btn ghost" id="lab-set" type="button">Record this as the seizure hash</button>
+      </div>
+      <div class="verdict ok" id="lab-verdict" style="display:none"></div>
+    </div>
+    <div>
+      <div class="callout fx"><b>MD5 and SHA-1 are still in the case files.</b> Older Indian forensic reports use MD5. Both algorithms have demonstrated collisions, so a defence can argue that a matching MD5 does not conclusively establish identity of content. It is rarely fatal, because a collision must be engineered in advance, but it is a legitimate line of attack. SHA-256 is the current standard.</div>
+      <div class="panel">
+        <h3>What a hash does not prove</h3>
+        <ul class="tight">
+          <li>It does not prove who created the file or who wrote its contents.</li>
+          <li>It does not prove the date. Timestamps live in the filesystem metadata, not in the hash.</li>
+          <li>It does not prove the seizure itself was lawful.</li>
+          <li>A hash computed <em>after</em> the device left the investigator's control proves only that nothing changed since that later moment.</li>
+        </ul>
+        <div class="callout law" style="margin-bottom:0"><b>Cross-examination.</b> "At what precise time was the first hash generated, and who else had physical access to the device between seizure and that computation?"</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="rule-h"><h2>2 · Order of volatility</h2><span class="line"></span><span class="note">RFC 3227 · what to collect first</span></div>
+  <div class="panel">
+    <p class="small">Evidence decays at very different speeds. Collect in the wrong order and the most fragile material is destroyed by the act of collecting the durable material. Pulling the plug on a running machine, for example, is a defensible choice for disk preservation and a catastrophic one if the encryption keys were only in memory.</p>
+    <p class="small">Click the sources in the order you would collect them, most volatile first.</p>
+    <div class="chips" id="vol-chips"></div>
+    <ol class="slotlist" id="vol-slots"></ol>
+    <div class="btnrow">
+      <button class="btn" id="vol-check" type="button">Check the order</button>
+      <button class="btn ghost" id="vol-reset" type="button">Reset</button>
+    </div>
+    <div class="feedback" id="vol-fb" style="display:none"></div>
+  </div>
+
+  <div class="rule-h"><h2>3 · File signature inspector</h2><span class="line"></span><span class="note">Magic numbers vs. extensions</span></div>
+  <div class="two-col">
+    <div class="panel">
+      <p class="small">An extension is a label typed by a user. The real type of a file is written in its first few bytes. Renaming a video to <span class="mono">.docx</span> hides it from a casual look at the folder but not from a forensic tool, which reads the header. This is how concealed material is routinely found, and how a "corrupt file" defence is defeated.</p>
+      <p class="small">Pick a seized file and read its header.</p>
+      <select id="sig-pick" aria-label="Choose a seized file"></select>
+      <div class="hexbox" id="sig-hex" style="margin-top:.8rem">—</div>
+      <div class="feedback" id="sig-fb" style="margin-top:.7rem">Select a file to inspect its first bytes.</div>
+    </div>
+    <div>
+      <div class="panel">
+        <h3>Common signatures</h3>
+        <table>
+          <thead><tr><th>Bytes</th><th>ASCII</th><th>Type</th></tr></thead>
+          <tbody>
+            <tr><td class="mono">25 50 44 46</td><td class="mono">%PDF</td><td>PDF document</td></tr>
+            <tr><td class="mono">50 4B 03 04</td><td class="mono">PK..</td><td>ZIP — also docx, xlsx, apk</td></tr>
+            <tr><td class="mono">FF D8 FF E0</td><td class="mono">ÿØÿà</td><td>JPEG image</td></tr>
+            <tr><td class="mono">89 50 4E 47</td><td class="mono">.PNG</td><td>PNG image</td></tr>
+            <tr><td class="mono">D0 CF 11 E0</td><td class="mono">ÐÏ..</td><td>Legacy Office — doc, xls</td></tr>
+            <tr><td class="mono">52 61 72 21</td><td class="mono">Rar!</td><td>RAR archive</td></tr>
+          </tbody>
+        </table>
+        <div class="callout law" style="margin-bottom:0"><b>Cross-examination.</b> "Did your tool identify this file by its extension or by its header signature, and is that distinction recorded in your report?"</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="rule-h"><h2>4 · Chain of custody builder</h2><span class="line"></span><span class="note">Seizure to production</span></div>
+  <div class="panel">
+    <p class="small">The chain is the documented history of every person who held the exhibit and every act done to it. A gap in the chain does not automatically make evidence inadmissible in India, but it goes directly to weight and invites the inference that the record could have been altered. Assemble the sequence for a seized laptop.</p>
+    <div class="chips" id="coc-chips"></div>
+    <ol class="slotlist" id="coc-slots"></ol>
+    <div class="btnrow">
+      <button class="btn" id="coc-check" type="button">Check the chain</button>
+      <button class="btn ghost" id="coc-reset" type="button">Reset</button>
+    </div>
+    <div class="feedback" id="coc-fb" style="display:none"></div>
+    <div class="callout fx" style="margin-bottom:0"><b>Statutory hook.</b> Section 176(3) of the Bharatiya Nagarik Suraksha Sanhita 2023 requires a forensic expert to visit the scene and collect evidence in offences punishable with seven years or more. Read it alongside the search and seizure powers in section 185 BNSS and the power to summon production of electronic communication devices in section 94 BNSS.</div>
+  </div>
+
+  <div class="rule-h"><h2>5 · Section 63 certificate clinic</h2><span class="line"></span><span class="note">Formerly section 65B, Evidence Act</span></div>
+  <div class="two-col">
+    <div class="panel">
+      <p class="small">A computer output is admissible as a document without producing the original device, provided the conditions in section 63(2) are satisfied and a certificate under section 63(4) is filed. The certificate is not a formality. Its absence has sunk entire prosecutions.</p>
+      <p class="small">Read each proposed certificate and decide whether the exhibit gets in.</p>
+      <div id="cert-drill"></div>
+    </div>
+    <div>
+      <div class="panel">
+        <h3>The four conditions in outline</h3>
+        <ul class="tight">
+          <li>The computer producing the output was in regular use for activities carried on by the person having lawful control over it.</li>
+          <li>Information of that kind was regularly fed into it in the ordinary course of those activities.</li>
+          <li>The computer was operating properly throughout, or any malfunction did not affect the accuracy of the record.</li>
+          <li>The information in the output reproduces or derives from information fed in during the ordinary course.</li>
+        </ul>
+        <div class="callout law"><b>The certificate must be signed</b> by a person occupying a responsible official position in relation to the operation of the relevant device or the management of the relevant activities. It must identify the electronic record, describe the manner of production, and give particulars of the device.</div>
+        <div class="callout" style="margin-bottom:0"><b>Line of authority.</b> <em>Anvar P.V.</em> (2014) held the certificate mandatory. <em>Shafhi Mohammad</em> (2018) relaxed it where the party did not control the device. <em>Arjun Panditrao Khotkar</em> (2020) overruled <em>Shafhi</em>, restored <em>Anvar</em>, and clarified that a party unable to obtain the certificate may apply to the court under the production powers of the procedural code.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="rule-h"><h2>6 · Toolkit reference</h2><span class="line"></span><span class="note">What each report can and cannot prove</span></div>
+  <p class="small muted lede">You are being trained to read and challenge forensic reports, not to operate the tools. For each one, learn the evidential claim it supports and the limit a competent opponent will press on.</p>
+  <div class="grid grid-2" id="tool-grid" style="margin-top:1rem"></div>
+</section>
+
+<!-- ================= SIMS ================= -->
+<section id="v-sims" class="view">
+  <h2>Branching investigations</h2>
+  <p class="lede small muted">Facts unfold a step at a time. Every choice is a real decision a lawyer or investigating officer has to make, and the consequence follows you to the next step. There is no undo — that is the point.</p>
+  <div class="grid grid-3" id="sim-grid" style="margin-top:1.4rem"></div>
+  <div id="sim-run" style="display:none;margin-top:1.6rem"></div>
+</section>
+
+<!-- ================= CASES ================= -->
+<section id="v-cases" class="view">
+  <h2>Landmark authorities</h2>
+  <p class="lede small muted">Tap a card to reveal the holding. These twelve carry most of the weight in an Indian cyber law paper.</p>
+  <div class="card-deck" id="case-deck" style="margin-top:1.4rem"></div>
+</section>
+
+<!-- ================= PROGRESS ================= -->
+<section id="v-progress" class="view">
+  <h2>Your progress</h2>
+  <p class="lede small muted">Stored in this browser only.</p>
+  <div class="panel" style="margin-top:1.4rem">
+    <h3>Modules completed</h3>
+    <div class="bar" style="margin:.7rem 0 .5rem"><i id="p-bar" style="width:0%"></i></div>
+    <p class="small muted" id="p-label">0 of 9</p>
+    <div id="p-list" style="margin-top:1rem"></div>
+  </div>
+  <div class="panel">
+    <h3>Drill scores</h3>
+    <div id="p-scores"><p class="small muted">No drills attempted yet. Open a module and sit the drill at the end.</p></div>
+  </div>
+  <div class="btnrow">
+    <button class="btn ghost" id="p-reset" type="button">Clear all saved progress</button>
+  </div>
+</section>
+
+<footer>
+  <p><b>CyberLex</b> is a teaching studio for law students. Statutory references follow the Information Technology Act 2000, the Digital Personal Data Protection Act 2023, the Bharatiya Sakshya Adhiniyam 2023 and the Bharatiya Nagarik Suraksha Sanhita 2023 as understood at the time of writing. Provisions are amended and rules are notified frequently, and case law moves. Nothing here is legal advice. Always read the bare act on India Code and the judgment in full before relying on any proposition.</p>
+</footer>
+
+</main>
+
+<script>
+/* ============ tiny helpers ============ */
+const $=(s,r=document)=>r.querySelector(s);
+const $$=(s,r=document)=>[...r.querySelectorAll(s)];
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+const store={
+  read(){try{return JSON.parse(localStorage.getItem('cyberlex')||'{}')}catch(e){return{}}},
+  write(o){try{localStorage.setItem('cyberlex',JSON.stringify(o))}catch(e){}}
+};
+let state=store.read();
+state.done=state.done||{}; state.scores=state.scores||{}; state.flipped=state.flipped||{}; state.videos=state.videos||{};
+const save=()=>store.write(state);
+
+async function sha256(t){
+  if(!(window.crypto&&crypto.subtle)) return 'sha-256 unavailable in this context';
+  const b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(t));
+  return [...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,'0')).join('');
+}
+
+/* ============ theme ============ */
+const tb=$('#themebtn');
+function applyTheme(t){
+  if(t) document.documentElement.setAttribute('data-theme',t);
+  const dark = document.documentElement.getAttribute('data-theme')==='dark' ||
+    (!document.documentElement.getAttribute('data-theme') && matchMedia('(prefers-color-scheme:dark)').matches);
+  tb.textContent = dark?'Light':'Dark';
+}
+applyTheme(state.theme);
+tb.onclick=()=>{
+  const dark = document.documentElement.getAttribute('data-theme')==='dark' ||
+    (!document.documentElement.getAttribute('data-theme') && matchMedia('(prefers-color-scheme:dark)').matches);
+  state.theme = dark?'light':'dark'; save(); applyTheme(state.theme);
+};
+
+/* ============================================================
+   VIDEO REGISTRY — paste your lesson links here.
+   Accepts YouTube (any form), Vimeo, Google Drive share links,
+   or a direct .mp4 / .webm file URL. Leave '' for an empty slot.
+   You can also add a link from inside the app, which saves to
+   this browser only; anything set here is the shared default.
+   ============================================================ */
+const VIDEOS={
+  access       : '',   // Unauthorised access and data theft
+  identity     : '',   // Identity theft and cheating by personation
+  obscene      : '',   // Obscene and sexually explicit material
+  intermediary : '',   // Intermediary liability and safe harbour
+  dpdp         : '',   // Data protection under the DPDP Act
+  evidence     : '',   // Electronic evidence and the certificate
+  jurisdiction : '',   // Jurisdiction and extra-territorial reach
+  interception : '',   // Interception, blocking and protected systems
+  terror       : ''    // Cyber terrorism and source code offences
+};
+
+/* Turn a shared link into something an iframe or player can use. */
+function embedUrl(raw){
+  const u=(raw||'').trim();
+  if(!u) return null;
+  if(/^https?:\/\/\S+\.(mp4|webm|ogg)(\?\S*)?$/i.test(u)) return {kind:'file',src:u};
+  let m;
+  if((m=u.match(/(?:youtube\.com\/(?:watch\?(?:\S*&)?v=|embed\/|live\/|shorts\/)|youtu\.be\/)([\w-]{11})/)))
+    return {kind:'frame',src:'https://www.youtube-nocookie.com/embed/'+m[1]+'?rel=0'};
+  if((m=u.match(/vimeo\.com\/(?:video\/)?(\d+)/)))
+    return {kind:'frame',src:'https://player.vimeo.com/video/'+m[1]};
+  if((m=u.match(/drive\.google\.com\/file\/d\/([\w-]+)/)))
+    return {kind:'frame',src:'https://drive.google.com/file/d/'+m[1]+'/preview'};
+  if(/^https?:\/\//i.test(u)) return {kind:'frame',src:u};
+  return null;
+}
+const videoFor=id=>(state.videos&&state.videos[id])||VIDEOS[id]||'';
+
+/* ============ data: modules ============ */
+const MODULES=[
+{
+ id:'access', tag:'§43 · §66', title:'Unauthorised access and data theft',
+ blurb:'Where the civil wrong ends and the offence begins, and why intention is the whole case.',
+ video:'Unauthorised access: mapping section 43 onto section 66',
+ body:`
+ <p>Section 43 lists the acts: accessing a computer without permission, downloading or copying data, introducing a contaminant, damaging or disrupting, denying access, tampering, destroying or diminishing value, and stealing or concealing source code. Commit any of them without the permission of the owner and you are liable to pay compensation. That is all section 43 does. It creates no offence and no imprisonment.</p>
+ <p>Section 66 takes the same list and adds a mental element. Do any act referred to in section 43 <em>dishonestly or fraudulently</em> and it becomes an offence punishable with three years or five lakh rupees or both. "Dishonestly" and "fraudulently" are not defined in the IT Act; they are borrowed from the penal code, now sections 2(7) and 2(9) of the Bharatiya Nyaya Sanhita 2023. Dishonestly means with intention to cause wrongful gain to one person or wrongful loss to another. Fraudulently means with intent to defraud.</p>
+ <p>Almost every contested prosecution under section 66 turns on two questions. Was there permission, express or implied? And was the state of mind dishonest rather than merely careless or curious?</p>
+ <h3>The permission problem</h3>
+ <p>An employee with valid credentials who accesses a folder they were never meant to open has not bypassed any technical control. Indian courts have generally treated the scope of authorisation as a question of fact determined by the employment terms, the access policy and the practice of the workplace, rather than by whether a password was defeated. An access policy that is written down and acknowledged is therefore worth more to a prosecution than any amount of technical logging.</p>
+ <h3>Related provisions to charge alongside</h3>
+ <ul class="tight">
+   <li><b>Section 65</b> — knowingly concealing, destroying or altering computer source code required to be kept by law. Narrower than it looks: the source code must be one the law requires to be maintained.</li>
+   <li><b>Section 66B</b> — dishonestly receiving or retaining a stolen computer resource or communication device, knowing or having reason to believe it is stolen.</li>
+   <li><b>Section 72A</b> — where the accused obtained the data lawfully under a contract and then disclosed it in breach of that contract with intent to cause wrongful loss or gain. This is often the correct charge against a departing employee, and it is missed constantly.</li>
+   <li><b>Section 316 BNS</b> (criminal breach of trust, formerly section 405 IPC) where the data was entrusted.</li>
+ </ul>`,
+ quiz:[
+  {q:'A systems administrator, annoyed at being passed over for promotion, uses her own valid credentials to read the confidential appraisal file of a colleague. She copies nothing and tells nobody. Which is the soundest charge?',
+   a:['Section 66 — she accessed data she had no permission to access, and her motive was improper','Section 43 only — there is no dishonesty or fraud, so no offence is made out','Section 66C — she used credentials to access personal information','Section 66F — she attacked a protected system'],
+   c:1, e:'Section 66 needs a dishonest or fraudulent intention, meaning intention to cause wrongful gain or wrongful loss. Spite and curiosity are not enough on these facts: no gain accrued, no loss was caused, nothing was copied or disclosed. The act falls squarely in section 43, which is a civil liability before the adjudicating officer. Section 66C is wrong because the credentials were her own.'},
+  {q:'The same administrator emails the appraisal file to a rival firm that is trying to poach the colleague, in exchange for a referral fee. What changes?',
+   a:['Nothing — she still used valid credentials','Section 66 is now available, and section 72A should be considered alongside it','Only a civil suit for breach of contract lies','Section 67 applies because the material was transmitted electronically'],
+   c:1, e:'The referral fee supplies wrongful gain to her and the disclosure supplies wrongful loss to the colleague and the employer, so the dishonesty element of section 66 is satisfied. Because she obtained the material lawfully under her contract of service and then disclosed it, section 72A is the more precise charge and carries three years. Section 67 concerns obscene material and has no application.'},
+  {q:'Section 43 proceedings are decided by which forum?',
+   a:['The Magistrate having jurisdiction','The adjudicating officer appointed under section 46, with appeal to the Appellate Tribunal','The District Consumer Commission','The High Court in writ jurisdiction'],
+   c:1, e:'Section 46 empowers the Central Government to appoint an adjudicating officer, not below the rank of Director to the Government of India or equivalent State officer, to adjudicate contraventions where the claim does not exceed five crore rupees. Claims above that go to the competent civil court. Appeals lie to the Telecom Disputes Settlement and Appellate Tribunal, which now exercises the functions of the Cyber Appellate Tribunal.'}
+ ]
+},
+{
+ id:'identity', tag:'§66C · §66D', title:'Identity theft and cheating by personation',
+ blurb:'The two most charged sections in India, and the distinction examiners test.',
+ video:'Impersonation online: 66C, 66D and the BNS cheating provisions',
+ body:`
+ <p>These two sections sit next to each other and are routinely charged together, but they punish different things.</p>
+ <p><b>Section 66C</b> punishes whoever <em>fraudulently or dishonestly makes use of</em> the electronic signature, password or any other unique identification feature of any other person. The gravamen is the unauthorised <em>use of an identifier</em>. No victim needs to be deceived; no property needs to change hands. Using a stolen OTP is complete under 66C the moment it is used.</p>
+ <p><b>Section 66D</b> punishes whoever <em>by means of any communication device or computer resource cheats by personation</em>. The gravamen is <em>deception of a human being</em>, pretending to be someone you are not, resulting in the cheating. The ingredients of cheating from section 318 BNS (formerly section 415 IPC) are imported: deception, and inducement to deliver property or to do something they would not otherwise have done.</p>
+ <table>
+  <thead><tr><th></th><th>Section 66C</th><th>Section 66D</th></tr></thead>
+  <tbody>
+   <tr><td>Core act</td><td>Use of another's unique identifier</td><td>Personation that cheats</td></tr>
+   <tr><td>Victim deceived?</td><td>Not required</td><td>Essential</td></tr>
+   <tr><td>Property obtained?</td><td>Not required</td><td>Usually, or an act induced</td></tr>
+   <tr><td>Typical facts</td><td>Stolen OTP, hijacked password, forged e-signature</td><td>Fake customer-care call, romance fraud, spoofed CEO email</td></tr>
+   <tr><td>Punishment</td><td>3 years and up to ₹1 lakh</td><td>3 years and up to ₹1 lakh</td></tr>
+  </tbody>
+ </table>
+ <h3>What a "unique identification feature" covers</h3>
+ <p>The phrase is deliberately open. Passwords and electronic signatures are named. Courts have comfortably read in Aadhaar numbers, PAN, biometric templates, account numbers with credentials, and one-time passwords. A photograph alone is contested: a face is not generally a "unique identification feature" in the sense the section uses, which is why misuse of a person's photograph is usually charged under section 66D together with section 356 BNS (defamation) or section 77 BNS (voyeurism) rather than under 66C.</p>
+ <div class="callout law"><b>Practice point.</b> First information reports in online fraud cases routinely list sections 66C, 66D IT Act with section 318(4) BNS. Where money moved through a bank, add the offence of criminal breach of trust or forgery of an electronic record under section 336 BNS as the facts support.</div>`,
+ quiz:[
+  {q:'A caller tells a pensioner he is from her bank\'s fraud team, persuades her to read out the OTP, and transfers ₹80,000. Which sections are correctly charged?',
+   a:['66C alone — he used her OTP','66D alone — he personated a bank official','66C and 66D both, with cheating under section 318 BNS','65 and 66 — he tampered with the bank system'],
+   c:2, e:'Both are made out on distinct acts. Personating the fraud team and inducing her to part with the OTP is cheating by personation under 66D. Then actually using her OTP, a unique identification feature, to authorise the transfer is the separate offence under 66C. The underlying cheating under section 318 BNS is charged alongside because the IT Act offences do not displace it on these facts.'},
+  {q:'A student creates a parody account using a politician\'s name and photograph, clearly labelled "parody", and posts satire. No money is involved and nobody is deceived. What is the correct analysis?',
+   a:['Section 66D is made out because a computer resource was used','Section 66C is made out because the photograph is a unique identification feature','Neither 66C nor 66D is made out; any liability would have to be found elsewhere, and political satire attracts Article 19(1)(a) protection','Section 66A applies'],
+   c:2, e:'66D requires cheating, which requires deception and inducement; a labelled parody deceives nobody. 66C requires fraudulent or dishonest use of a unique identification feature, and a name with a public photograph is neither unique identification in the statutory sense nor used fraudulently here. Section 66A was struck down in Shreya Singhal in 2015 and cannot be charged at all — police stations that still invoke it are acting without jurisdiction.'},
+  {q:'Which is the best single description of what makes 66D different from ordinary cheating under the BNS?',
+   a:['66D requires that loss exceed one lakh rupees','66D requires that the cheating be by personation and be committed by means of a communication device or computer resource','66D does not require dishonest intention','66D is a civil provision'],
+   c:1, e:'Section 66D is a specific aggravated form of cheating: the deception must take the form of personation, and the medium must be a communication device or computer resource. Both elements must be pleaded. There is no monetary threshold.'}
+ ]
+},
+{
+ id:'obscene', tag:'§67 · §67A · §67B', title:'Obscene and sexually explicit material',
+ blurb:'A graded scheme, an obsolete test replaced, and the one section with no consent defence.',
+ video:'Sections 67, 67A and 67B: the graded scheme and its overlaps',
+ body:`
+ <p>The IT Act grades this material in three steps.</p>
+ <ul class="tight">
+  <li><b>Section 67</b> — publishing or transmitting <em>obscene</em> material in electronic form. Three years and five lakh on first conviction, five years and ten lakh on a subsequent one.</li>
+  <li><b>Section 67A</b> — material containing <em>sexually explicit act or conduct</em>. Five years and ten lakh, rising to seven years. Non-bailable.</li>
+  <li><b>Section 67B</b> — material depicting <em>children</em> in a sexually explicit act, and also the acts of creating, collecting, browsing, downloading, facilitating, enticing a child into an online relationship for a sexually explicit act, and recording abuse. Five years, rising to seven. A child is defined in the section as a person under eighteen.</li>
+ </ul>
+ <h3>What "obscene" means after Aveek Sarkar</h3>
+ <p>Section 67 uses the lascivious / prurient interest / tendency to deprave and corrupt formula taken from the old <em>Hicklin</em> test. In <em>Aveek Sarkar v. State of West Bengal</em> (2014) the Supreme Court discarded Hicklin and adopted the community standards test: obscenity is judged from the standpoint of an average person applying contemporary community standards, taking the work as a whole and in its context. A photograph is not obscene merely because it is nude or suggestive; the question is whether it is designed to arouse sexual passion in the circumstances of its publication.</p>
+ <div class="callout law"><b>Section 67B has no consent defence.</b> Consent is irrelevant where the person depicted is under eighteen, and the section reaches collection and browsing, not only publication. It runs alongside the POCSO Act 2012, whose sections 13 to 15 cover use of a child for pornographic purposes and storage of such material. Where both apply, the punishment provisions of POCSO generally prevail as the special and later Act on the subject.</div>
+ <h3>Overlap with the penal code</h3>
+ <p>In <em>Sharat Babu Digumarti v. Government of NCT of Delhi</em> (2017) the Supreme Court held that where obscene material is published in electronic form, section 67 of the IT Act is a special provision that overrides section 292 IPC by operation of section 81 of the IT Act. The accused could not be prosecuted under the general penal provision once the special one covered the field. The same reasoning applies to the corresponding provision, now section 294 BNS.</p>
+ <div class="callout fx"><b>Non-consensual intimate imagery.</b> Section 66E (capturing, publishing or transmitting the image of a private area without consent) is the provision for voyeurism and revenge imagery involving adults, read with section 77 BNS. Rule 3(2)(b) of the Intermediary Guidelines 2021 requires intermediaries to remove such content within twenty-four hours of a complaint.</div>`,
+ quiz:[
+  {q:'Which test governs whether material is obscene under section 67 today?',
+   a:['The Hicklin test — tendency to deprave the most susceptible reader','The community standards test adopted in Aveek Sarkar, judging the work as a whole in context','Whether any complaint has been received','Whether the material was shared with more than fifty people'],
+   c:1, e:'Aveek Sarkar v. State of West Bengal (2014) expressly discarded Hicklin, which had been applied in Ranjit Udeshi, in favour of contemporary community standards. The material is assessed as a whole and in the context of its publication, from the standpoint of an average person rather than the most susceptible one.'},
+  {q:'An eighteen-year-old and her partner exchange private intimate images consensually. He later forwards them to a group without her knowledge. Which provision is central?',
+   a:['Section 67B, because the images are sexually explicit','Section 66E and section 67A — she is an adult, so 67B does not apply, and the transmission was without consent','Section 66C, because he used her images','No offence, because the images were created consensually'],
+   c:1, e:'Section 67B applies only where the person depicted is under eighteen; she is not. The publication of the image of a private area without consent engages section 66E, and where the material depicts a sexually explicit act, section 67A. Her original consent to the creation of the images is not consent to their transmission — that is the entire point of section 66E.'},
+  {q:'Which statement about section 67B is correct?',
+   a:['It punishes publication only','It reaches creating, collecting, browsing and downloading such material, and consent of the child is no defence','It applies to persons under sixteen','It is bailable and compoundable'],
+   c:1, e:'Section 67B is drafted deliberately widely to cover collection, browsing and downloading, not merely publication, and it covers enticement of a child into an online relationship for a sexually explicit act. A child means a person below eighteen. Consent is irrelevant.'}
+ ]
+},
+{
+ id:'intermediary', tag:'§79 · IT Rules 2021', title:'Intermediary liability and safe harbour',
+ blurb:'When a platform stops being a conduit and becomes a participant.',
+ video:'Safe harbour after Shreya Singhal and the 2021 Rules',
+ body:`
+ <p>Section 2(1)(w) defines an intermediary as any person who on behalf of another receives, stores or transmits an electronic record or provides any service with respect to it. Telecom providers, network service providers, web hosts, search engines, online payment sites, auction sites, marketplaces and cyber cafes are named.</p>
+ <p>Section 79(1) exempts an intermediary from liability for third-party information it makes available. The exemption is conditional.</p>
+ <ul class="tight">
+  <li><b>79(2)(a)</b> — the function is limited to providing access to a communication system; or</li>
+  <li><b>79(2)(b)</b> — the intermediary does not initiate the transmission, select the receiver, or select or modify the information; and</li>
+  <li><b>79(2)(c)</b> — it observes due diligence and any guidelines prescribed by the Central Government.</li>
+ </ul>
+ <p>Section 79(3) removes the exemption where the intermediary has conspired, abetted, aided or induced the unlawful act, or where it fails to expeditiously remove material on receiving <em>actual knowledge</em>.</p>
+ <div class="callout law"><b>Shreya Singhal read down 79(3)(b).</b> "Actual knowledge" was held to mean knowledge received through a court order or a notification by the appropriate government or its agency, that the unlawful act relates to the restrictions in Article 19(2). A private complaint from any aggrieved person does not trigger the takedown obligation. The court reasoned that millions of private takedown demands would make the intermediary an arbiter of speech and would chill lawful expression.</div>
+ <h3>The Intermediary Guidelines and Digital Media Ethics Code Rules 2021</h3>
+ <ul class="tight">
+  <li><b>Rule 3(1)(b)</b> — publish rules, privacy policy and user agreement, and inform users of prohibited categories of content.</li>
+  <li><b>Rule 3(1)(d)</b> — remove or disable access within thirty-six hours of a court order or a government notification.</li>
+  <li><b>Rule 3(2)(a)</b> — a grievance officer must acknowledge a complaint within twenty-four hours and dispose of it within fifteen days.</li>
+  <li><b>Rule 3(2)(b)</b> — content exposing a private area, showing nudity, or depicting a person in an impersonated form including artificially morphed images, must go within twenty-four hours of complaint.</li>
+  <li><b>Rule 4</b> — a significant social media intermediary, meaning one above the notified user threshold of fifty lakh registered users, must appoint a Chief Compliance Officer, a nodal contact person available round the clock, and a Resident Grievance Officer, all resident in India, and publish monthly compliance reports.</li>
+  <li><b>Rule 4(2)</b> — a significant social media intermediary providing messaging must enable identification of the <em>first originator</em> of information, on a judicial order or an order under section 69, only for specified serious offences. This provision is under constitutional challenge as incompatible with end-to-end encryption and with Puttaswamy proportionality.</li>
+ </ul>
+ <h3>Losing safe harbour by participating</h3>
+ <p>In <em>Christian Louboutin SAS v. Nakul Bajaj</em> (Delhi High Court, 2018) the court set out a list of activities — identifying the seller, transporting, promoting, advertising, authenticating, offering guarantees — and held that a marketplace which performs enough of them ceases to be a passive conduit and becomes an active participant, losing the section 79 exemption. Contrast <em>MySpace Inc. v. Super Cassettes</em> (Delhi High Court, Division Bench, 2016), where automated processing for format and advertising was held not to amount to modification of content.</p>`,
+ quiz:[
+  {q:'A private individual emails a platform demanding removal of a post she says defames her. The platform does nothing. Has it lost safe harbour under section 79(3)(b)?',
+   a:['Yes — it had actual knowledge from the email','No — after Shreya Singhal, actual knowledge means a court order or a government notification','Yes, but only if the post is later found defamatory','Only if the platform is a significant social media intermediary'],
+   c:1, e:'Shreya Singhal read down section 79(3)(b) precisely so that private demands do not trigger the obligation. Actual knowledge means receipt of a court order, or notification by the appropriate government or its agency, relating to the Article 19(2) restrictions. Note separately that the 2021 Rules impose their own grievance-redressal timelines, but failure to meet those is a rule breach and not automatically a loss of the statutory exemption.'},
+  {q:'An online marketplace photographs the products, warehouses them, guarantees authenticity and handles returns. A luxury brand sues over counterfeits. What is the likely outcome on safe harbour?',
+   a:['Safe harbour holds because the seller is a third party','Applying Christian Louboutin, the accumulation of active functions is likely to take it outside section 79','Safe harbour is automatically lost by any e-commerce platform','The question depends only on whether it has 50 lakh users'],
+   c:1, e:'The Delhi High Court in Christian Louboutin v. Nakul Bajaj identified a catalogue of activities that, taken together, convert a passive conduit into an active participant. Warehousing, authentication guarantees and returns handling sit squarely in that catalogue. The user threshold is relevant to the additional due diligence under Rule 4, not to the basic availability of section 79.'},
+  {q:'Under the 2021 Rules, within what period must an intermediary acknowledge a user grievance?',
+   a:['24 hours, with disposal in 15 days','36 hours, with disposal in 30 days','72 hours, with disposal in 7 days','There is no prescribed period'],
+   c:0, e:'Rule 3(2)(a) requires acknowledgement within twenty-four hours and disposal within fifteen days. Keep this distinct from the thirty-six hour window in Rule 3(1)(d) for acting on a court order or government notification, and the separate twenty-four hour window in Rule 3(2)(b) for intimate or morphed imagery.'}
+ ]
+},
+{
+ id:'dpdp', tag:'DPDP 2023', title:'Data protection under the DPDP Act',
+ blurb:'Consent, fiduciary duties, children, breach reporting and penalties up to ₹250 crore.',
+ video:'The DPDP Act 2023: obligations, rights and the Board',
+ body:`
+ <p>The Digital Personal Data Protection Act 2023 replaced the thin protection previously offered by section 43A of the IT Act and the 2011 Sensitive Personal Data Rules. It applies to digital personal data processed within India, and to processing outside India where it is in connection with offering goods or services to data principals in India.</p>
+ <h3>The vocabulary</h3>
+ <table>
+  <thead><tr><th>Term</th><th>Meaning</th></tr></thead>
+  <tbody>
+   <tr><td>Data Principal</td><td>The individual to whom the personal data relates. For a child, includes the parent or lawful guardian.</td></tr>
+   <tr><td>Data Fiduciary</td><td>Whoever alone or with others determines the purpose and means of processing. The controller equivalent.</td></tr>
+   <tr><td>Data Processor</td><td>Processes on behalf of a fiduciary.</td></tr>
+   <tr><td>Significant Data Fiduciary</td><td>Notified by the Central Government on volume and sensitivity of data, risk to rights, electoral democracy, security of the State and public order. Owes extra duties.</td></tr>
+   <tr><td>Consent Manager</td><td>Registered with the Board; gives the principal a single interface to give, manage, review and withdraw consent.</td></tr>
+  </tbody>
+ </table>
+ <h3>Consent and notice</h3>
+ <p>Consent must be free, specific, informed, unconditional and unambiguous, given by a clear affirmative action, and limited to the data necessary for the specified purpose. The notice must accompany or precede the request, state the data and the purpose, explain how to withdraw, how to exercise rights, and how to complain to the Board. The notice must be available in English or any language in the Eighth Schedule, at the principal's option. Withdrawal must be as easy as giving consent.</p>
+ <p>Certain processing is permitted without consent as a "legitimate use": where the principal voluntarily provided data for a purpose and did not object, for State functions and subsidies, for compliance with law or court orders, for medical emergencies, epidemics, disasters, and for employment purposes.</p>
+ <h3>Children</h3>
+ <p>A child is anyone under eighteen. Processing requires verifiable consent of the parent or guardian. Tracking, behavioural monitoring and targeted advertising directed at children are prohibited outright, as is processing likely to cause a detrimental effect on a child's wellbeing.</p>
+ <h3>Duties of the fiduciary</h3>
+ <ul class="tight">
+  <li>Ensure completeness, accuracy and consistency of data used to make a decision affecting the principal or shared with another fiduciary.</li>
+  <li>Implement reasonable security safeguards. This duty exists regardless of any contract with a processor.</li>
+  <li>Notify the Board and each affected principal of a personal data breach.</li>
+  <li>Erase data when consent is withdrawn or the purpose is no longer served, unless retention is required by law.</li>
+  <li>Publish the contact details of a Data Protection Officer or person answering questions.</li>
+  <li>Significant Data Fiduciaries additionally appoint a DPO based in India answerable to the board of directors, appoint an independent data auditor, and conduct periodic Data Protection Impact Assessments and audits.</li>
+ </ul>
+ <h3>Rights, duties and enforcement</h3>
+ <p>Principals have rights to access a summary of their data and the fiduciaries it was shared with, to correction and erasure, to grievance redressal, and to nominate another person to exercise rights in the event of death or incapacity. Notably, the Act also imposes <em>duties</em> on principals, including not registering false or frivolous complaints, breach of which attracts a penalty up to ten thousand rupees.</p>
+ <p>The Data Protection Board of India adjudicates. Penalties are civil and run to two hundred and fifty crore rupees for failure to take reasonable security safeguards, two hundred crore for failure to notify a breach or breach of children's obligations, and one hundred and fifty crore for breach of Significant Data Fiduciary duties. Appeals lie to the Telecom Disputes Settlement and Appellate Tribunal.</p>
+ <div class="callout"><b>Constitutional backdrop.</b> Read the Act against <em>K.S. Puttaswamy v. Union of India</em> (2017), which located informational privacy within Article 21 and required any restriction to satisfy legality, legitimate aim, proportionality and procedural safeguards. The breadth of the State exemptions under section 17 of the DPDP Act is the most contested question in the field.</div>`,
+ quiz:[
+  {q:'A fintech app signs up a seventeen-year-old and serves her personalised loan advertisements based on her spending. Which is correct?',
+   a:['Permitted, because she consented when installing the app','Prohibited — she is a child under the Act, and targeted advertising directed at children is barred outright regardless of consent','Permitted if the parent is informed afterwards','Permitted because financial services are a legitimate use'],
+   c:1, e:'A child under the DPDP Act is anyone below eighteen. Two separate problems arise. Processing her data at all requires verifiable parental consent, which was not obtained. And even with such consent, tracking, behavioural monitoring and targeted advertising directed at children are prohibited. Legitimate use does not cover commercial advertising.'},
+  {q:'A fiduciary outsources storage to a processor, whose weak configuration causes a breach. The contract puts all security obligations on the processor. Who answers to the Board?',
+   a:['The processor alone, under the contract','The fiduciary — the security obligation under the Act is not displaced by contract, though it may have contractual recourse against the processor','Neither, since there was no intention','Both equally, as joint fiduciaries'],
+   c:1, e:'The Act places the duty to implement reasonable security safeguards on the Data Fiduciary and states that it applies whether or not there is an agreement to the contrary with a processor. The contract may give the fiduciary an indemnity against the processor, but it does not move the statutory liability. The maximum penalty for this failure is two hundred and fifty crore rupees.'},
+  {q:'Which body hears an appeal from an order of the Data Protection Board of India?',
+   a:['The National Company Law Appellate Tribunal','The Telecom Disputes Settlement and Appellate Tribunal','The High Court directly under Article 226','The Cyber Appellate Tribunal'],
+   c:1, e:'Appeals from the Data Protection Board lie to the Telecom Disputes Settlement and Appellate Tribunal, which is also the appellate forum for orders under the IT Act following the merger of the Cyber Appellate Tribunal into it.'}
+ ]
+},
+{
+ id:'evidence', tag:'§63 BSA', title:'Electronic evidence and the certificate',
+ blurb:'Why prosecutions collapse: the conditions, the certificate, and the line of authority.',
+ video:'Section 63 BSA in practice: drafting and attacking the certificate',
+ body:`
+ <p>Section 63 of the Bharatiya Sakshya Adhiniyam 2023 carries forward, with modifications, what section 65B of the Indian Evidence Act 1872 did. Every reported judgment you will read still says 65B, so learn both numbers.</p>
+ <p>The scheme is this. An electronic record printed, stored, recorded or copied by a computer is deemed to be a <em>document</em>, and is admissible without further proof and without producing the original, if the conditions are satisfied. That is a considerable concession: it dispenses with the primary evidence rule for a whole class of material.</p>
+ <h3>The conditions</h3>
+ <ul class="tight">
+  <li>The computer output was produced by a computer or communication device used regularly to store or process information for activities regularly carried on by a person having lawful control over it.</li>
+  <li>Information of that kind was regularly fed into it in the ordinary course of those activities.</li>
+  <li>Throughout the material period the device was operating properly, or if not, the malfunction did not affect the accuracy of the record.</li>
+  <li>The information reproduces or derives from information fed in during the ordinary course.</li>
+ </ul>
+ <p>Where the record was produced by a combination of devices or over a period by several computers, they are treated as a single device.</p>
+ <h3>The certificate</h3>
+ <p>Subsection (4) requires a certificate identifying the electronic record, describing the manner of its production, giving particulars of the device, and dealing with the conditions. It must be signed by a person in charge of the computer or communication device or the management of the relevant activities, and the 2023 Act additionally contemplates a certificate from an expert. A statement in the certificate made to the best of the signatory's knowledge and belief suffices.</p>
+ <h3>The line of authority</h3>
+ <table>
+  <thead><tr><th>Case</th><th>Holding</th></tr></thead>
+  <tbody>
+   <tr><td><em>State (NCT of Delhi) v. Navjot Sandhu</em> (2005)</td><td>Permitted proof of electronic records by other means under sections 63 and 65 of the old Act. Later held to be bad law.</td></tr>
+   <tr><td><em>Anvar P.V. v. P.K. Basheer</em> (2014)</td><td>Overruled Navjot Sandhu. The certificate is mandatory for secondary electronic evidence. Section 65B is a complete code.</td></tr>
+   <tr><td><em>Shafhi Mohammad v. State of HP</em> (2018)</td><td>Two-judge bench relaxed the requirement where the party did not possess the device. Doubted almost immediately.</td></tr>
+   <tr><td><em>Arjun Panditrao Khotkar v. Kailash Gorantyal</em> (2020)</td><td>Three-judge bench overruled Shafhi, restored Anvar, and clarified that a party who cannot obtain a certificate should apply to the court to summon it. Also clarified the certificate may be produced at any stage before trial concludes, in the court's discretion.</td></tr>
+  </tbody>
+ </table>
+ <div class="callout law"><b>The exception that is always missed.</b> If the original device itself is produced and the owner steps into the witness box, no certificate is needed. The certificate exists only to authenticate <em>secondary</em> output — a printout, a CD, a forwarded copy. A litigant who brings the actual phone and testifies is giving primary evidence.</div>`,
+ quiz:[
+  {q:'The prosecution produces a CD containing CCTV footage, supported by the testimony of the investigating officer who copied it, but no certificate. What is the position after Arjun Panditrao?',
+   a:['Admissible, because oral evidence of the copying process is sufficient','Inadmissible as it stands; the certificate is mandatory for secondary electronic evidence, though the court may permit it to be produced later','Admissible if the accused does not object','Admissible because CCTV is real evidence, not documentary'],
+   c:1, e:'Arjun Panditrao overruled Shafhi Mohammad and restored Anvar P.V. Oral testimony cannot substitute for the certificate where secondary electronic evidence is tendered. The court did however hold that the certificate may be produced at any stage before the trial concludes, and that a party unable to obtain it may apply to the court to summon it from the person in control.'},
+  {q:'A complainant walks into court holding the phone on which she received the threatening messages, and testifies to receiving them. Does she need a section 63 certificate?',
+   a:['Yes, always, for any electronic record','No — producing the original device with the owner\'s testimony is primary evidence; the certificate is required only for secondary output','Yes, unless the accused admits the messages','No, but only if the phone is sent for forensic examination'],
+   c:1, e:'Section 63 is directed at computer output tendered in place of the original. Where the original device is itself produced and spoken to by the person in control of it, the material is primary evidence and the certificate requirement does not arise. This is stated in terms in Anvar P.V. and reaffirmed in Arjun Panditrao.'},
+  {q:'Which decision did Arjun Panditrao Khotkar expressly overrule?',
+   a:['Anvar P.V. v. P.K. Basheer','Shafhi Mohammad v. State of Himachal Pradesh','Shreya Singhal v. Union of India','Tomaso Bruno v. State of UP'],
+   c:1, e:'The three-judge bench overruled Shafhi Mohammad, which had relaxed the certificate requirement for parties not in possession of the device, and restored the strict position taken in Anvar P.V. Navjot Sandhu had already been overruled by Anvar itself.'}
+ ]
+},
+{
+ id:'jurisdiction', tag:'§1(2) · §75', title:'Jurisdiction and extra-territorial reach',
+ blurb:'The server is in Ireland, the accused in Manila, the victim in Madurai. Who tries the case?',
+ video:'Jurisdiction in cyberspace: section 75 and the tests courts apply',
+ body:`
+ <p>Section 1(2) extends the IT Act to the whole of India and, subject to section 75, to any offence or contravention committed outside India by any person. Section 75 makes the position explicit: the Act applies to an offence or contravention committed outside India by any person irrespective of nationality, <em>if the act involves a computer, computer system or computer network located in India</em>.</p>
+ <p>That is a broad claim of prescriptive jurisdiction. It is easy to state and hard to enforce, which is why the practical questions are about mutual legal assistance, letters rogatory and platform cooperation rather than about the text of section 75.</p>
+ <h3>Territorial jurisdiction within India</h3>
+ <p>Which court in India tries the matter is governed by the procedural code, now sections 197 to 206 of the Bharatiya Nagarik Suraksha Sanhita 2023, which continue the familiar rules: the offence may be tried where the act was done or where the consequence ensued, and where it is uncertain, in any of the local areas concerned. For online fraud, the place where the victim parted with the money and the place where it was received are both available. This is why a complainant in Tamil Nadu can register an FIR locally even though the accused operates from another State, and why "zero FIR" practice matters.</p>
+ <h3>The tests courts have borrowed</h3>
+ <ul class="tight">
+  <li><b>Purposeful availment.</b> Drawn from United States doctrine and applied by the Delhi High Court in <em>Banyan Tree Holding v. A. Murali Krishna Reddy</em> (2009) for a passive website: the plaintiff must show the defendant specifically targeted users in the forum state and that the activity resulted in injury there. A merely accessible website is not enough.</li>
+  <li><b>Effects test.</b> Jurisdiction where the harmful effect is felt. Attractive for defamation and data breach, criticised for exposing a publisher to every forum on earth.</li>
+  <li><b>Location of the computer resource.</b> The statutory test under section 75, which does not ask about targeting at all.</li>
+ </ul>
+ <div class="callout"><b>Data location is not the whole answer.</b> Where evidence sits on a foreign server, production usually requires a mutual legal assistance treaty request through the Ministry of Home Affairs, which is slow. Section 94 BNSS empowers a court or officer in charge of a police station to require production of a document or electronic communication device, but service on a foreign entity with no Indian presence remains the practical obstacle. This is precisely the problem the CLOUD Act arrangements and the Budapest Convention debate are about, and India is not a party to the Budapest Convention.</div>`,
+ quiz:[
+  {q:'A person in Manila, using a server in Singapore, deploys ransomware that encrypts a hospital network in Coimbatore. Does the IT Act apply?',
+   a:['No — both the accused and the server are outside India','Yes — section 75 applies where the act involves a computer or network located in India, irrespective of the nationality of the accused','Only if the accused is an Indian citizen','Only if Singapore consents'],
+   c:1, e:'Section 75 asserts jurisdiction over an offence committed outside India by any person, irrespective of nationality, where the act involves a computer, computer system or computer network located in India. The hospital network in Coimbatore satisfies that. Whether the accused can actually be brought to trial is a separate question of extradition and mutual legal assistance.'},
+  {q:'What did Banyan Tree Holding v. A. Murali Krishna Reddy establish about passive websites?',
+   a:['Any accessible website confers jurisdiction everywhere','The plaintiff must show the defendant purposefully availed itself of the forum and that the targeted activity caused injury there','Jurisdiction lies only where the server is located','Only the Supreme Court has jurisdiction over internet disputes'],
+   c:1, e:'The Delhi High Court held that mere accessibility of a website in the forum state is insufficient. The plaintiff must plead and show that the defendant purposefully availed itself of the forum jurisdiction, that the activity was intentionally directed at users there, and that it resulted in injury to the plaintiff in that forum.'},
+  {q:'A victim in Tamil Nadu is defrauded by an accused operating from Delhi, money moving to a Mumbai account. Where can the FIR be registered?',
+   a:['Only in Delhi, where the accused acted','In Tamil Nadu, Delhi or Mumbai — the act and its consequences span all three','Only in Mumbai, where the money was received','Only at the National Cyber Crime Reporting Portal'],
+   c:1, e:'The territorial jurisdiction provisions of the BNSS permit trial where the act was done or where the consequence ensued, and where it is uncertain in which of several areas the offence was committed, in any of them. All three locations are therefore available. Practically, the victim registers locally, and a zero FIR is transferred to the station with jurisdiction to investigate.'}
+ ]
+},
+{
+ id:'interception', tag:'§69 · §69A · §69B · §70', title:'Interception, blocking and protected systems',
+ blurb:'State power over networks, and the proportionality standard it now has to meet.',
+ video:'Sections 69 to 70 and the Puttaswamy proportionality test',
+ body:`
+ <p>Three adjacent powers, often confused.</p>
+ <ul class="tight">
+  <li><b>Section 69</b> — directions for interception, monitoring or decryption of any information through any computer resource, on grounds of sovereignty and integrity, defence, security of the State, friendly relations with foreign States, public order, or preventing incitement to a cognizable offence, or for investigation of an offence. A subscriber or intermediary who fails to assist faces seven years and a fine.</li>
+  <li><b>Section 69A</b> — directions to block public access to information, on the same grounds minus investigation of an offence. Procedure is in the Blocking Rules 2009, which include a confidentiality clause that has been much criticised.</li>
+  <li><b>Section 69B</b> — authorisation to monitor and collect traffic data or information for cyber security purposes.</li>
+  <li><b>Section 70</b> — declaration of a protected system by notification. Unauthorised access to it carries ten years. Section 70A establishes the National Critical Information Infrastructure Protection Centre; section 70B establishes CERT-In.</li>
+ </ul>
+ <div class="callout law"><b>Section 69A survived Shreya Singhal.</b> While section 66A was struck down, the court upheld section 69A and the Blocking Rules, noting that blocking is only on the Article 19(2) grounds, that reasons must be recorded in writing so the order is amenable to challenge under Article 226, and that a committee procedure with a hearing for the originator is built into the Rules.</div>
+ <h3>The proportionality overlay</h3>
+ <p>After <em>Puttaswamy</em>, any invasion of informational privacy must satisfy four requirements: a law must exist; the aim must be legitimate; the means must be rationally connected and be the least restrictive available; and there must be procedural safeguards against abuse. The <em>Anuradha Bhasin v. Union of India</em> (2020) decision applied this to internet shutdowns, holding that orders must be published, must be reasoned, must be limited in duration and scope, and are subject to periodic review by a committee.</p>
+ <h3>CERT-In directions of 28 April 2022</h3>
+ <ul class="tight">
+  <li>Report specified cyber incidents to CERT-In within <b>six hours</b> of noticing them.</li>
+  <li>Enable and securely maintain ICT system logs for a rolling period of <b>180 days</b>, within Indian jurisdiction.</li>
+  <li>Data centres, virtual private server providers, cloud and VPN providers must register and retain subscriber details for <b>five years</b> after cancellation.</li>
+  <li>Synchronise system clocks to NIC or NPL servers.</li>
+ </ul>`,
+ quiz:[
+  {q:'Which section empowers the government to direct that public access to online information be blocked?',
+   a:['Section 69','Section 69A, read with the Blocking Rules 2009','Section 69B','Section 70'],
+   c:1, e:'Section 69 concerns interception, monitoring and decryption directed at information passing through a computer resource. Section 69A is the blocking power, exercised under the Information Technology (Procedure and Safeguards for Blocking for Access of Information by Public) Rules 2009. Section 69B deals with traffic data monitoring for cyber security, and section 70 with protected systems.'},
+  {q:'What is the CERT-In reporting window for a specified cyber incident under the April 2022 directions?',
+   a:['72 hours','6 hours of noticing the incident','24 hours','30 days'],
+   c:1, e:'The directions require reporting within six hours of noticing the incident or being brought to notice of it. The six-hour window is among the shortest in the world and is a frequent examination point. Log retention is separately fixed at 180 days within India.'},
+  {q:'Anuradha Bhasin v. Union of India is authority for which proposition?',
+   a:['Internet access is an absolute fundamental right','Orders restricting internet access must be published, reasoned, proportionate, limited in time and subject to periodic review','Section 69A is unconstitutional','Shutdowns can never be ordered'],
+   c:1, e:'The Court did not declare internet access an absolute right. It held that freedom of speech and the freedom to carry on trade through the internet are constitutionally protected, that suspension orders are subject to judicial review, must be published, must record reasons, must satisfy proportionality, cannot be indefinite, and must be reviewed periodically by the committee constituted under the Telecom Suspension Rules.'}
+ ]
+},
+{
+ id:'terror', tag:'§66F · §65', title:'Cyber terrorism and source code offences',
+ blurb:'The gravest offence in the Act, and the narrow provision students always overstate.',
+ video:'Section 66F: threshold, intention and why it is rarely charged',
+ body:`
+ <p><b>Section 66F</b> is the only provision in the IT Act carrying imprisonment for life. It has two limbs.</p>
+ <p><b>Limb (1)(A)</b> — with intent to threaten the unity, integrity, security or sovereignty of India or to strike terror in the people or any section of the people, the accused denies access to an authorised person, attempts to penetrate without authorisation, or introduces a contaminant, and by such conduct causes or is likely to cause death or injuries to persons, damage to property, disruption of supplies or services essential to the life of the community, or adversely affects critical information infrastructure.</p>
+ <p><b>Limb (1)(B)</b> — knowingly or intentionally penetrating or accessing a computer resource without authorisation and thereby obtaining access to information restricted in the interests of the sovereignty and integrity of India, the security of the State, friendly relations with foreign States, public order, decency or morality, or in relation to contempt of court, defamation or incitement to an offence, or to any restricted information, data or database, with reason to believe that it may be used to cause injury to the interests of India or its sovereignty.</p>
+ <div class="callout law"><b>The threshold is intention, not consequence.</b> A large-scale outage caused by a financially motivated ransomware group does not become cyber terrorism merely because it is serious. Without the specific intent to threaten sovereignty or strike terror, the correct charges are sections 66 and 43, with section 70 if a protected system is involved. Charging 66F loosely is a recurring criticism of investigating agencies, and it matters because 66F is non-bailable.</div>
+ <h3>Section 65 — tampering with source documents</h3>
+ <p>Section 65 punishes knowingly or intentionally concealing, destroying or altering, or causing another to do so, any computer source code <em>used for a computer, computer programme, computer system or computer network, when the source code is required to be kept or maintained by law for the time being in force</em>. Three years or two lakh rupees or both.</p>
+ <p>Students routinely misread this as covering all source code theft. It does not. The qualifier — required to be kept or maintained by law — narrows it considerably. Where no statute or regulation requires that the code be maintained, section 65 is unavailable and the correct route is section 66 read with section 43, copyright infringement under sections 63 and 63B of the Copyright Act 1957, or an action for breach of confidence.</p>
+ <h3>Protected systems</h3>
+ <p>Section 70 permits the appropriate government to declare any computer resource which directly or indirectly affects the facility of Critical Information Infrastructure to be a protected system, by notification in the Official Gazette. Securing unauthorised access to such a system carries ten years and a fine. Critical Information Infrastructure is defined in the Explanation as a computer resource whose incapacitation or destruction shall have a debilitating impact on national security, economy, public health or safety.</p>`,
+ quiz:[
+  {q:'A criminal group encrypts a private logistics company\'s servers and demands ransom. Deliveries stop for four days. Is section 66F made out?',
+   a:['Yes — essential supplies were disrupted','Not without the specific intent to threaten sovereignty or strike terror; sections 66 and 43 are the appropriate charges','Yes — any ransomware is cyber terrorism','Only if the company is foreign-owned'],
+   c:1, e:'Section 66F requires a specific mental element: intent to threaten the unity, integrity, security or sovereignty of India, or to strike terror in the people or a section of them. Financial motivation is inconsistent with that intent. The disruption is serious but the correct charges are section 66 read with section 43, with section 70 if the resource had been notified as a protected system.'},
+  {q:'A developer leaving a private startup deletes the company\'s proprietary source code from the repository out of spite. No law requires the company to maintain that code. Is section 65 available?',
+   a:['Yes — section 65 covers all source code','No — section 65 applies only where the source code is required to be kept or maintained by law','Yes, but only if the code was commercially valuable','No, because deletion is not alteration'],
+   c:1, e:'The qualifying words in section 65 are essential: the source code must be one required to be kept or maintained by law for the time being in force. Absent such a requirement, section 65 fails. Charge section 66 with section 43 for the destruction of data, consider section 63 of the Copyright Act, and plead breach of the confidentiality covenant in the employment contract.'},
+  {q:'Which section permits declaration of a protected system, and what punishment attaches to unauthorised access to one?',
+   a:['Section 69, three years','Section 70, ten years','Section 66F, life imprisonment','Section 43A, compensation only'],
+   c:1, e:'Section 70 permits the appropriate government to declare a computer resource affecting Critical Information Infrastructure to be a protected system by Gazette notification. Section 70(3) punishes securing access or attempting to secure access to such a system in contravention of the section with imprisonment up to ten years and a fine.'}
+ ]
+}
+];
+
+/* ============ data: tools ============ */
+const TOOLS=[
+ {n:'FTK Imager', c:'Acquisition',
+  d:'Creates a forensic image — a bit-for-bit copy of a storage device including unallocated space and slack — and computes hashes of the source and the image. Produces raw (dd) or expert witness (E01) formats.',
+  p:'That the image tendered is identical to the media as it existed at acquisition.',
+  l:'It proves nothing about how the device was obtained, who handled it before imaging, or whether a hardware write blocker was in line. Ask for the acquisition log and the write blocker model.'},
+ {n:'Autopsy / The Sleuth Kit', c:'Analysis',
+  d:'Open-source examination platform. Parses filesystems, recovers deleted files by carving, builds timelines from MAC times, extracts web history, and indexes keywords.',
+  p:'That specified artefacts exist on the image and when the filesystem recorded them.',
+  l:'A timeline is only as honest as the system clock and the timezone setting. Carved files often have no metadata and no reliable timestamp at all. Attribution to a human user is an inference, never a finding.'},
+ {n:'EnCase / X-Ways', c:'Analysis',
+  d:'Commercial examination suites used widely by police forces. Similar function to Autopsy, with validated tooling and court-accepted reporting formats.',
+  p:'Same evidential ground as Autopsy, with the added weight of tool validation records.',
+  l:'Commercial licensing does not equal correctness. Ask whether the examiner verified any critical finding with a second, independent tool — dual-tool verification is standard practice and its absence is a fair criticism.'},
+ {n:'Cellebrite UFED / Magnet AXIOM', c:'Mobile',
+  d:'Mobile extraction. Logical extraction pulls what the phone\'s own interface exposes. File system extraction goes deeper. Physical extraction reads the raw flash including deleted regions, and is often unavailable on modern encrypted handsets.',
+  p:'The contents of messages, call logs, location history and application data as stored on the handset.',
+  l:'Establish which extraction type was used, because a logical extraction cannot support a claim about deleted content. Cloud-synced data pulled with the account credentials raises a separate authorisation question. Deleted-message recovery on a current encrypted device is frequently overstated.'},
+ {n:'Volatility', c:'Memory',
+  d:'Analyses a captured RAM image. Recovers running processes, open network connections, injected code, clipboard contents and, importantly, encryption keys held only in memory.',
+  p:'The live state of the machine at the instant of capture.',
+  l:'Requires that memory was captured before shutdown. If the first responder pulled the plug, this evidence no longer exists — which is why order of volatility is a legal question, not merely a technical one.'},
+ {n:'Wireshark / tcpdump', c:'Network',
+  d:'Captures and dissects network traffic into a pcap file. Shows source and destination addresses, ports, protocols and, where traffic is unencrypted, payload content.',
+  p:'That traffic of a given shape passed between two addresses at a given time.',
+  l:'An IP address identifies an interface, not a person. Carrier-grade NAT, shared connections, VPNs and compromised devices all break the inference from address to individual. Most traffic today is encrypted, so payload is usually unavailable and only metadata remains.'},
+ {n:'Hardware write blocker', c:'Acquisition',
+  d:'A physical device placed between the evidence drive and the examination machine that permits read commands and refuses write commands.',
+  p:'That the examination process could not have altered the source media.',
+  l:'It must actually have been used. Its absence is the single most damaging admission an examiner can make, because mounting a drive on a running operating system updates access times and can write to the volume.'},
+ {n:'C-DAC CyberCheck / TrueBack', c:'Indian toolchain',
+  d:'Developed by the Resource Centre for Cyber Forensics at C-DAC Thiruvananthapuram. TrueBack handles acquisition, CyberCheck handles analysis. Used by several Indian state police forces and accepted in Indian courts.',
+  p:'The same evidential ground as the international suites, with reports formatted for Indian practice.',
+  l:'The examiner\'s competence and the documented procedure matter more than the brand of the tool. Ask about training, certification and whether the laboratory follows a documented standard operating procedure.'}
+];
+
+/* ============ data: cases ============ */
+const CASES=[
+ {n:'Shreya Singhal v. Union of India', c:'(2015) 5 SCC 1',
+  h:'Struck down section 66A as vague and overbroad, violating Article 19(1)(a) and not saved by Article 19(2). Upheld section 69A and the Blocking Rules. Read down section 79(3)(b) so that "actual knowledge" means a court order or government notification. Drew the distinction between discussion or advocacy, which is protected, and incitement, which may be restricted.'},
+ {n:'K.S. Puttaswamy v. Union of India', c:'(2017) 10 SCC 1',
+  h:'Nine judges held privacy to be a fundamental right under Article 21, including informational privacy. Any restriction must satisfy legality, legitimate State aim, proportionality and procedural safeguards. The constitutional foundation of the DPDP Act and of every challenge to surveillance powers.'},
+ {n:'Anvar P.V. v. P.K. Basheer', c:'(2014) 10 SCC 473',
+  h:'Overruled Navjot Sandhu. Section 65B is a complete code for secondary electronic evidence; the certificate is mandatory and cannot be substituted by oral evidence. Where the original device is produced, no certificate is required.'},
+ {n:'Arjun Panditrao Khotkar v. Kailash Gorantyal', c:'(2020) 7 SCC 1',
+  h:'Three judges overruled Shafhi Mohammad, restored Anvar, and held the certificate mandatory. A party unable to obtain it may apply to the court to summon it. The certificate may be produced at any stage before the trial concludes, in the court\'s discretion.'},
+ {n:'Aveek Sarkar v. State of West Bengal', c:'(2014) 4 SCC 257',
+  h:'Discarded the Hicklin test for obscenity and adopted contemporary community standards. Material is judged as a whole, in context, from the standpoint of an average person. Nudity alone is not obscenity.'},
+ {n:'Sharat Babu Digumarti v. Govt of NCT of Delhi', c:'(2017) 2 SCC 18',
+  h:'Where obscene material is in electronic form, section 67 of the IT Act is the special provision and overrides section 292 IPC by operation of section 81. The accused could not be prosecuted under the general penal provision.'},
+ {n:'Christian Louboutin SAS v. Nakul Bajaj', c:'2018 SCC OnLine Del 12215',
+  h:'Listed the activities that convert an e-commerce marketplace from a passive conduit into an active participant — identifying sellers, warehousing, authenticating, guaranteeing, promoting. Enough of them, and section 79 safe harbour is lost.'},
+ {n:'MySpace Inc. v. Super Cassettes Industries', c:'2016 SCC OnLine Del 6382',
+  h:'Division Bench held that automated processing of content for format and advertisement insertion is not "modification" that defeats safe harbour. Actual knowledge for copyright purposes requires specific identification of the infringing material, not a general notice.'},
+ {n:'Anuradha Bhasin v. Union of India', c:'(2020) 3 SCC 637',
+  h:'Internet shutdown orders must be published, must record reasons, must be proportionate and limited in duration, and are subject to periodic review and to judicial review. Freedom of trade through the internet is protected under Article 19(1)(g).'},
+ {n:'State of Tamil Nadu v. Suhas Katti', c:'CC No. 4680 of 2004, Egmore',
+  h:'The first conviction in India under section 67 of the IT Act, obtained within about seven months of the charge sheet. Obscene messages about a divorced woman were posted in a Yahoo group. Significant as a procedural landmark for speed and for reliance on electronic records.'},
+ {n:'CBI v. Arif Azim (Sony Sambandh)', c:'Delhi, 2003',
+  h:'First reported cybercrime conviction in India. A call centre employee used stolen credit card details to order goods. Convicted of cheating under the IPC; the court noted the IT Act did not then cover the conduct comprehensively, and released him on probation given his age.'},
+ {n:'Shafhi Mohammad v. State of Himachal Pradesh', c:'(2018) 2 SCC 801',
+  h:'Relaxed the section 65B certificate where the party did not possess the device, reasoning that procedure should not defeat justice. Overruled by Arjun Panditrao in 2020. Learn it as the wrong turn in the line, because examiners ask what happened to it.'}
+];
+
+/* ============ data: scenarios ============ */
+const SIMS=[
+{
+ id:'exfil', title:'The departing associate', tag:'§43 · §66 · §72A',
+ blurb:'A senior associate resigns on Friday. On Monday the managing partner finds the client database on a rival firm\'s pitch deck.',
+ steps:[
+  {n:'You act for the firm. The IT head tells you the associate\'s laptop is still running at her desk, logged in, with a file-sync client active. The managing partner wants to "just look through it quickly" before anyone else touches it.',
+   o:[
+    {t:'Let him look. Speed matters and it is the firm\'s own laptop.',s:-2,f:'Every file he opens updates the access timestamp, and the sync client may push those changes to the cloud. You have contaminated the exhibit before the case begins, and the defence will say so in the first ten minutes of cross-examination. Ownership of the device does not preserve evidence.'},
+    {t:'Photograph the screen, note what is running, then call a forensic examiner before anything is touched.',s:2,f:'Correct. The machine is live and volatile evidence — running processes, network connections, and decrypted session tokens — exists only while it stays powered. Documenting the screen state costs nothing and preserves the record of what you found.'},
+    {t:'Shut it down immediately so nothing more can be synced.',s:0,f:'Defensible but costly. You have stopped further exfiltration, which is a real benefit, but you have destroyed the memory image and any encryption keys held only in RAM. If the drive turns out to be encrypted you may have locked yourself out of your own evidence.'}
+   ]},
+  {n:'The examiner arrives. She proposes to disconnect the network cable, capture RAM, then power down and image the drive through a hardware write blocker. The partner objects that this will take six hours and he wants an injunction application filed today.',
+   o:[
+    {t:'Agree with the partner. Copy the relevant folders onto a pen drive now and file on that.',s:-2,f:'A selective copy of "relevant folders" is secondary evidence with no image, no hash and no write blocker. It cannot be authenticated, and worse, it invites the allegation that you picked what suited you. You will also have to admit on affidavit how the copy was made.'},
+    {t:'Let the examiner proceed. File the application on the partner\'s affidavit setting out what was observed, with the forensic report to follow.',s:2,f:'Correct. An interim application can proceed on a deponent\'s account of what was seen on the screen. The forensic report strengthens it later. You have not traded away the integrity of the exhibit for a few hours.'},
+    {t:'Ask the examiner to skip the RAM capture to save time, but image the drive properly.',s:0,f:'A reasonable compromise that most practitioners would accept, but you have given up the memory image. If the associate used a browser-based transfer service, the session evidence may have lived only in RAM.'}
+   ]},
+  {n:'The image shows the associate used her own valid credentials, accessed a client folder she had partial rights to, and copied 4,200 records to a personal cloud account two days before resigning. Her contract contains an express confidentiality covenant. What do you charge?',
+   o:[
+    {t:'Section 66F — this is an attack on the firm\'s critical infrastructure.',s:-2,f:'No. Section 66F requires intent to threaten the sovereignty or integrity of India or to strike terror. A law firm\'s client database is not critical information infrastructure and commercial motive is inconsistent with the mental element. Overcharging like this gets the FIR quashed and damages your credibility.'},
+    {t:'Section 43 read with section 66, and section 72A because she obtained the data lawfully under contract and disclosed it in breach.',s:2,f:'Correct and precise. Section 72A is the provision built for exactly this fact pattern and is routinely missed. Section 66 supplies the dishonesty limb over the section 43 acts. Add criminal breach of trust under section 316 BNS if entrustment can be pleaded, and run the civil remedy under section 43 before the adjudicating officer in parallel.'},
+    {t:'Section 66C — she used credentials to take the data.',s:-1,f:'Section 66C punishes fraudulent use of <em>another person\'s</em> unique identification feature. She used her own. This charge fails on its face and a defence counsel will say so at the first hearing.'}
+   ]},
+  {n:'At trial you tender a printout of the cloud upload log, obtained from the firm\'s own monitoring system. Opposing counsel objects to admissibility.',
+   o:[
+    {t:'Argue the printout is real evidence and needs no certificate.',s:-2,f:'A computer output tendered in place of the original device is secondary evidence and section 63 BSA applies. Arjun Panditrao settled this. The objection will be sustained.'},
+    {t:'File a certificate under section 63(4) BSA signed by the IT head, identifying the record, the device and the manner of production.',s:2,f:'Correct. The IT head occupies a responsible official position in relation to the operation of the monitoring system, which is exactly who the subsection contemplates. Ensure the certificate deals with each of the four conditions and describes the device particulars, not just the file name.'},
+    {t:'Call the IT head to testify orally about how the log was generated.',s:-1,f:'Oral evidence cannot substitute for the certificate where secondary electronic evidence is tendered. That was the whole holding in Anvar P.V., restored in Arjun Panditrao. You may still call him, but you must file the certificate.'}
+   ]}
+ ]
+},
+{
+ id:'mule', title:'The customer care call', tag:'§66C · §66D · §318 BNS',
+ blurb:'A retired schoolteacher in Madurai loses ₹4.2 lakh in eleven minutes. You are the officer she reports to.',
+ steps:[
+  {n:'She reports at 9.40 a.m. The transfers happened at 8.55 a.m. She has the caller\'s number, the SMS alerts, and her phone in hand. What is your first act?',
+   o:[
+    {t:'Record the complaint carefully and register the FIR by the end of the shift.',s:-2,f:'You have lost the money. Layering through mule accounts typically completes within a few hours. The first hour is the only window in which funds can realistically be frozen.'},
+    {t:'Report on the National Cyber Crime Reporting Portal immediately to trigger the banking freeze, then register the FIR.',s:2,f:'Correct. The reporting portal and the associated helpline route the transaction details to the beneficiary banks for a hold within the golden hour. Registration of the FIR is essential but it is not what stops the money moving.'},
+    {t:'Send her to the bank branch to sort it out with them directly.',s:-1,f:'The branch cannot freeze an account at another bank. You have transferred your own responsibility to a victim who is in distress, and lost the window while she travels.'}
+   ]},
+  {n:'She hands you her phone and asks you to keep it. Her son says he will forward you screenshots of the SMS alerts instead.',
+   o:[
+    {t:'Take the screenshots. They show the same information and are easier to file.',s:-1,f:'A forwarded screenshot is secondary evidence at two removes, with no certificate and no established provenance. It can be challenged as easily fabricated. It is better than nothing but it is the weakest option available to you.'},
+    {t:'Seize the handset under a documented seizure memo with witnesses, and send it for forensic extraction.',s:2,f:'Correct. The handset is the original. A documented seizure with a memo, witnesses and a hash of the extraction gives you primary material and a defensible chain. Provide her a receipt and, where the investigation permits, arrange a replacement or return after extraction.'},
+    {t:'Photograph the messages on your own phone and return hers.',s:0,f:'Better than a forwarded screenshot because you can depose to having taken the photographs yourself. But you have given up the original device and with it the message database, deletion artefacts and timestamps that extraction would recover.'}
+   ]},
+  {n:'Extraction shows the caller spoofed the bank\'s customer care number, induced her to read out an OTP, and the OTP was then used to authorise the transfer. What sections?',
+   o:[
+    {t:'Section 66D only — the whole offence was the impersonation.',s:0,f:'You have the personation but you have left out the separate act of using her OTP. Charging only 66D is not wrong, but it is incomplete and gives away a count.'},
+    {t:'Sections 66C and 66D IT Act with section 318(4) BNS for cheating.',s:2,f:'Correct. Personating the bank to induce her is 66D. Actually using her OTP, a unique identification feature, is the distinct offence under 66C. The underlying cheating is charged under section 318(4) BNS. Consider section 336 BNS if any electronic record was forged.'},
+    {t:'Section 66 read with section 43 — the accused accessed her account without permission.',s:-1,f:'Technically the account was accessed using credentials she supplied under deception, so the section 43 framing is strained. The provisions drafted for this exact conduct are 66C and 66D, and a court will expect to see them.'}
+   ]},
+  {n:'The beneficiary account belongs to a nineteen-year-old who says he was paid ₹3,000 to let his account be used and did not know the source of the funds.',
+   o:[
+    {t:'Treat him as a victim and close the inquiry against him.',s:-2,f:'Accepting a fee to lend an account is not innocent. It is at minimum a matter for investigation under the money laundering framework and potentially abetment. Closing without inquiry hands the defence a ready-made gap.'},
+    {t:'Investigate him as a mule: take the account opening documents, device details, and the chain that recruited him, while assessing what he actually knew.',s:2,f:'Correct. The mule is the only physically reachable node in most of these networks and is the route upward. Knowledge is the live question for section 66B and for abetment; the recruitment chain, usually a messaging group, is where the investigation actually goes.'},
+    {t:'Charge him under section 66F as part of an organised cyber attack.',s:-2,f:'No. The mental element of section 66F is entirely absent and the section is non-bailable. Charging a nineteen-year-old under a life-imprisonment provision on these facts is an abuse that the High Court will correct.'}
+   ]}
+ ]
+},
+{
+ id:'platform', title:'The morphed image', tag:'§66E · §79 · Rules 2021',
+ blurb:'A college student finds a morphed photograph of herself circulating on a large social platform. You advise her.',
+ steps:[
+  {n:'She has screenshots and the profile URL. She wants it gone today. What is the fastest lawful route?',
+   o:[
+    {t:'File a writ petition in the High Court seeking a takedown direction.',s:-1,f:'It will work eventually, and in serious cases a court order is exactly what you want. But it is not the fastest route and it is disproportionate as a first step when a twenty-four hour statutory window already exists.'},
+    {t:'Complain to the platform\'s Resident Grievance Officer, invoking Rule 3(2)(b), which requires removal of morphed or impersonated imagery within twenty-four hours.',s:2,f:'Correct. Rule 3(2)(b) of the Intermediary Guidelines 2021 creates a specific twenty-four hour obligation for content showing a private area, nudity, or a person in an impersonated form including artificially morphed images. Name the rule expressly in the complaint — it changes how the complaint is triaged.'},
+    {t:'Email the platform\'s general support address and wait.',s:-2,f:'A general support ticket has no statutory timeline attached. The Rules give you a named officer, a twenty-four hour acknowledgement obligation and a fifteen day disposal obligation. Use them.'}
+   ]},
+  {n:'Simultaneously, what do you preserve?',
+   o:[
+    {t:'Nothing — the platform will have logs.',s:-2,f:'The platform may retain logs, but the post itself is about to be deleted at your own request. Once removed, obtaining the content back requires a legal request that may take months. Preserve first, then complain.'},
+    {t:'Capture the URLs, full-page captures with visible timestamps, the profile identifiers, and hash the captures before filing anything.',s:2,f:'Correct. Hashing your own captures at the moment of collection lets you show later that what you produce is what you took. Record the date, time and the device used. This is the same discipline the police laboratory applies, and there is no reason a lawyer should apply less.'},
+    {t:'Ask her to forward the screenshots to you on a messaging app.',s:-1,f:'Forwarding re-encodes images, strips metadata and adds a link in the chain you will have to explain. It is the weakest form of preservation and the easiest to attack.'}
+   ]},
+  {n:'The platform removes the post in eighteen hours but refuses to disclose the uploader\'s details without legal process. She wants to prosecute.',
+   o:[
+    {t:'Argue that the platform has lost safe harbour by refusing, and sue it.',s:-2,f:'The platform complied within the window. Refusing to hand subscriber data to a private party without legal process is correct conduct, not a breach. Section 79 is intact and the suit fails.'},
+    {t:'Register an FIR under sections 66E and 67 IT Act with section 79 BNS, and have the investigating officer seek subscriber details through lawful process.',s:2,f:'Correct. The platform can only disclose on lawful process. An FIR gives the investigating officer the power to require production. Section 66E addresses the private area imagery, section 67 the obscene publication where the material qualifies, and section 79 BNS covers insult to the modesty of a woman.'},
+    {t:'Ask the platform politely again, in writing.',s:-1,f:'It will be refused again for the same correct reason. You are spending the client\'s time on a route that cannot succeed without process.'}
+   ]},
+  {n:'The uploader is identified. He argues the image is obviously fake, that no reasonable person would believe it, and that no offence is made out.',
+   o:[
+    {t:'Concede — if it is obviously fake, there is no deception.',s:-2,f:'Deception of a third party is not an ingredient of section 66E, which is about publishing or transmitting the image of a private area without consent. Nor is it an ingredient of section 67, which turns on obscenity. You have conceded a defence that does not exist.'},
+    {t:'Answer that neither section 66E nor section 67 requires anyone to be deceived; the harm is the publication itself.',s:2,f:'Correct. Section 66E is complete on publication or transmission of the image of a private area without consent. Section 67 turns on whether the material is obscene by community standards. Whether viewers believed it to be authentic goes at most to sentencing and to any parallel defamation claim, not to the ingredients.'},
+    {t:'Rely on section 66A to prosecute the offensive character of the post.',s:-2,f:'Section 66A was struck down in Shreya Singhal in 2015 and no longer exists. Invoking it is a serious error that the Supreme Court has repeatedly had to correct in subsequent directions to police forces.'}
+   ]}
+ ]
+}
+];
+
+/* ============ router ============ */
+const VIEWS=['home','modules','lab','sims','cases','progress'];
+function route(){
+  let h=(location.hash||'#home').slice(1);
+  let sub=null;
+  if(h.includes('/')){[h,sub]=h.split('/');}
+  if(!VIEWS.includes(h)) h='home';
+  VIEWS.forEach(v=>$('#v-'+v).classList.toggle('on',v===h));
+  $$('#nav a').forEach(a=>a.classList.toggle('on',a.getAttribute('href')==='#'+h));
+  if(h==='modules'){ sub?openModule(sub):closeModule(); }
+  if(h==='progress') renderProgress();
+  window.scrollTo({top:0,behavior:'instant'});
+}
+addEventListener('hashchange',route);
+
+/* ============ hero hash ============ */
+const evBox=$('#ev');
+let seizeHash='';
+async function heroInit(){
+  seizeHash=await sha256(evBox.value);
+  $('#h-seize').textContent=seizeHash;
+  heroUpdate();
+}
+async function heroUpdate(){
+  const now=await sha256(evBox.value);
+  $('#h-now').textContent=now;
+  const v=$('#verdict');
+  if(now===seizeHash){
+    v.className='verdict ok';
+    v.textContent='Integrity intact. The record produced matches the record seized.';
+  }else{
+    v.className='verdict bad';
+    v.innerHTML='Integrity failed. The digests diverge, so this is not the record that was seized. Under section 63 BSA the output may still be tendered, but the defence now has an unanswerable question: who altered it, and when?';
+  }
+}
+evBox.addEventListener('input',heroUpdate);
+heroInit();
+
+/* ============ modules ============ */
+function renderModList(){
+  $('#mod-grid').innerHTML=MODULES.map(m=>`
+    <button class="mod" data-id="${m.id}">
+      <div class="mod-top"><span class="sec-tag">${esc(m.tag)}</span><span class="dot ${state.done[m.id]?'done':''}"></span></div>
+      <h3>${esc(m.title)}</h3>
+      <p>${esc(m.blurb)}</p>
+      <span class="meta">${state.done[m.id]?'Completed':'Not started'}${state.scores[m.id]!==undefined?' · drill '+state.scores[m.id]+'/'+m.quiz.length:''}</span>
+    </button>`).join('');
+  $$('#mod-grid .mod').forEach(b=>b.onclick=()=>location.hash='#modules/'+b.dataset.id);
+}
+function closeModule(){ $('#mod-list').style.display=''; $('#mod-reader').style.display='none'; renderModList(); }
+
+function openModule(id){
+  const m=MODULES.find(x=>x.id===id);
+  if(!m){location.hash='#modules';return;}
+  $('#mod-list').style.display='none';
+  const r=$('#mod-reader'); r.style.display='';
+  r.innerHTML=`
+    <div class="reader-top">
+      <a class="btn ghost" href="#modules">All modules</a>
+      <span class="sec-tag">${esc(m.tag)}</span>
+    </div>
+    <h2 style="max-width:22ch">${esc(m.title)}</h2>
+    <div class="two-col" style="margin-top:1.4rem">
+      <div>
+        <div id="vidhost"></div>
+        <div style="margin-top:1.5rem">${m.body}</div>
+      </div>
+      <div>
+        <div class="panel">
+          <h3>Drill</h3>
+          <p class="small muted">Three applied questions. Answer all three to mark the module complete.</p>
+          <div id="quiz"></div>
+        </div>
+        <div class="panel">
+          <h3>Study note</h3>
+          <p class="small">Write the provision out by hand once, ingredient by ingredient, before you attempt the drill. Section-level recall is what separates a pass from a good answer in this subject.</p>
+        </div>
+      </div>
+    </div>`;
+  buildQuiz(m);
+  renderVideo(m);
+}
+
+/* ============ video block ============ */
+function renderVideo(m){
+  const host=$('#vidhost'); if(!host) return;
+  const raw=videoFor(m.id), v=embedUrl(raw);
+  const custom=!!(state.videos&&state.videos[m.id]);
+
+  if(!v){
+    host.innerHTML=`
+      <div class="videoslot">
+        <div class="play">▶</div>
+        <b style="font-family:Spectral,serif;font-size:1.05rem">${esc(m.video)}</b>
+        <small>No lesson linked yet. Paste a YouTube, Vimeo, Google Drive or direct video link to attach one.</small>
+      </div>
+      <div class="vidbar">
+        <input type="text" id="vid-in" placeholder="https://youtu.be/…" aria-label="Video link for this lesson">
+        <button class="btn" id="vid-save" type="button">Attach</button>
+      </div>`;
+  }else{
+    const player = v.kind==='file'
+      ? `<video controls playsinline preload="metadata" src="${esc(v.src)}"></video>`
+      : `<iframe src="${esc(v.src)}" title="${esc(m.video)}" loading="lazy" allowfullscreen
+           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+           referrerpolicy="strict-origin-when-cross-origin"></iframe>`;
+    host.innerHTML=`
+      <div class="videoframe">${player}</div>
+      <div class="vidbar">
+        <span class="small muted" style="margin-right:auto">${esc(m.video)}${custom?' · linked on this device':''}</span>
+        <button class="btn ghost" id="vid-edit" type="button">Change link</button>
+        ${custom?'<button class="btn ghost" id="vid-clear" type="button">Remove</button>':''}
+      </div>`;
+  }
+
+  const attach=()=>{
+    const val=$('#vid-in').value.trim();
+    if(!embedUrl(val)){
+      $('#vid-in').value='';
+      $('#vid-in').placeholder='That is not a link this player recognises. Try a YouTube, Vimeo, Drive or .mp4 URL.';
+      return;
+    }
+    state.videos=state.videos||{}; state.videos[m.id]=val; save(); renderVideo(m);
+  };
+  if($('#vid-save')){
+    $('#vid-save').onclick=attach;
+    $('#vid-in').addEventListener('keydown',e=>{if(e.key==='Enter')attach();});
+  }
+  if($('#vid-edit')) $('#vid-edit').onclick=()=>{
+    host.querySelector('.vidbar').innerHTML=
+      `<input type="text" id="vid-in" value="${esc(raw)}" aria-label="Video link for this lesson">
+       <button class="btn" id="vid-save" type="button">Save</button>`;
+    $('#vid-save').onclick=attach;
+    $('#vid-in').focus();
+  };
+  if($('#vid-clear')) $('#vid-clear').onclick=()=>{
+    if(state.videos) delete state.videos[m.id];
+    save(); renderVideo(m);
+  };
+}
+
+function buildQuiz(m){
+  const host=$('#quiz'); let answered=0,correct=0;
+  host.innerHTML=m.quiz.map((q,i)=>`
+    <div style="margin-bottom:1.3rem" data-q="${i}">
+      <p class="small" style="font-weight:500;margin-bottom:.55rem">${i+1}. ${esc(q.q)}</p>
+      ${q.a.map((a,j)=>`<button class="opt" data-i="${i}" data-j="${j}">${esc(a)}</button>`).join('')}
+      <div class="feedback" style="display:none"></div>
+    </div>`).join('');
+  $$('.opt',host).forEach(btn=>{
+    btn.onclick=()=>{
+      const i=+btn.dataset.i,j=+btn.dataset.j,q=m.quiz[i];
+      const blk=btn.closest('[data-q]');
+      if(blk.dataset.locked)return;
+      blk.dataset.locked='1';
+      $$('.opt',blk).forEach((b,k)=>{b.disabled=true;if(k===q.c)b.classList.add('correct');});
+      if(j!==q.c) btn.classList.add('wrong'); else correct++;
+      const fb=$('.feedback',blk); fb.style.display=''; fb.innerHTML=(j===q.c?'<b>Correct. </b>':'<b>Not quite. </b>')+q.e;
+      answered++;
+      if(answered===m.quiz.length){
+        state.done[m.id]=true; state.scores[m.id]=correct; save();
+        const done=document.createElement('div');
+        done.className='callout fx';
+        done.innerHTML=`<b>Module complete.</b> You scored ${correct} of ${m.quiz.length}. <a href="#modules">Back to the modules</a>.`;
+        host.appendChild(done);
+      }
+    };
+  });
+}
+
+/* ============ lab: integrity ============ */
+const labEv=$('#lab-ev');
+let labRef=null;
+async function labUpdate(){
+  const h=await sha256(labEv.value);
+  $('#lab-h').textContent=h;
+  const v=$('#lab-verdict');
+  if(labRef===null){v.style.display='none';return;}
+  v.style.display='';
+  if(h===labRef){v.className='verdict ok';v.textContent='Match. The record is unchanged since it was recorded.';}
+  else{v.className='verdict bad';v.textContent='Mismatch. Something in this record has changed since the reference hash was taken.';}
+}
+labEv.addEventListener('input',labUpdate);
+$('#lab-set').onclick=async()=>{ labRef=await sha256(labEv.value); $('#lab-ref').textContent=labRef; labUpdate(); };
+labUpdate();
+
+/* ============ lab: volatility ============ */
+const VOL=[
+ {t:'CPU registers and cache',e:'Gone in nanoseconds. Practically uncollectable, but it heads the list in RFC 3227.'},
+ {t:'Routing table, ARP cache, process table, kernel statistics',e:'Live system state. Lost the instant the machine is powered down.'},
+ {t:'Contents of RAM, including encryption keys',e:'The most valuable volatile source in practice. Capture before shutdown or lose it entirely.'},
+ {t:'Temporary file systems and swap',e:'Often cleared on reboot. May contain fragments of documents never saved to disk.'},
+ {t:'Data on the hard disk',e:'Durable. This is what the forensic image captures.'},
+ {t:'Remote logging and monitoring data held elsewhere',e:'Held on another system, subject to that system\'s retention policy.'},
+ {t:'Physical configuration and network topology',e:'Stable, documented by photographs and notes.'},
+ {t:'Archival media and backups',e:'The most durable source, and often the one everybody forgets to ask for.'}
+];
+let volPicked=[];
+function volRender(){
+  $('#vol-chips').innerHTML=VOL.map((v,i)=>`<button class="chip ${volPicked.includes(i)?'picked':''}" data-i="${i}" ${volPicked.includes(i)?'disabled':''}>${esc(v.t)}</button>`).join('');
+  $('#vol-slots').innerHTML=volPicked.map((i,pos)=>`<li data-pos="${pos}">${esc(VOL[i].t)}<button data-rm="${pos}" aria-label="Remove">×</button></li>`).join('');
+  $$('#vol-chips .chip').forEach(c=>c.onclick=()=>{volPicked.push(+c.dataset.i);volRender();});
+  $$('#vol-slots button').forEach(b=>b.onclick=()=>{volPicked.splice(+b.dataset.rm,1);volRender();});
+}
+$('#vol-check').onclick=()=>{
+  const fb=$('#vol-fb'); fb.style.display='';
+  if(volPicked.length<VOL.length){fb.innerHTML='<b>Place all eight sources</b> before checking. '+(VOL.length-volPicked.length)+' remaining.';return;}
+  let right=0;
+  $$('#vol-slots li').forEach((li,pos)=>{
+    const ok=volPicked[pos]===pos; li.classList.toggle('ok',ok); li.classList.toggle('no',!ok); if(ok)right++;
+  });
+  fb.innerHTML=`<b>${right} of ${VOL.length} in the correct position.</b><br>The RFC 3227 order runs: `+
+    VOL.map((v,i)=>`${i+1}. ${esc(v.t)} — <span class="muted">${esc(v.e)}</span>`).join('<br>')+
+    `<br><br>The legal consequence: a first responder who powers a machine down to "preserve" it has made an irreversible choice that destroys everything above the disk. That decision must be recorded and justified in the seizure memo, because it will be asked about.`;
+  state.scores['vol']=right; save();
+};
+$('#vol-reset').onclick=()=>{volPicked=[];$('#vol-fb').style.display='none';volRender();};
+volRender();
+
+/* ============ lab: signatures ============ */
+const SIGS=[
+ {n:'family_photo.jpg',hex:'FF D8 FF E0 00 10 4A 46 49 46 00 01 01 00 00 48',asc:'ÿØÿà..JFIF......',v:'JPEG image',ok:true,
+  e:'The header matches the extension. This is a genuine JPEG. Nothing to report.'},
+ {n:'accounts_2025.docx',hex:'52 61 72 21 1A 07 01 00 CF 90 73 00 0D 00 00 00',asc:'Rar!............',v:'RAR archive',ok:false,
+  e:'The extension says Word document. The header says RAR archive. A genuine .docx begins 50 4B 03 04 because it is a ZIP container. This file has been deliberately renamed to hide an archive among the accounting documents — a standard concealment technique, and a finding that goes directly to the accused\'s knowledge and intention.'},
+ {n:'notes.txt',hex:'25 50 44 46 2D 31 2E 37 0A 25 E2 E3 CF D3 0A 31',asc:'%PDF-1.7.%.....1',v:'PDF document',ok:false,
+  e:'A PDF renamed to a text file. Less sinister than the archive but still a mismatch that must be reported. Note what this means for keyword searching: a tool searching only files with document extensions would have missed this one entirely.'},
+ {n:'backup.zip',hex:'50 4B 03 04 14 00 06 00 08 00 00 00 21 00 D2 A8',asc:'PK..........!...',v:'ZIP archive',ok:true,
+  e:'Genuine ZIP container. Remember that docx, xlsx, pptx, apk and jar files all share this signature, so a header match alone does not tell you which of them you are holding — the internal structure does.'},
+ {n:'logo.png',hex:'D0 CF 11 E0 A1 B1 1A E1 00 00 00 00 00 00 00 00',asc:'ÐÏ..¡±..........',v:'Legacy Microsoft Office document',ok:false,
+  e:'This is an OLE compound file — a legacy .doc or .xls — masquerading as an image. Legacy Office formats can carry macros, which raises a separate question about whether the file was capable of executing code on the victim\'s machine.'}
+];
+const sel=$('#sig-pick');
+sel.innerHTML='<option value="">Select a seized file…</option>'+SIGS.map((s,i)=>`<option value="${i}">${esc(s.n)}</option>`).join('');
+sel.onchange=()=>{
+  const i=sel.value; const hex=$('#sig-hex'), fb=$('#sig-fb');
+  if(i===''){hex.textContent='—';fb.textContent='Select a file to inspect its first bytes.';return;}
+  const s=SIGS[i];
+  hex.textContent='Offset  Hex                                              ASCII\n'+
+    '000000  '+s.hex+'  '+s.asc;
+  fb.innerHTML=`<b>${s.ok?'Header matches extension. ':'Mismatch. '}</b>Identified as <b>${esc(s.v)}</b>. ${s.e}`;
+};
+
+/* ============ lab: chain of custody ============ */
+const COC=[
+ 'Photograph the device in situ, record its state and any screen contents',
+ 'Prepare a seizure memo listing make, model, serial number, signed by two independent witnesses',
+ 'Place the device in an anti-static or Faraday bag, seal it, and sign across the seal',
+ 'Transport to the laboratory and log receipt with date, time and receiving officer',
+ 'Attach a hardware write blocker and acquire a forensic image, recording source and image hashes',
+ 'Store the original in a secured exhibit locker; conduct all analysis on a verified working copy',
+ 'Record every subsequent transfer of the exhibit with date, time, receiving person and purpose',
+ 'Produce the exhibit in court with the section 63(4) certificate and the acquisition log'
+];
+let cocPicked=[];
+function cocRender(){
+  $('#coc-chips').innerHTML=COC.map((c,i)=>`<button class="chip ${cocPicked.includes(i)?'picked':''}" data-i="${i}" ${cocPicked.includes(i)?'disabled':''}>${esc(c)}</button>`).join('');
+  $('#coc-slots').innerHTML=cocPicked.map((i,pos)=>`<li data-pos="${pos}">${esc(COC[i])}<button data-rm="${pos}" aria-label="Remove">×</button></li>`).join('');
+  $$('#coc-chips .chip').forEach(c=>c.onclick=()=>{cocPicked.push(+c.dataset.i);cocRender();});
+  $$('#coc-slots button').forEach(b=>b.onclick=()=>{cocPicked.splice(+b.dataset.rm,1);cocRender();});
+}
+$('#coc-check').onclick=()=>{
+  const fb=$('#coc-fb'); fb.style.display='';
+  if(cocPicked.length<COC.length){fb.innerHTML='<b>Place all eight steps</b> before checking. '+(COC.length-cocPicked.length)+' remaining.';return;}
+  let right=0;
+  $$('#coc-slots li').forEach((li,pos)=>{const ok=cocPicked[pos]===pos;li.classList.toggle('ok',ok);li.classList.toggle('no',!ok);if(ok)right++;});
+  fb.innerHTML=`<b>${right} of ${COC.length} correct.</b> The two that matter most in cross-examination are the write blocker before imaging, and analysing the copy rather than the original. An examiner who admits to working on the original device has handed the defence its case: every finding is now open to the answer that the examination itself created it.`;
+  state.scores['coc']=right; save();
+};
+$('#coc-reset').onclick=()=>{cocPicked=[];$('#coc-fb').style.display='none';cocRender();};
+cocRender();
+
+/* ============ lab: certificate clinic ============ */
+const CERTS=[
+ {t:'A certificate signed by the bank\'s branch manager, identifying the statement, describing that it was printed from the core banking system, giving the system particulars, and stating that the system was in regular use and operating properly.',
+  ok:true,e:'This satisfies section 63(4). The branch manager occupies a responsible official position in relation to the management of the relevant activities, the record and device are identified, and the conditions are addressed. The exhibit gets in.'},
+ {t:'No certificate. The investigating officer testifies on oath that he personally downloaded the call detail records from the telecom provider\'s portal and that they are accurate.',
+  ok:false,e:'Oral evidence cannot substitute for the certificate where secondary electronic evidence is tendered. That is the holding of Anvar P.V., restored by Arjun Panditrao after Shafhi Mohammad was overruled. The correct course is to apply to the court to summon the certificate from the telecom provider.'},
+ {t:'The complainant produces the original mobile handset on which the messages were received and steps into the witness box to depose to receiving them.',
+  ok:true,e:'No certificate is needed. Section 63 governs computer output tendered in place of the original. Here the original device is produced and spoken to, so this is primary evidence. Anvar P.V. says so in terms.'},
+ {t:'A certificate signed by a junior clerk in the company, which recites that "the enclosed printout is true and correct" and nothing further.',
+  ok:false,e:'Two defects. The signatory must occupy a responsible official position in relation to the operation of the device or the management of the activities, and a junior clerk with no such role does not qualify. And the certificate must identify the record, describe the manner of production and give device particulars — a bare assertion of correctness does none of that.'},
+ {t:'A certificate filed for the first time during the trial, after the prosecution evidence has begun but before it closes, with an explanation for the delay.',
+  ok:true,e:'Arjun Panditrao held that the certificate may be produced at any stage before the trial is concluded, in the exercise of the court\'s discretion and provided no irreversible prejudice is caused. Late is not fatal; absent is.'}
+];
+function certRender(){
+  $('#cert-drill').innerHTML=CERTS.map((c,i)=>`
+    <div style="margin-bottom:1rem" data-c="${i}">
+      <p class="small" style="margin-bottom:.5rem">${esc(c.t)}</p>
+      <div style="display:flex;gap:.5rem">
+        <button class="opt" style="margin:0" data-i="${i}" data-v="1">Admissible</button>
+        <button class="opt" style="margin:0" data-i="${i}" data-v="0">Not admissible as it stands</button>
+      </div>
+      <div class="feedback" style="display:none;margin-top:.45rem"></div>
+    </div>`).join('');
+  $$('#cert-drill .opt').forEach(b=>b.onclick=()=>{
+    const i=+b.dataset.i, v=b.dataset.v==='1', c=CERTS[i], blk=b.closest('[data-c]');
+    if(blk.dataset.locked)return; blk.dataset.locked='1';
+    $$('.opt',blk).forEach(x=>x.disabled=true);
+    b.classList.add(v===c.ok?'correct':'wrong');
+    const fb=$('.feedback',blk); fb.style.display=''; fb.innerHTML=(v===c.ok?'<b>Correct. </b>':'<b>Not quite. </b>')+c.e;
+  });
+}
+certRender();
+
+/* ============ lab: tools ============ */
+$('#tool-grid').innerHTML=TOOLS.map(t=>`
+  <div class="mod" style="cursor:default">
+    <div class="mod-top"><h3>${esc(t.n)}</h3><span class="sec-tag">${esc(t.c)}</span></div>
+    <p>${esc(t.d)}</p>
+    <p style="margin-top:.5rem"><b style="color:var(--forensic)">Proves:</b> ${esc(t.p)}</p>
+    <p style="margin-top:.35rem"><b style="color:var(--seal)">Press on:</b> ${esc(t.l)}</p>
+  </div>`).join('');
+
+/* ============ sims ============ */
+$('#sim-grid').innerHTML=SIMS.map(s=>`
+  <button class="mod" data-id="${s.id}">
+    <div class="mod-top"><span class="sec-tag">${esc(s.tag)}</span><span class="dot ${state.done['sim-'+s.id]?'done':''}"></span></div>
+    <h3>${esc(s.title)}</h3>
+    <p>${esc(s.blurb)}</p>
+    <span class="meta">${s.steps.length} decisions</span>
+  </button>`).join('');
+$$('#sim-grid .mod').forEach(b=>b.onclick=()=>runSim(b.dataset.id));
+
+function runSim(id){
+  const s=SIMS.find(x=>x.id===id);
+  let step=0,score=0;
+  const host=$('#sim-run'); host.style.display='';
+  $('#sim-grid').style.display='none';
+  function draw(){
+    if(step>=s.steps.length){
+      const max=s.steps.length*2;
+      let verdict;
+      if(score>=max-1) verdict='You made the choices a careful practitioner would make. The exhibit survives, the charges fit the facts, and nothing you did is open to attack.';
+      else if(score>=max/2) verdict='Sound overall, but at least one decision gave away ground you did not need to concede. Go back and read the feedback on the steps you lost points on.';
+      else verdict='This case would be in serious difficulty. The recurring error in cyber law practice is haste — acting before the evidence is preserved, and charging before the ingredients are checked. Run it again.';
+      host.innerHTML=`<div class="scene"><div class="scene-head"><b>${esc(s.title)} — concluded</b><span class="score">${score} of ${max}</span></div>
+        <div class="scene-body"><p class="scene-narr">${verdict}</p>
+        <div class="btnrow"><button class="btn" id="sim-again">Run it again</button><button class="btn ghost" id="sim-back">Back to investigations</button></div></div></div>`;
+      state.done['sim-'+s.id]=true; state.scores['sim-'+s.id]=score; save();
+      $('#sim-again').onclick=()=>{step=0;score=0;draw();};
+      $('#sim-back').onclick=()=>{host.style.display='none';$('#sim-grid').style.display='';};
+      return;
+    }
+    const st=s.steps[step];
+    host.innerHTML=`<div class="scene">
+      <div class="scene-head"><b>${esc(s.title)}</b><span class="trail">Decision ${step+1} of ${s.steps.length} · running score ${score}</span></div>
+      <div class="scene-body">
+        <p class="scene-narr">${esc(st.n)}</p>
+        ${st.o.map((o,i)=>`<button class="opt" data-i="${i}">${esc(o.t)}</button>`).join('')}
+        <div class="feedback" id="sim-fb" style="display:none"></div>
+        <div class="btnrow" id="sim-next" style="display:none"><button class="btn" id="sim-go">Continue</button></div>
+      </div></div>`;
+    $$('.opt',host).forEach(b=>b.onclick=()=>{
+      const o=st.o[+b.dataset.i];
+      $$('.opt',host).forEach(x=>x.disabled=true);
+      b.classList.add(o.s>0?'correct':(o.s<0?'wrong':''));
+      score+=o.s;
+      const fb=$('#sim-fb'); fb.style.display=''; fb.innerHTML=o.f;
+      $('#sim-next').style.display='';
+      $('#sim-go').onclick=()=>{step++;draw();};
+      $('#sim-go').focus();
+    });
+  }
+  draw();
+  host.scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+/* ============ cases ============ */
+$('#case-deck').innerHTML=CASES.map((c,i)=>`
+  <button class="fcard ${state.flipped[i]?'flipped':''}" data-i="${i}">
+    <h4>${esc(c.n)}</h4>
+    <span class="cite">${esc(c.c)}</span>
+    <p>${state.flipped[i]?esc(c.h):'Tap to reveal the holding.'}</p>
+  </button>`).join('');
+$$('#case-deck .fcard').forEach(b=>b.onclick=()=>{
+  const i=+b.dataset.i; state.flipped[i]=!state.flipped[i]; save();
+  b.classList.toggle('flipped',!!state.flipped[i]);
+  $('p',b).textContent=state.flipped[i]?CASES[i].h:'Tap to reveal the holding.';
+});
+
+/* ============ progress ============ */
+function renderProgress(){
+  const n=MODULES.filter(m=>state.done[m.id]).length;
+  const pct=Math.round(n/MODULES.length*100);
+  $('#p-bar').style.width=pct+'%';
+  $('#p-label').textContent=`${n} of ${MODULES.length} modules`;
+  $('#p-list').innerHTML=MODULES.map(m=>`<div style="display:flex;gap:.6rem;align-items:center;padding:.35rem 0;border-top:1px solid var(--rule);font-size:.88rem">
+    <span class="dot ${state.done[m.id]?'done':''}"></span><span>${esc(m.title)}</span>
+    <span class="muted mono" style="margin-left:auto;font-size:.78rem">${state.scores[m.id]!==undefined?state.scores[m.id]+'/'+m.quiz.length:'—'}</span></div>`).join('');
+  const rows=[];
+  if(state.scores.vol!==undefined) rows.push(['Order of volatility',state.scores.vol+'/'+VOL.length]);
+  if(state.scores.coc!==undefined) rows.push(['Chain of custody',state.scores.coc+'/'+COC.length]);
+  SIMS.forEach(s=>{if(state.scores['sim-'+s.id]!==undefined) rows.push([s.title,state.scores['sim-'+s.id]+'/'+(s.steps.length*2)]);});
+  $('#p-scores').innerHTML = rows.length
+    ? rows.map(r=>`<div style="display:flex;padding:.35rem 0;border-top:1px solid var(--rule);font-size:.88rem"><span>${esc(r[0])}</span><span class="muted mono" style="margin-left:auto;font-size:.78rem">${esc(r[1])}</span></div>`).join('')
+    : '<p class="small muted">No lab or investigation scores yet.</p>';
+  const hn=Math.round(n/MODULES.length*100);
+  $('#home-bar').style.width=hn+'%';
+  $('#home-bar-label').textContent=hn+'% complete';
+}
+$('#p-reset').onclick=()=>{
+  state={done:{},scores:{},flipped:{},theme:state.theme,videos:state.videos}; save();
+  location.reload();
+};
+
+/* ============ boot ============ */
+renderModList();
+renderProgress();
+route();
+</script>
+</body>
+</html>
