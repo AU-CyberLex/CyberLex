@@ -56,17 +56,3 @@ export function useStore() {
   if (!v) throw new Error("useStore must be used inside StoreProvider");
   return v;
 }
-
-export function useIsDark() {
-  const { state } = useStore();
-  const [dark, setDark] = useState(false);
-  useEffect(() => {
-    const mq = window.matchMedia("(prefers-color-scheme: dark)");
-    const compute = () =>
-      setDark(state.theme ? state.theme === "dark" : mq.matches);
-    compute();
-    mq.addEventListener("change", compute);
-    return () => mq.removeEventListener("change", compute);
-  }, [state.theme]);
-  return dark;
-}

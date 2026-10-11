@@ -11,10 +11,10 @@ export function ProgressView() {
   const pct = Math.round((doneCount / MODULES.length) * 100);
   const rows: Array<[string, string]> = [];
   if (state.scores.vol !== undefined) rows.push(["Order of volatility", state.scores.vol + "/" + VOL.length]);
-  if (state.scores.coc !== undefined) rows.push(["Chain of custody", state.scores.coc + "/" + (COC as unknown[]).length]);
+  if (state.scores.coc !== undefined) rows.push(["Chain of custody", state.scores.coc + "/" + (COC as unknown as unknown[]).length]);
   (SIMS as unknown as Array<{ id: string; title: string; steps: unknown[] }>).forEach((s) => {
     if (state.scores["sim-" + s.id] !== undefined)
-      rows.push([s.title, state.scores["sim-" + s.id] + "/" + s.steps.length * 2]);
+      rows.push([s.title, state.scores["sim-" + s.id] + "/" + (s.steps.length * 2)]);
   });
 
   return (
@@ -45,7 +45,7 @@ export function ProgressView() {
               <span>{m.title}</span>
               <span className="ml-auto font-mono text-[0.78rem]" style={{ color: "var(--muted)" }}>
                 {state.scores[m.id] !== undefined
-                  ? state.scores[m.id] + "/" + (m.quiz as unknown[]).length
+                  ? state.scores[m.id] + "/" + (m.quiz as unknown as unknown[]).length
                   : "—"}
               </span>
             </div>

@@ -25,9 +25,9 @@ export function VolatilityBench() {
           : "Not quite. Position " +
               (firstWrong + 1) +
               " is wrong: " +
-              (VOL as Array<{ t: string; e: string }>)[order[firstWrong]].t +
+              (VOL as unknown as Array<{ t: string; e: string }>)[order[firstWrong]].t +
               " does not belong there. " +
-              (VOL as Array<{ t: string; e: string }>)[firstWrong].e
+              (VOL as unknown as Array<{ t: string; e: string }>)[firstWrong].e
       );
     }
   };
@@ -54,7 +54,7 @@ export function VolatilityBench() {
             className="rounded-full border px-3 py-1.5 text-[0.82rem]"
             style={{ borderColor: "var(--rule)", background: "var(--surface-2)" }}
           >
-            {(VOL as Array<{ t: string }>)[i].t}
+            {(VOL as unknown as Array<{ t: string }>)[i].t}
           </button>
         ))}
         {remaining.length === 0 && (
@@ -73,7 +73,7 @@ export function VolatilityBench() {
             <span className="font-mono" style={{ color: "var(--muted)" }}>
               {pos + 1}.
             </span>
-            {(VOL as Array<{ t: string }>)[v].t}
+            {(VOL as unknown as Array<{ t: string }>)[v].t}
             <button
               type="button"
               aria-label="Remove"

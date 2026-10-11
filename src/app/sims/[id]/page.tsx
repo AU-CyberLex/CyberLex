@@ -32,7 +32,7 @@ export default function SimPage({ params }: { params: { id: string } }) {
       <p className="mb-6 mt-2 max-w-[66ch] text-sm" style={{ color: "var(--muted)" }}>
         {s.blurb}
       </p>
-      <SimRunner simId={s.id} title={s.title} steps={s.steps} />
+      <SimRunner key={s.id} simId={s.id} title={s.title} steps={s.steps} />
     </div>
   );
 }

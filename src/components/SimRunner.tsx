@@ -110,10 +110,11 @@ export function SimRunner({ simId, title, steps }: { simId: string; title: strin
                 type="button"
                 onClick={() => {
                   if (step + 1 >= steps.length) {
+                    const finalScore = score;
                     setState((s) => ({
                       ...s,
                       done: { ...s.done, ["sim-" + simId]: true },
-                      scores: { ...s.scores, ["sim-" + simId]: score },
+                      scores: { ...s.scores, ["sim-" + simId]: finalScore },
                     }));
                     setFinished(true);
                   } else {

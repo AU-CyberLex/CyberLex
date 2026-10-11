@@ -10,14 +10,14 @@ export function Quiz({ moduleId, quiz }: { moduleId: string; quiz: Q[] }) {
   const [locked, setLocked] = useState<Record<number, number>>({});
   const [done, setDone] = useState(false);
   const answered = Object.keys(locked).length;
-  const correct = Object.entries(locked).filter(([i, j]) => quiz[+i].c === j).length;
+  const correct = Object.entries(locked).filter(([i, j]) => quiz[+i].c === Number(j)).length;
 
   const answer = (i: number, j: number) => {
     if (locked[i] !== undefined) return;
     const next = { ...locked, [i]: j };
     setLocked(next);
     if (Object.keys(next).length === quiz.length) {
-      const score = Object.entries(next).filter(([qi, qj]) => quiz[+qi].c === qj).length;
+      const score = Object.entries(next).filter(([qi, qj]) => quiz[+qi].c === Number(qj)).length;
       setState((s) => ({
         ...s,
         done: { ...s.done, [moduleId]: true },

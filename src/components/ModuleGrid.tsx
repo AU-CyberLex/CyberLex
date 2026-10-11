@@ -43,7 +43,7 @@ export function ModuleGrid() {
             />
             {state.done[m.id] ? "Completed" : "Not started"}
             {state.scores[m.id] !== undefined
-              ? " · drill " + state.scores[m.id] + "/" + (m.quiz as unknown[]).length
+              ? " · drill " + state.scores[m.id] + "/" + (m.quiz as unknown as unknown[]).length
               : ""}
           </span>
         </Link>

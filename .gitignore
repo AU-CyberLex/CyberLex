@@ -1,0 +1,20 @@
+# dependencies
+/node_modules
+
+# build output
+.next
+
+# TypeScript incremental build
+tsconfig.tsbuildinfo
+
+# environment variables (optional)
+.env
+.env.local
+.env*.local
+
+# IDE and OS
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store

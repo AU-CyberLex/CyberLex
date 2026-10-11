@@ -32,7 +32,7 @@ export default function ModuleReader({ params }: { params: { id: string } }) {
       </h2>
       <div className="mt-6 grid items-start gap-8 lg:grid-cols-2">
         <div>
-          <VideoBlock moduleId={m.id} title={m.video} />
+          <VideoBlock key={m.id} moduleId={m.id} title={m.video} />
           <div className="prose-cyberlex mt-6" dangerouslySetInnerHTML={{ __html: m.body }} />
         </div>
         <div className="space-y-5">
@@ -41,7 +41,7 @@ export default function ModuleReader({ params }: { params: { id: string } }) {
             <p className="mb-4 text-[0.85rem]" style={{ color: "var(--muted)" }}>
               Three applied questions. Answer all three to mark the module complete.
             </p>
-            <Quiz moduleId={m.id} quiz={m.quiz} />
+            <Quiz key={m.id} moduleId={m.id} quiz={m.quiz} />
           </Panel>
           <Panel>
             <h3 className="mb-1 font-serif text-lg font-medium">Study note</h3>

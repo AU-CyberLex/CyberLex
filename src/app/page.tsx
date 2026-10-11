@@ -1,7 +1,5 @@
 "use client";
 import Link from "next/link";
-import { useEffect, useState } from "react";
-import { sha256Hex } from "@/lib/hash";
 import { useStore } from "@/lib/store";
 import { MODULES } from "@/data/modules";
 import { Callout, Panel, SecTag, SectionHeading } from "@/components/ui";

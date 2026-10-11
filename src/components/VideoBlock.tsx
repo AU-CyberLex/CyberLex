@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { embedUrl } from "@/lib/video";
 import { useStore } from "@/lib/store";
 import { VIDEOS } from "@/data/videos";
@@ -12,6 +12,10 @@ export function VideoBlock({ moduleId, title }: { moduleId: string; title: strin
   const [draft, setDraft] = useState(raw);
   const [editing, setEditing] = useState(false);
   const [error, setError] = useState("");
+
+  useEffect(() => {
+    setDraft(raw);
+  }, [moduleId, raw]);
 
   const attach = (val: string) => {
     if (!embedUrl(val)) {
@@ -42,13 +46,13 @@ export function VideoBlock({ moduleId, title }: { moduleId: string; title: strin
         <div className="mt-2 flex gap-2">
           <input
             type="text"
-            value={editing ? draft : ""}
+            value={draft}
             onChange={(e) => setDraft(e.target.value)}
             onKeyDown={(e) => {
-              if (e.key === "Enter") attach((e.target as HTMLInputElement).value);
+              if (e.key === "Enter") attach(draft);
             }}
             placeholder={error || "https://youtu.be/…"}
-            aria-label="Video link for this lesson"
+            aria-label={"Video link for " + moduleId}
             className="min-w-0 flex-1 rounded border px-2.5 py-2 text-sm"
             style={{
               borderColor: "var(--rule)",
@@ -58,12 +62,7 @@ export function VideoBlock({ moduleId, title }: { moduleId: string; title: strin
           />
           <button
             type="button"
-            onClick={() =>
-              attach(
-                (document.querySelector("input[aria-label='Video link for this lesson']") as HTMLInputElement)
-                  ?.value ?? draft
-              )
-            }
+            onClick={() => attach(draft)}
             className="rounded border px-3 py-2 text-sm font-medium"
             style={{ background: "var(--seal)", borderColor: "var(--seal)", color: "#fff" }}
           >

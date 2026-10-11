@@ -1,4 +1,5 @@
 "use client";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useStore } from "@/lib/store";
@@ -15,6 +16,17 @@ const LINKS = [
 export function SiteHeader() {
   const pathname = usePathname();
   const { state, setState } = useStore();
+  const [mounted, setMounted] = useState(false);
+  const [systemDark, setSystemDark] = useState(false);
+  useEffect(() => {
+    setMounted(true);
+    const mq = window.matchMedia("(prefers-color-scheme: dark)");
+    const onChange = () => setSystemDark(mq.matches);
+    onChange();
+    mq.addEventListener("change", onChange);
+    return () => mq.removeEventListener("change", onChange);
+  }, []);
+  const dark = state.theme ? state.theme === "dark" : systemDark;
   const isActive = (href: string) =>
     href === "/" ? pathname === "/" : pathname === href || pathname.startsWith(href + "/");
 
@@ -53,26 +65,21 @@ export function SiteHeader() {
         </nav>
         <button
           type="button"
-          onClick={() =>
-            setState((s) => ({
-              ...s,
-              theme:
-                s.theme === "dark" ||
-                (!s.theme && window.matchMedia("(prefers-color-scheme: dark)").matches)
-                  ? "light"
-                  : "dark",
-            }))
-          }
+          onClick={() => {
+            setState((s) => {
+              const sysDark =
+                typeof window !== "undefined" &&
+                window.matchMedia("(prefers-color-scheme: dark)").matches;
+              const currentlyDark = s.theme ? s.theme === "dark" : sysDark;
+              return { ...s, theme: currentlyDark ? "light" : "dark" };
+            });
+          }}
           className="rounded border px-2.5 py-1.5 text-[0.78rem]"
           style={{ borderColor: "var(--rule)", color: "var(--muted)" }}
           aria-label="Toggle theme"
+          suppressHydrationWarning
         >
-          {state.theme === "dark" ||
-          (!state.theme &&
-            typeof window !== "undefined" &&
-            window.matchMedia("(prefers-color-scheme: dark)").matches)
-            ? "Light"
-            : "Dark"}
+          {!mounted ? "Theme" : dark ? "Light" : "Dark"}
         </button>
       </div>
     </header>
