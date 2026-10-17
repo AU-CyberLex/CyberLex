@@ -1,0 +1,21 @@
+{
+  "name": "@cyberlex/ui",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Presentation primitives for CyberLex surfaces, styled with the shared Tailwind design tokens.",
+  "main": "./src/index.tsx",
+  "types": "./src/index.tsx",
+  "exports": {
+    ".": "./src/index.tsx"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit"
+  },
+  "peerDependencies": {
+    "react": "^18.3.1"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.3",
+    "typescript": "^5.5.3"
+  }
+}

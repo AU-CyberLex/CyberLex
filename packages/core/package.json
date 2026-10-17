@@ -1,0 +1,19 @@
+{
+  "name": "@cyberlex/core",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Isomorphic helpers shared across CyberLex surfaces — SHA-256 digests and lesson-video embedding.",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "tsx --test test/hash.test.ts test/video.test.ts"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.0",
+    "typescript": "^5.5.3"
+  }
+}

@@ -1,11 +1,15 @@
 # dependencies
-/node_modules
+node_modules/
 
 # build output
-.next
+.next/
+.turbo/
 
 # TypeScript incremental build
-tsconfig.tsbuildinfo
+*.tsbuildinfo
+
+# test output
+coverage/
 
 # environment variables (optional)
 .env
