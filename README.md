@@ -89,7 +89,7 @@ src/
     video.ts         # embedUrl(): YouTube/Vimeo/Drive/mp4 → player src
 ```
 
-See `docs/ARCHITECTURE.md` for routing/state/styling details and `docs/CONTENT.md` for editing content.
+See `docs/ARCHITECTURE.md` for routing/state/styling details and `docs/CONTENT.md` for editing content. Project definition docs: `docs/BRD.md` (business requirements), `docs/PRD.md` (product requirements), `docs/TRD.md` (technical requirements) and `docs/FEATURES.md` (feature catalogue).
 
 ## Editing content
 
