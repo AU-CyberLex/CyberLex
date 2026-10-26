@@ -17,16 +17,6 @@ export function VideoBlock({ moduleId, title }: { moduleId: string; title: strin
     setDraft(raw);
   }, [moduleId, raw]);
 
-  const attach = (val: string) => {
-    if (!embedUrl(val)) {
-      setError("That is not a link this player recognises. Try a YouTube, Vimeo, Drive or .mp4 URL.");
-      return;
-    }
-    setError("");
-    setState((s) => ({ ...s, videos: { ...s.videos, [moduleId]: val.trim() } }));
-    setEditing(false);
-  };
-
   if (!v || editing) {
     return (
       <div>

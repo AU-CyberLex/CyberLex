@@ -41,10 +41,7 @@ export function ModuleGrid() {
               className="h-[7px] w-[7px] flex-none rounded-full"
               style={{ background: state.done[m.id] ? "var(--forensic)" : "var(--rule)" }}
             />
-            {state.done[m.id] ? "Completed" : "Not started"}
-            {state.scores[m.id] !== undefined
-              ? " · drill " + state.scores[m.id] + "/" + m.quiz.length
-              : ""}
+            {state.done[m.id] ? "Completed" : "Not started"} {" · drill " + (state.scores[m.id] ?? 0) + "/" + m.quiz.length}
           </span>
         </Link>
       ))}
