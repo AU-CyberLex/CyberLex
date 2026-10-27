@@ -1,0 +1,308 @@
+<section class="hero" style="padding-bottom:22px">
+  <div>
+    <div class="eyebrow">Faculty / instructor view · P3 persona</div>
+    <h1 class="hero-title" style="max-width:21ch">Prepare the lesson. <em>Keep the learner's data where it belongs.</em></h1>
+    <p class="lede">
+      Faculty can attach a recording to any module without a CMS, a developer or a redeploy. The
+      link lives on the teaching device, overrides the shipped default, and plays inside the same
+      sandboxed slot the learner sees. There is no cohort cloud in Phase-1 — and that is a feature,
+      not a gap.
+    </p>
+    <div class="btnrow" style="margin-top:16px">
+      <button class="btn primary" type="button" data-faculty-tab="videos">Manage lesson videos</button>
+      <a class="btn" href="client.html">See the learner view</a>
+      <a class="btn ghost" href="DEMO-EMAIL.md">Open demo email</a>
+    </div>
+  </div>
+  <aside class="panel panel-pad">
+    <div class="panel-head" style="margin-bottom:10px"><h2 class="panel-title">Teaching readiness</h2><span class="pill amber">local device</span></div>
+    <div class="grid grid-2">
+      <div class="stat"><div class="stat-label">Lessons linked</div><div class="stat-value" id="fac-linked">4/9</div><div class="stat-note">overrides</div></div>
+      <div class="stat"><div class="stat-label">Lab benches</div><div class="stat-value">6</div><div class="stat-note">ready to run</div></div>
+      <div class="stat"><div class="stat-label">Investigations</div><div class="stat-value">3</div><div class="stat-note">scored</div></div>
+      <div class="stat"><div class="stat-label">Authorities</div><div class="stat-value">12</div><div class="stat-note">case cards</div></div>
+    </div>
+    <div class="notice" style="margin-top:12px"><b>No learner PII.</b> A faculty device can see its own saved video links and a seeded demo cohort. It cannot read a learner's browser storage.</div>
+  </aside>
+</section>
+
+<div class="tabs" style="margin-top:22px" role="tablist" aria-label="Faculty views">
+  <button class="tab active" type="button" data-faculty-tab="videos" role="tab" aria-selected="true">Video manager</button>
+  <button class="tab" type="button" data-faculty-tab="readiness" role="tab" aria-selected="false">Class readiness</button>
+  <button class="tab" type="button" data-faculty-tab="cohort" role="tab" aria-selected="false">Cohort snapshot</button>
+  <button class="tab" type="button" data-faculty-tab="boundary" role="tab" aria-selected="false">Role boundary</button>
+</div>
+
+<section class="tab-panel active" id="fac-panel-videos" role="tabpanel">
+  <div class="grid grid-side" style="margin-top:16px">
+    <div class="panel panel-pad">
+      <div class="panel-head">
+        <div>
+          <h2 class="panel-title">Module video slots</h2>
+          <p class="panel-note">Attach, replace, preview or clear a lesson. The learner sees the same slot.</p>
+        </div>
+        <span class="pill teal" id="fac-linked-pill">4 linked</span>
+      </div>
+      <div id="faculty-video-list"></div>
+    </div>
+
+    <div class="stack">
+      <div class="panel panel-pad">
+        <div class="panel-head"><h2 class="panel-title">Preview</h2><span class="pill amber" id="fac-preview-provider">YouTube</span></div>
+        <div id="faculty-preview"></div>
+        <div id="faculty-preview-actions" class="btnrow" style="margin-top:10px"></div>
+      </div>
+      <div class="panel panel-pad">
+        <h2 class="panel-title">How the slot behaves</h2>
+        <ul class="role-list" style="margin-top:8px">
+          <li>YouTube, Vimeo and Drive links are normalised to their embed URL.</li>
+          <li>Direct .mp4 / .webm / .ogg links render a native video player.</li>
+          <li>An empty slot is a clean attach state, not a broken iframe.</li>
+          <li>Iframes are sandboxed and use a strict referrer policy.</li>
+          <li>The link is stored on this device only; clearing the browser clears it.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="tab-panel" id="fac-panel-readiness" role="tabpanel">
+  <div class="grid grid-2" style="margin-top:16px">
+    <div class="panel panel-pad">
+      <div class="panel-head"><h2 class="panel-title">Module readiness</h2><span class="panel-note">lesson linked / not linked</span></div>
+      <div id="faculty-readiness"></div>
+    </div>
+    <div class="panel panel-pad">
+      <h2 class="panel-title">What is ready for class</h2>
+      <div class="timeline" style="margin-top:10px">
+        <div class="timeline-item done"><span class="timeline-mark">9</span><div class="timeline-body"><b>Statutory modules</b><p>Doctrine, video slot and a three-question drill each.</p></div></div>
+        <div class="timeline-item done"><span class="timeline-mark">6</span><div class="timeline-body"><b>Forensics workbenches</b><p>Integrity, volatility, file signatures, chain of custody, certificates, toolkit.</p></div></div>
+        <div class="timeline-item done"><span class="timeline-mark">3</span><div class="timeline-body"><b>Branching investigations</b><p>Four scored decisions each; no undo, saved as sim-&lt;id&gt;.</p></div></div>
+        <div class="timeline-item done"><span class="timeline-mark">12</span><div class="timeline-body"><b>Landmark authorities</b><p>Searchable cards with holding, citation and a review count.</p></div></div>
+        <div class="timeline-item"><span class="timeline-mark">!</span><div class="timeline-body"><b>No cloud cohort</b><p>Phase-1 has no accounts or server, so class analytics stay local.</p></div></div>
+      </div>
+      <div class="notice teal" style="margin-top:12px"><b>Demo tip.</b> Attach a lesson in the Video manager, then open the learner page in the same browser profile. The slot is shared because both pages use the same local demo key.</div>
+    </div>
+  </div>
+</section>
+
+<section class="tab-panel" id="fac-panel-cohort" role="tabpanel">
+  <div class="panel panel-pad" style="margin-top:16px">
+    <div class="panel-head">
+      <div><h2 class="panel-title">Demo cohort snapshot</h2><p class="panel-note">Seeded rows for the walkthrough. Not a real class roster.</p></div>
+      <span class="pill">local demo only</span>
+    </div>
+    <div class="table-wrap">
+      <table class="table">
+        <thead><tr><th>#</th><th>Learner</th><th>Points</th><th>Modules</th><th>Cases</th><th>Saved</th></tr></thead>
+        <tbody id="faculty-cohort"></tbody>
+      </table>
+    </div>
+    <div class="notice ox" style="margin-top:12px"><b>Why there is no real cohort table.</b> The product deliberately keeps learner state on the learner's device. A faculty account cannot read another browser's localStorage, and there is no backend to aggregate it. Phase-2 could add an opt-in class code, but that is out of scope for P7.</div>
+  </div>
+</section>
+
+<section class="tab-panel" id="fac-panel-boundary" role="tabpanel">
+  <div class="grid grid-2" style="margin-top:16px">
+    <div class="panel panel-pad">
+      <h2 class="panel-title">Faculty can</h2>
+      <ul class="role-list" style="margin-top:8px">
+        <li>Attach, replace or clear a video link per module on this device.</li>
+        <li>Preview the exact player the learner will see.</li>
+        <li>Copy a lesson link for a class handout or LMS.</li>
+        <li>Run the lab benches, investigations and case deck in class.</li>
+        <li>Reset the demo state on this device.</li>
+      </ul>
+    </div>
+    <div class="panel panel-pad">
+      <h2 class="panel-title">Faculty cannot</h2>
+      <ul class="role-list" style="margin-top:8px">
+        <li>See a learner's scores, name or progress from another device.</li>
+        <li>Create accounts, enrol learners or run a cloud cohort.</li>
+        <li>Edit the statutory text or the 12 case holdings from this view.</li>
+        <li>Publish a video to every device — the link is local by design.</li>
+        <li>Bypass the sandbox or inject scripts into the learner page.</li>
+      </ul>
+      <div class="notice" style="margin-top:10px"><b>Owner boundary.</b> Legal copy changes belong to the content owner (P2/P3); P7 owns the video slot, cases, progress and gamification surfaces.</div>
+    </div>
+  </div>
+</section>
+
+<script>
+(function () {
+  var D = window.CyberDemo;
+  var state = D.loadState();
+  var selected = "access";
+  var editing = null;
+  var SAMPLE = {
+    youtube: "https://www.youtube.com/watch?v=cQYACLLAPOw",
+    vimeo: "https://vimeo.com/76979871",
+    drive: "https://drive.google.com/file/d/1yKbrlk-2yuzVTX3P33kKEV4wMoJRMwMW/view",
+    mp4: "https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4"
+  };
+  function $(id) { return document.getElementById(id); }
+  function esc(value) { return D.escapeHtml(value); }
+  function save() { D.saveState(state); }
+  function linkedCount() { return D.MODULES.filter(function (m) { return !!state.videos[m.id]; }).length; }
+
+  function renderStats() {
+    $("fac-linked").textContent = linkedCount() + "/" + D.MODULES.length;
+    $("fac-linked-pill").textContent = linkedCount() + " linked";
+  }
+
+  function formFor(module) {
+    var raw = state.videos[module.id] || "";
+    return '<div class="video-form" style="padding:8px 0 0">' +
+      '<div class="input-row"><input class="input" id="fac-edit-' + module.id + '" value="' + esc(raw) + '" placeholder="https://youtu.be/…" aria-label="Lesson link for ' + esc(module.title) + '">' +
+      '<button class="btn primary tiny" type="button" data-fac-save="' + module.id + '">' + (raw ? "Save" : "Attach") + '</button>' +
+      '<button class="btn tiny ghost" type="button" data-fac-cancel="' + module.id + '">Cancel</button></div>' +
+      '<div class="sample-row"><span class="tiny muted" style="align-self:center">Try:</span>' +
+      '<button class="btn tiny ghost" type="button" data-fac-sample="' + module.id + '" data-sample="youtube">YouTube</button>' +
+      '<button class="btn tiny ghost" type="button" data-fac-sample="' + module.id + '" data-sample="vimeo">Vimeo</button>' +
+      '<button class="btn tiny ghost" type="button" data-fac-sample="' + module.id + '" data-sample="drive">Drive</button>' +
+      '<button class="btn tiny ghost" type="button" data-fac-sample="' + module.id + '" data-sample="mp4">mp4</button></div></div>';
+  }
+
+  function renderList() {
+    $("faculty-video-list").innerHTML = D.MODULES.map(function (module) {
+      var raw = state.videos[module.id] || "";
+      var provider = raw ? D.providerOf(raw).label : "Empty";
+      var active = selected === module.id;
+      return '<div style="padding:10px 0;border-bottom:1px solid var(--line);' + (active ? 'background:var(--surface-2);margin:0 -8px;padding-left:8px;padding-right:8px;' : '') + '">' +
+        '<div style="display:flex;align-items:flex-start;gap:10px;flex-wrap:wrap">' +
+        '<div style="min-width:0;flex:1"><div class="small" style="font-weight:600">' + esc(module.title) + '</div><div class="tiny muted">' + esc(module.tag) + ' · ' + esc(module.video) + '</div></div>' +
+        '<span class="pill ' + (raw ? 'teal' : '') + '">' + esc(provider) + '</span></div>' +
+        (editing === module.id ? formFor(module) : '') +
+        '<div class="btnrow" style="margin-top:7px">' +
+        '<button class="btn tiny" type="button" data-fac-preview="' + module.id + '">Preview</button>' +
+        '<button class="btn tiny ghost" type="button" data-fac-change="' + module.id + '">' + (raw ? "Change" : "Attach") + '</button>' +
+        (raw ? '<button class="btn tiny ghost" type="button" data-fac-copy="' + module.id + '">Copy link</button>' : '') +
+        (raw ? '<button class="btn tiny danger" type="button" data-fac-clear="' + module.id + '">Clear</button>' : '') +
+        '</div></div>';
+    }).join("");
+  }
+
+  function renderPreview() {
+    var module = D.MODULES.filter(function (m) { return m.id === selected; })[0] || D.MODULES[0];
+    var raw = state.videos[module.id] || "";
+    var parsed = D.embedUrl(raw);
+    var provider = raw ? D.providerOf(raw) : null;
+    $("fac-preview-provider").textContent = provider ? provider.label : "Empty";
+    $("fac-preview-provider").className = "pill " + (raw ? "amber" : "");
+    if (!raw || !parsed) {
+      $("faculty-preview").innerHTML = '<div class="video-empty" style="margin:0"><div><b>No lesson linked</b><p>' + esc(module.title) + ' is showing the clean empty state. Attach a link from the list or use a sample below.</p></div></div>' +
+        '<div class="sample-row" style="margin-top:8px"><button class="btn tiny" type="button" data-fac-sample="' + module.id + '" data-sample="youtube">YouTube sample</button><button class="btn tiny ghost" type="button" data-fac-sample="' + module.id + '" data-sample="vimeo">Vimeo sample</button><button class="btn tiny ghost" type="button" data-fac-sample="' + module.id + '" data-sample="drive">Drive sample</button><button class="btn tiny ghost" type="button" data-fac-sample="' + module.id + '" data-sample="mp4">mp4 sample</button></div>';
+      $("faculty-preview-actions").innerHTML = "";
+      return;
+    }
+    $("faculty-preview").innerHTML = parsed.kind === "file"
+      ? '<div class="video-frame" style="margin-top:0;border-radius:3px;overflow:hidden"><video controls playsinline preload="metadata" src="' + esc(parsed.src) + '"></video></div>'
+      : '<div class="video-frame" style="margin-top:0;border-radius:3px;overflow:hidden"><iframe src="' + esc(parsed.src) + '" title="' + esc(module.video) + '" loading="lazy" allowfullscreen allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" sandbox="allow-scripts allow-same-origin allow-presentation allow-popups allow-popups-to-escape-sandbox"></iframe></div>';
+    $("faculty-preview-actions").innerHTML =
+      '<button class="btn tiny" type="button" data-fac-change="' + module.id + '">Change link</button>' +
+      '<button class="btn tiny ghost" type="button" data-fac-copy="' + module.id + '">Copy link</button>' +
+      '<button class="btn tiny danger" type="button" data-fac-clear="' + module.id + '">Clear slot</button>';
+  }
+
+  function renderReadiness() {
+    $("faculty-readiness").innerHTML = D.MODULES.map(function (module) {
+      var raw = state.videos[module.id] || "";
+      return '<div class="leader-row" style="grid-template-columns:16px 1fr auto;padding:7px 0">' +
+        '<span style="width:7px;height:7px;border-radius:50%;background:' + (raw ? "var(--teal)" : "var(--line)") + '"></span>' +
+        '<span class="leader-name">' + esc(module.title) + '</span>' +
+        '<span class="leader-points">' + (raw ? "linked" : "empty") + '</span></div>';
+    }).join("");
+  }
+
+  function renderCohort() {
+    var rows = D.boardWithCurrent(state).slice(0, 6);
+    $("faculty-cohort").innerHTML = rows.map(function (row, index) {
+      return '<tr><td class="num">' + (index + 1) + '</td><td>' + esc(row.name) + '</td><td class="num">' + row.points + '</td><td class="num">' + row.modules + '</td><td class="num">' + row.cases + '</td><td class="tiny muted">' + esc(D.formatDate(row.updatedAt)) + '</td></tr>';
+    }).join("");
+  }
+
+  function renderAll() {
+    renderStats();
+    renderList();
+    renderPreview();
+    renderReadiness();
+    renderCohort();
+  }
+
+  function attach(id, raw) {
+    var clean = String(raw || "").trim();
+    if (!clean || !D.embedUrl(clean)) {
+      D.toast("Paste a supported YouTube, Vimeo, Google Drive or direct video link.", "error");
+      return;
+    }
+    state.videos[id] = clean;
+    save();
+    editing = null;
+    selected = id;
+    renderAll();
+    D.toast("Lesson link saved on this device.");
+  }
+
+  function clearVideo(id) {
+    delete state.videos[id];
+    save();
+    editing = null;
+    renderAll();
+    D.toast("Lesson link cleared; the slot is empty.");
+  }
+
+  function openFacultyTab(name) {
+    document.querySelectorAll(".tab[data-faculty-tab]").forEach(function (tab) {
+      tab.classList.toggle("active", tab.getAttribute("data-faculty-tab") === name);
+      tab.setAttribute("aria-selected", tab.getAttribute("data-faculty-tab") === name ? "true" : "false");
+    });
+    document.querySelectorAll(".tab-panel[id^='fac-panel-']").forEach(function (panel) {
+      panel.classList.toggle("active", panel.id === "fac-panel-" + name);
+    });
+  }
+
+  document.querySelectorAll(".tab[data-faculty-tab]").forEach(function (tab) {
+    tab.addEventListener("click", function () { openFacultyTab(tab.getAttribute("data-faculty-tab")); });
+  });
+  document.querySelectorAll("[data-faculty-tab]").forEach(function (button) {
+    if (button.classList.contains("tab")) return;
+    button.addEventListener("click", function () { openFacultyTab(button.getAttribute("data-faculty-tab")); });
+  });
+
+  document.addEventListener("click", function (event) {
+    var preview = event.target.closest("[data-fac-preview]");
+    var change = event.target.closest("[data-fac-change]");
+    var saveButton = event.target.closest("[data-fac-save]");
+    var cancel = event.target.closest("[data-fac-cancel]");
+    var clear = event.target.closest("[data-fac-clear]");
+    var copy = event.target.closest("[data-fac-copy]");
+    var sample = event.target.closest("[data-fac-sample]");
+    if (preview) {
+      selected = preview.getAttribute("data-fac-preview");
+      editing = null;
+      renderAll();
+    } else if (change) {
+      editing = change.getAttribute("data-fac-change");
+      selected = editing;
+      renderAll();
+    } else if (saveButton) {
+      var id = saveButton.getAttribute("data-fac-save");
+      var input = $("fac-edit-" + id);
+      attach(id, input ? input.value : "");
+    } else if (cancel) {
+      editing = null;
+      renderAll();
+    } else if (clear) {
+      clearVideo(clear.getAttribute("data-fac-clear"));
+    } else if (copy) {
+      var copyId = copy.getAttribute("data-fac-copy");
+      D.copyText(state.videos[copyId] || "").then(function () { D.toast("Lesson link copied."); });
+    } else if (sample) {
+      var sampleId = sample.getAttribute("data-fac-sample");
+      attach(sampleId, SAMPLE[sample.getAttribute("data-sample")]);
+    }
+  });
+
+  renderAll();
+})();
+</script>

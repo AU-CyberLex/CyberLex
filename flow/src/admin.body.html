@@ -1,0 +1,435 @@
+<section class="hero" style="padding-bottom:22px">
+  <div>
+    <div class="eyebrow">Administrator view · local operations</div>
+    <h1 class="hero-title" style="max-width:21ch">Operate the studio. <em>Without inventing a backend.</em></h1>
+    <p class="lede">
+      The admin view is an operations console for a static product: video-registry health, the
+      device-local progress file, gamification rules and the role/permission matrix. There are no
+      accounts to manage and no learner records on a server, because Phase-1 has neither.
+    </p>
+    <div class="btnrow" style="margin-top:16px">
+      <button class="btn primary" type="button" data-admin-tab="registry">Open video registry</button>
+      <button class="btn" type="button" data-admin-tab="data">Inspect local data</button>
+      <a class="btn ghost" href="ROLE-SCOPE.md">Role-scope doc</a>
+    </div>
+  </div>
+  <aside class="panel panel-pad">
+    <div class="panel-head" style="margin-bottom:10px"><h2 class="panel-title">Runtime posture</h2><span class="pill ox">static</span></div>
+    <div class="grid grid-2">
+      <div class="stat"><div class="stat-label">Server calls</div><div class="stat-value">0</div><div class="stat-note">no API layer</div></div>
+      <div class="stat"><div class="stat-label">Accounts</div><div class="stat-value">0</div><div class="stat-note">by design</div></div>
+      <div class="stat"><div class="stat-label">Learner PII</div><div class="stat-value">0</div><div class="stat-note">on any server</div></div>
+      <div class="stat"><div class="stat-label">Video slots</div><div class="stat-value" id="admin-linked">4/9</div><div class="stat-note">linked on this device</div></div>
+    </div>
+    <div class="notice ox" style="margin-top:12px"><b>Admin boundary.</b> This console can test embeds, move a local progress file and reset demo data. It cannot read a learner's browser storage or change statutory content.</div>
+  </aside>
+</section>
+
+<div class="tabs" style="margin-top:22px" role="tablist" aria-label="Admin views">
+  <button class="tab active" type="button" data-admin-tab="overview" role="tab" aria-selected="true">Overview</button>
+  <button class="tab" type="button" data-admin-tab="registry" role="tab" aria-selected="false">Video registry</button>
+  <button class="tab" type="button" data-admin-tab="data" role="tab" aria-selected="false">Data &amp; progress</button>
+  <button class="tab" type="button" data-admin-tab="gamification" role="tab" aria-selected="false">Gamification</button>
+  <button class="tab" type="button" data-admin-tab="roles" role="tab" aria-selected="false">Roles &amp; audit</button>
+</div>
+
+<section class="tab-panel active" id="admin-panel-overview" role="tabpanel">
+  <div class="grid grid-4" style="margin-top:16px">
+    <div class="stat"><div class="stat-label">Modules</div><div class="stat-value">9</div><div class="stat-note">statutory</div></div>
+    <div class="stat"><div class="stat-label">Case cards</div><div class="stat-value">12</div><div class="stat-note">landmark authorities</div></div>
+    <div class="stat"><div class="stat-label">Lab benches</div><div class="stat-value">6</div><div class="stat-note">forensics</div></div>
+    <div class="stat"><div class="stat-label">Investigations</div><div class="stat-value">3</div><div class="stat-note">branching</div></div>
+  </div>
+
+  <div class="grid grid-side" style="margin-top:16px">
+    <div class="panel panel-pad">
+      <div class="panel-head"><h2 class="panel-title">Operational health</h2><span class="panel-note">P7 surfaces</span></div>
+      <div class="table-wrap">
+        <table class="table">
+          <thead><tr><th>Surface</th><th>Signal</th><th>Status</th></tr></thead>
+          <tbody>
+            <tr><td><b>Cases</b></td><td>12 cards · search · review state · points</td><td><span class="pill ok">healthy</span></td></tr>
+            <tr><td><b>Progress</b></td><td>Export/import · reset keeps videos + theme</td><td><span class="pill ok">healthy</span></td></tr>
+            <tr><td><b>Videos</b></td><td><span id="admin-video-health">4 of 9 linked</span> · 4 provider types</td><td><span class="pill ok">healthy</span></td></tr>
+            <tr><td><b>Gamification</b></td><td>Points · 14 badges · local leaderboard</td><td><span class="pill ok">healthy</span></td></tr>
+            <tr><td><b>Storage</b></td><td><span id="admin-storage-size">—</span> in this browser</td><td><span class="pill ok">local</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="notice teal" style="margin-top:12px"><b>No server dependency.</b> The app is statically rendered. Every P7 feature works from typed content plus <span class="mono tiny">localStorage</span>.</div>
+    </div>
+
+    <div class="panel panel-pad">
+      <div class="panel-head"><h2 class="panel-title">Recent audit</h2><span class="pill">session</span></div>
+      <div class="timeline" id="admin-audit-preview"></div>
+      <button class="btn tiny ghost" type="button" data-admin-tab="roles" style="margin-top:10px">Full audit →</button>
+    </div>
+  </div>
+
+  <div class="panel panel-pad" style="margin-top:16px">
+    <div class="panel-head"><h2 class="panel-title">P7 release gates</h2><span class="panel-note">what the team leader can verify</span></div>
+    <div class="table-wrap">
+      <table class="table">
+        <thead><tr><th>Gate</th><th>Evidence</th><th>Result</th></tr></thead>
+        <tbody>
+          <tr><td>Typecheck</td><td><span class="mono tiny">npm run typecheck</span></td><td><span class="pill ok">pass</span></td></tr>
+          <tr><td>Unit tests</td><td><span class="mono tiny">npm run test</span> · content and core</td><td><span class="pill ok">pass</span></td></tr>
+          <tr><td>Production build</td><td><span class="mono tiny">npm run build</span> · 21 static pages</td><td><span class="pill ok">pass</span></td></tr>
+          <tr><td>Sandbox present</td><td>iframe attribute on every frame player</td><td><span class="pill ok">pass</span></td></tr>
+          <tr><td>Docs</td><td>README · role scope · demo email</td><td><span class="pill ok">pass</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<section class="tab-panel" id="admin-panel-registry" role="tabpanel">
+  <div class="panel panel-pad" style="margin-top:16px">
+    <div class="panel-head">
+      <div><h2 class="panel-title">Video registry</h2><p class="panel-note">One slot per module. Test the embed before a class; clear it to restore the clean empty state.</p></div>
+      <span class="pill teal" id="admin-registry-count">4 linked</span>
+    </div>
+    <div class="table-wrap">
+      <table class="table">
+        <thead><tr><th>Module</th><th>Provider</th><th>Link</th><th>Status</th><th>Actions</th></tr></thead>
+        <tbody id="registry-body"></tbody>
+      </table>
+    </div>
+    <div class="notice" style="margin-top:12px"><b>Provider rules.</b> YouTube → nocookie embed; Vimeo → player URL; Drive → preview URL; direct .mp4/.webm/.ogg → native video. A blank slot is valid and shows the attach state.</div>
+  </div>
+
+  <div class="grid grid-2" style="margin-top:16px">
+    <div class="panel panel-pad">
+      <h2 class="panel-title">Normalisation test matrix</h2>
+      <div class="table-wrap">
+        <table class="table">
+          <thead><tr><th>Input</th><th>Output</th></tr></thead>
+          <tbody>
+            <tr><td class="mono tiny">youtu.be/cQYACLLAPOw</td><td class="mono tiny">youtube-nocookie.com/embed/cQYACLLAPOw</td></tr>
+            <tr><td class="mono tiny">vimeo.com/76979871</td><td class="mono tiny">player.vimeo.com/video/76979871</td></tr>
+            <tr><td class="mono tiny">drive.google.com/file/d/…/view</td><td class="mono tiny">drive.google.com/file/d/…/preview</td></tr>
+            <tr><td class="mono tiny">cdn.example.edu/lesson.mp4</td><td class="mono tiny">&lt;video controls&gt;</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="panel panel-pad">
+      <h2 class="panel-title">Sandbox and privacy</h2>
+      <ul class="role-list" style="margin-top:8px">
+        <li>Every iframe carries a <span class="mono tiny">sandbox</span> attribute.</li>
+        <li>Referrer policy is <span class="mono tiny">strict-origin-when-cross-origin</span>.</li>
+        <li>No cookies, analytics or third-party scripts are loaded by the app shell.</li>
+        <li>A generic https URL is framed as-is; faculty should use a known provider.</li>
+        <li>Clearing the slot deletes the local override, not the source video.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="tab-panel" id="admin-panel-data" role="tabpanel">
+  <div class="grid grid-4" style="margin-top:16px">
+    <div class="stat"><div class="stat-label">Points</div><div class="stat-value" id="admin-points">620</div><div class="stat-note" id="admin-points-note">of 1,100</div></div>
+    <div class="stat"><div class="stat-label">Modules</div><div class="stat-value" id="admin-modules">5/9</div><div class="stat-note">completed</div></div>
+    <div class="stat"><div class="stat-label">Cases</div><div class="stat-value" id="admin-cases">8/12</div><div class="stat-note">reviewed</div></div>
+    <div class="stat"><div class="stat-label">Leaderboard</div><div class="stat-value" id="admin-board">5</div><div class="stat-note">local entries</div></div>
+  </div>
+
+  <div class="grid grid-side" style="margin-top:16px">
+    <div class="panel panel-pad">
+      <div class="panel-head"><h2 class="panel-title">Storage inspector</h2><span class="pill">read-only preview</span></div>
+      <p class="small muted">This is the exact shape exported by the progress page. It contains no server-side identifier.</p>
+      <pre id="admin-storage-json" class="mono" style="max-height:360px;overflow:auto;padding:12px;border:1px solid var(--line);border-radius:3px;background:var(--surface-2);font-size:0.72rem;line-height:1.5"></pre>
+      <p class="hint" style="margin-top:6px"><span id="admin-storage-bytes">—</span> · key <span class="mono tiny">cyberlex</span> · device only</p>
+    </div>
+
+    <div class="stack">
+      <div class="panel panel-pad">
+        <h2 class="panel-title">Move or clear</h2>
+        <div class="btnrow" style="margin-top:10px">
+          <button class="btn" type="button" id="admin-export">Export demo JSON</button>
+          <button class="btn" type="button" id="admin-import-btn">Import JSON</button>
+          <input type="file" id="admin-import-input" accept="application/json,.json" class="sr-only">
+          <button class="btn danger" type="button" id="admin-reset">Clear progress</button>
+        </div>
+        <div id="admin-status" role="status" aria-live="polite" style="margin-top:10px"></div>
+        <p class="hint" style="margin-top:8px">Clearing progress keeps lesson links, theme and display name. The demo reset in the top bar restores the seeded state.</p>
+      </div>
+      <div class="panel panel-pad">
+        <h2 class="panel-title">Privacy statement</h2>
+        <ul class="role-list" style="margin-top:8px">
+          <li>No telemetry, analytics or error reporting.</li>
+          <li>No account, email or learner identifier.</li>
+          <li>No server-side progress record.</li>
+          <li>Export is the only way to move progress between devices.</li>
+          <li>Clearing the browser storage is a first-class action.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="tab-panel" id="admin-panel-gamification" role="tabpanel">
+  <div class="grid grid-side" style="margin-top:16px">
+    <div class="panel panel-pad">
+      <div class="panel-head"><h2 class="panel-title">Points rules</h2><span class="panel-note">computed, not stored</span></div>
+      <div class="table-wrap">
+        <table class="table">
+          <thead><tr><th>Action</th><th>Points</th><th>Cap</th></tr></thead>
+          <tbody>
+            <tr><td>Module completed</td><td class="num">50</td><td class="num">9 × 50</td></tr>
+            <tr><td>Drill answer correct</td><td class="num">10</td><td class="num">27 × 10</td></tr>
+            <tr><td>Lab check correct</td><td class="num">5</td><td class="num">16 × 5</td></tr>
+            <tr><td>Investigation point</td><td class="num">10</td><td class="num">24 × 10</td></tr>
+            <tr><td>Case card reviewed</td><td class="num">5</td><td class="num">12 × 5</td></tr>
+            <tr><td><b>Total</b></td><td class="num"><b id="admin-max-points">1,100</b></td><td></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="hint" style="margin-top:8px">Only the saved score counts, so re-answering a drill cannot farm points. Badges are derived from the same state and do not award points.</p>
+    </div>
+
+    <div class="panel panel-pad">
+      <div class="panel-head"><h2 class="panel-title">Badge catalogue</h2><span class="panel-note" id="admin-badge-count">8 earned</span></div>
+      <div class="table-wrap">
+        <table class="table">
+          <thead><tr><th>Badge</th><th>Trigger</th><th>State</th></tr></thead>
+          <tbody id="admin-badge-table"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel panel-pad" style="margin-top:16px">
+    <div class="panel-head"><h2 class="panel-title">Local leaderboard</h2><span class="panel-note">snapshot rows saved on this browser</span></div>
+    <div class="table-wrap">
+      <table class="table">
+        <thead><tr><th>#</th><th>Learner</th><th>Points</th><th>Modules</th><th>Cases</th><th>Saved</th></tr></thead>
+        <tbody id="admin-board-table"></tbody>
+      </table>
+    </div>
+    <div class="notice" style="margin-top:12px"><b>No ranking service.</b> The leaderboard is a local comparison tool, not a class competition. A learner can edit their own display name; there is no server authority to verify a score.</div>
+  </div>
+</section>
+
+<section class="tab-panel" id="admin-panel-roles" role="tabpanel">
+  <div class="panel panel-pad" style="margin-top:16px">
+    <div class="panel-head"><h2 class="panel-title">Role and permission matrix</h2><a class="small" href="ROLE-SCOPE.md">Full role-scope document →</a></div>
+    <div class="table-wrap">
+      <table class="table">
+        <thead><tr><th>Capability</th><th>Learner</th><th>Faculty</th><th>Admin</th><th>Reviewer</th></tr></thead>
+        <tbody>
+          <tr><td>Read modules, lab, sims, cases</td><td><span class="pill ok">yes</span></td><td><span class="pill ok">yes</span></td><td><span class="pill ok">yes</span></td><td><span class="pill ok">read-only</span></td></tr>
+          <tr><td>Answer drills and save scores</td><td><span class="pill ok">yes</span></td><td><span class="pill">class demo</span></td><td><span class="pill">no</span></td><td><span class="pill">no</span></td></tr>
+          <tr><td>Attach or clear lesson video</td><td><span class="pill">own device</span></td><td><span class="pill ok">yes</span></td><td><span class="pill ok">test/clear</span></td><td><span class="pill">no</span></td></tr>
+          <tr><td>Review case cards</td><td><span class="pill ok">yes</span></td><td><span class="pill ok">yes</span></td><td><span class="pill">inspect</span></td><td><span class="pill">inspect</span></td></tr>
+          <tr><td>Export/import progress</td><td><span class="pill ok">own file</span></td><td><span class="pill">own device</span></td><td><span class="pill ok">demo</span></td><td><span class="pill">no</span></td></tr>
+          <tr><td>See another learner's device data</td><td><span class="pill ox">no</span></td><td><span class="pill ox">no</span></td><td><span class="pill ox">no</span></td><td><span class="pill ox">no</span></td></tr>
+          <tr><td>Edit statutory content</td><td><span class="pill ox">no</span></td><td><span class="pill ox">no</span></td><td><span class="pill ox">no</span></td><td><span class="pill ox">no</span></td></tr>
+          <tr><td>Sign off P7</td><td><span class="pill ox">no</span></td><td><span class="pill ox">no</span></td><td><span class="pill ox">no</span></td><td><span class="pill ok">yes</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="grid grid-2" style="margin-top:16px">
+    <div class="panel panel-pad">
+      <div class="panel-head"><h2 class="panel-title">Audit log</h2><span class="pill">session + seeded</span></div>
+      <div class="timeline" id="admin-audit-full"></div>
+    </div>
+    <div class="panel panel-pad">
+      <h2 class="panel-title">MOM follow-ups</h2>
+      <div class="timeline" style="margin-top:10px">
+        <div class="timeline-item done"><span class="timeline-mark">1</span><div class="timeline-body"><b>Demo email</b><p><a href="DEMO-EMAIL.md">DEMO-EMAIL.md</a> — ready to send to the team leader with the agenda and links.</p></div></div>
+        <div class="timeline-item done"><span class="timeline-mark">2</span><div class="timeline-body"><b>Role-scope document</b><p><a href="ROLE-SCOPE.md">ROLE-SCOPE.md</a> — who sees what, who can do what, and where the boundaries are.</p></div></div>
+        <div class="timeline-item done"><span class="timeline-mark">3</span><div class="timeline-body"><b>P7 acceptance</b><p><a href="reviewer.html">Reviewer page</a> — test matrix, checklist and sign-off.</p></div></div>
+      </div>
+      <div class="notice teal" style="margin-top:12px"><b>Phase-1 rule.</b> No admin panel for content, no accounts, no server. This console is a local demo surface, not a production back office.</div>
+    </div>
+  </div>
+</section>
+
+<div class="modal-backdrop" id="admin-modal" aria-hidden="true">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="admin-modal-title">
+    <div class="modal-head"><h3 id="admin-modal-title">Embed test</h3><button class="modal-close" type="button" data-modal-close>Close</button></div>
+    <div class="modal-body" id="admin-modal-body"></div>
+  </div>
+</div>
+
+<script>
+(function () {
+  var D = window.CyberDemo;
+  var state = D.loadState();
+  var audit = [
+    { time: Date.now() - 1000 * 60 * 42, text: "P7 surfaces checked on this device", note: "cases · progress · videos · gamification" },
+    { time: Date.now() - 1000 * 60 * 31, text: "Video registry inspected", note: "4 linked · 5 clean empty slots" },
+    { time: Date.now() - 1000 * 60 * 18, text: "Progress snapshot exported", note: "versioned JSON · no server" },
+    { time: Date.now() - 1000 * 60 * 7, text: "Role matrix reviewed", note: "learner · faculty · admin · reviewer" }
+  ];
+  function $(id) { return document.getElementById(id); }
+  function esc(value) { return D.escapeHtml(value); }
+  function save() { D.saveState(state); }
+  function addAudit(text, note) { audit.unshift({ time: Date.now(), text: text, note: note }); renderAudit(); }
+
+  function renderStats() {
+    var linked = D.MODULES.filter(function (m) { return !!state.videos[m.id]; }).length;
+    $("admin-linked").textContent = linked + "/" + D.MODULES.length;
+    $("admin-video-health").textContent = linked + " of " + D.MODULES.length + " linked";
+    $("admin-registry-count").textContent = linked + " linked";
+    $("admin-points").textContent = D.computePoints(state);
+    $("admin-points-note").textContent = "of " + D.maxPoints();
+    $("admin-modules").textContent = D.completedModules(state) + "/" + D.MODULES.length;
+    $("admin-cases").textContent = D.reviewedCases(state) + "/" + D.CASES.length;
+    $("admin-board").textContent = (state.board || []).length;
+    $("admin-max-points").textContent = D.maxPoints();
+    $("admin-badge-count").textContent = D.badgesFor(state).filter(function (b) { return b.earned; }).length + " earned";
+  }
+
+  function renderRegistry() {
+    $("registry-body").innerHTML = D.MODULES.map(function (module) {
+      var raw = state.videos[module.id] || "";
+      var provider = raw ? D.providerOf(raw) : null;
+      return '<tr><td><b>' + esc(module.title) + '</b><div class="tiny muted">' + esc(module.tag) + '</div></td>' +
+        '<td>' + (provider ? '<span class="pill teal">' + esc(provider.label) + '</span>' : '<span class="pill">empty</span>') + '</td>' +
+        '<td class="tiny mono" style="max-width:260px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">' + (raw ? esc(raw) : '—') + '</td>' +
+        '<td>' + (raw ? '<span class="pill ok">linked</span>' : '<span class="pill">clean slot</span>') + '</td>' +
+        '<td><div class="btnrow"><button class="btn tiny" type="button" data-embed="' + module.id + '">Test embed</button>' +
+        (raw ? '<button class="btn tiny danger" type="button" data-clear="' + module.id + '">Clear</button>' : '') + '</div></td></tr>';
+    }).join("");
+  }
+
+  function renderData() {
+    var json = JSON.stringify(state, null, 2);
+    $("admin-storage-json").textContent = json;
+    $("admin-storage-bytes").textContent = new Blob([json]).size.toLocaleString() + " bytes";
+    $("admin-storage-size").textContent = new Blob([json]).size.toLocaleString() + " bytes";
+    $("admin-board-table").innerHTML = D.boardWithCurrent(state).map(function (row, index) {
+      return '<tr><td class="num">' + (index + 1) + '</td><td>' + esc(row.name) + '</td><td class="num">' + row.points + '</td><td class="num">' + row.modules + '</td><td class="num">' + row.cases + '</td><td class="tiny muted">' + esc(D.formatDate(row.updatedAt)) + '</td></tr>';
+    }).join("");
+  }
+
+  function renderGamification() {
+    $("admin-badge-table").innerHTML = D.badgesFor(state).map(function (badge) {
+      return '<tr><td><b>' + esc(badge.name) + '</b><div class="tiny muted">' + esc(badge.description) + '</div></td><td class="tiny mono">' + badge.progress + ' / ' + badge.target + '</td><td>' + (badge.earned ? '<span class="pill ok">earned</span>' : '<span class="pill">locked</span>') + '</td></tr>';
+    }).join("");
+  }
+
+  function renderAudit() {
+    var html = audit.slice(0, 6).map(function (entry) {
+      return '<div class="timeline-item done"><span class="timeline-mark">•</span><div class="timeline-body"><b>' + esc(entry.text) + '</b><p>' + esc(entry.note) + ' · ' + esc(new Date(entry.time).toLocaleTimeString("en-IN", { hour: "2-digit", minute: "2-digit" })) + '</p></div></div>';
+    }).join("");
+    $("admin-audit-preview").innerHTML = html;
+    $("admin-audit-full").innerHTML = html;
+  }
+
+  function renderAll() {
+    renderStats();
+    renderRegistry();
+    renderData();
+    renderGamification();
+    renderAudit();
+  }
+
+  function openAdminTab(name) {
+    document.querySelectorAll(".tab[data-admin-tab]").forEach(function (tab) {
+      tab.classList.toggle("active", tab.getAttribute("data-admin-tab") === name);
+      tab.setAttribute("aria-selected", tab.getAttribute("data-admin-tab") === name ? "true" : "false");
+    });
+    document.querySelectorAll(".tab-panel[id^='admin-panel-']").forEach(function (panel) {
+      panel.classList.toggle("active", panel.id === "admin-panel-" + name);
+    });
+  }
+
+  function closeModal() {
+    $("admin-modal").classList.remove("open");
+    $("admin-modal").setAttribute("aria-hidden", "true");
+  }
+
+  function openEmbed(id) {
+    var module = D.MODULES.filter(function (m) { return m.id === id; })[0];
+    var raw = state.videos[id] || "";
+    var parsed = D.embedUrl(raw);
+    $("admin-modal-title").textContent = "Embed test · " + module.title;
+    if (!raw || !parsed) {
+      $("admin-modal-body").innerHTML = '<div class="video-empty" style="margin:0"><div><b>Clean empty slot</b><p>No lesson is linked for ' + esc(module.title) + '. The learner sees the attach state, not a broken player.</p></div></div>';
+    } else if (parsed.kind === "file") {
+      $("admin-modal-body").innerHTML = '<div class="video-frame" style="margin:0;border-radius:3px;overflow:hidden"><video controls playsinline preload="metadata" src="' + esc(parsed.src) + '"></video></div><p class="hint" style="margin-top:8px">Native video · ' + esc(raw) + '</p>';
+    } else {
+      $("admin-modal-body").innerHTML = '<div class="video-frame" style="margin:0;border-radius:3px;overflow:hidden"><iframe src="' + esc(parsed.src) + '" title="Embed test" loading="lazy" allowfullscreen allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" sandbox="allow-scripts allow-same-origin allow-presentation allow-popups allow-popups-to-escape-sandbox"></iframe></div><p class="hint" style="margin-top:8px">Sandboxed frame · ' + esc(parsed.src) + '</p>';
+    }
+    $("admin-modal").classList.add("open");
+    $("admin-modal").setAttribute("aria-hidden", "false");
+  }
+
+  document.querySelectorAll(".tab[data-admin-tab]").forEach(function (tab) {
+    tab.addEventListener("click", function () { openAdminTab(tab.getAttribute("data-admin-tab")); });
+  });
+  document.querySelectorAll("[data-admin-tab]").forEach(function (button) {
+    if (button.classList.contains("tab")) return;
+    button.addEventListener("click", function () { openAdminTab(button.getAttribute("data-admin-tab")); });
+  });
+
+  document.addEventListener("click", function (event) {
+    var embed = event.target.closest("[data-embed]");
+    var clear = event.target.closest("[data-clear]");
+    var close = event.target.closest("[data-modal-close]");
+    if (embed) {
+      openEmbed(embed.getAttribute("data-embed"));
+      addAudit("Embed test opened", embed.getAttribute("data-embed"));
+    } else if (clear) {
+      var id = clear.getAttribute("data-clear");
+      delete state.videos[id];
+      save();
+      renderAll();
+      addAudit("Video slot cleared", id);
+      D.toast("Video slot cleared; the learner will see the empty state.");
+    } else if (close) {
+      closeModal();
+    }
+  });
+  $("admin-modal").addEventListener("click", function (event) {
+    if (event.target === $("admin-modal")) closeModal();
+  });
+  document.addEventListener("keydown", function (event) {
+    if (event.key === "Escape") closeModal();
+  });
+
+  $("admin-export").addEventListener("click", function () {
+    D.downloadText("cyberlex-progress-" + new Date().toISOString().slice(0, 10) + ".json", D.exportPayload(state));
+    addAudit("Progress snapshot exported", "versioned JSON");
+    D.toast("Demo progress exported.");
+  });
+  $("admin-import-btn").addEventListener("click", function () { $("admin-import-input").click(); });
+  $("admin-import-input").addEventListener("change", function (event) {
+    var file = event.target.files && event.target.files[0];
+    if (!file) return;
+    var reader = new FileReader();
+    reader.onload = function () {
+      try {
+        var result = D.parseImport(String(reader.result || ""));
+        state = result.state;
+        save();
+        renderAll();
+        addAudit("Progress snapshot imported", result.warnings.length ? result.warnings.join(" ") : "validated JSON");
+        $("admin-status").innerHTML = '<div class="notice teal"><b>Imported.</b> The local progress file replaced this demo state.</div>';
+        D.toast("Progress imported.");
+      } catch (error) {
+        $("admin-status").innerHTML = '<div class="notice ox"><b>Import failed.</b> ' + esc(error.message) + '</div>';
+        D.toast(error.message, "error");
+      }
+      event.target.value = "";
+    };
+    reader.readAsText(file);
+  });
+  $("admin-reset").addEventListener("click", function () {
+    if (!window.confirm("Clear modules, drills, lab and simulation scores, case reviews and the local leaderboard? Lesson links, theme and display name are kept.")) return;
+    state = D.clearProgress(state);
+    save();
+    renderAll();
+    addAudit("Learning progress cleared", "videos and theme kept");
+    $("admin-status").innerHTML = '<div class="notice teal"><b>Progress cleared.</b> Lesson links and theme were kept.</div>';
+    D.toast("Learning progress cleared.");
+  });
+
+  renderAll();
+})();
+</script>

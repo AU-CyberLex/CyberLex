@@ -32,8 +32,8 @@ export function SimGrid() {
             {s.blurb}
           </p>
           <span className="mt-auto pt-2 text-[0.74rem]" style={{ color: "var(--muted)" }}>
-            {s.steps.length} decisions
-            " · score " + (state.scores["sim-" + s.id] ?? 0) + "/" + s.steps.length * 2
+            {s.steps.length} decisions · score {state.scores["sim-" + s.id] ?? 0}/
+            {s.steps.length * 2}
           </span>
         </Link>
       ))}

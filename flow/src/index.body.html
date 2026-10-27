@@ -1,0 +1,222 @@
+<section class="hero">
+  <div>
+    <div class="eyebrow">Phase-1 · work split · P7</div>
+    <h1 class="hero-title">One studio. Four role views. <em>One end-to-end workflow.</em></h1>
+    <p class="lede">
+      This folder is the P7 demo for the team leader: what each user sees, what each user can do,
+      and how a learner moves from the first page to a saved, exportable progress record. Cases,
+      progress, video slots and gamification are live in every view.
+    </p>
+    <div class="btnrow" style="margin-top:18px">
+      <a class="btn primary" href="client.html">Open the learner demo</a>
+      <a class="btn" href="workflow.html">Open the node workflow</a>
+      <a class="btn ghost" href="README.md">Read the role guide</a>
+    </div>
+    <p class="hint" style="margin-top:12px">
+      Open a file directly, or serve the folder for shared demo state across role pages. No build,
+      account, API key or server is required.
+    </p>
+  </div>
+
+  <aside class="panel panel-pad">
+    <div class="panel-head" style="margin-bottom:10px">
+      <h2 class="panel-title">P7 scope</h2>
+      <span class="pill teal">live</span>
+    </div>
+    <div class="stack-sm">
+      <div class="timeline-item done" style="grid-template-columns:24px 1fr">
+        <span class="timeline-mark">12</span>
+        <div class="timeline-body"><b>Case cards</b><p>Twelve authorities, search, filters, reveal-all and persisted review state.</p></div>
+      </div>
+      <div class="timeline-item done" style="grid-template-columns:24px 1fr">
+        <span class="timeline-mark">↕</span>
+        <div class="timeline-body"><b>Progress</b><p>Reset fixed, export/import, points breakdown and a device-local leaderboard.</p></div>
+      </div>
+      <div class="timeline-item done" style="grid-template-columns:24px 1fr">
+        <span class="timeline-mark">▶</span>
+        <div class="timeline-body"><b>Video slots</b><p>YouTube, Vimeo, Drive and direct files; sandboxed iframe; clean empty state.</p></div>
+      </div>
+      <div class="timeline-item done" style="grid-template-columns:24px 1fr">
+        <span class="timeline-mark">◆</span>
+        <div class="timeline-body"><b>Gamification</b><p>Points, fourteen badges and a local leaderboard — all derived from saved progress.</p></div>
+      </div>
+    </div>
+    <div class="notice teal" style="margin-top:14px">
+      <b>Live demo state.</b> <span id="live-state">Loading…</span>
+    </div>
+  </aside>
+</section>
+
+<section style="margin-top:34px">
+  <div class="panel-head">
+    <h2 class="panel-title">Choose a role</h2>
+    <span class="panel-note">Every page is a standalone HTML file.</span>
+  </div>
+  <div class="role-grid">
+    <a class="role-card" href="client.html">
+      <div class="role-card-top">
+        <div>
+          <div class="role-kicker">Client · P1 / P2 / P4 personas</div>
+          <h3 class="role-name">Learner</h3>
+        </div>
+        <span class="role-icon">L</span>
+      </div>
+      <ul class="role-list">
+        <li>Sees modules, six lab benches, three investigations, twelve case cards and video slots.</li>
+        <li>Can answer drills, run labs and sims, attach a lesson link, review cases and save a score.</li>
+        <li>Owns the device-local progress, points, badges and leaderboard entry.</li>
+      </ul>
+      <div class="role-foot"><span class="pill teal">full learning surface</span><span class="small">Open learner →</span></div>
+    </a>
+
+    <a class="role-card" href="faculty.html">
+      <div class="role-card-top">
+        <div>
+          <div class="role-kicker">Faculty · P3 persona</div>
+          <h3 class="role-name">Instructor</h3>
+        </div>
+        <span class="role-icon">F</span>
+      </div>
+      <ul class="role-list">
+        <li>Sees module readiness, lesson slots, the lab benches and the case deck.</li>
+        <li>Can attach, replace or clear a recording per module; copy a link for a class.</li>
+        <li>Cannot see learner PII or a cloud cohort — there is no server in Phase-1.</li>
+      </ul>
+      <div class="role-foot"><span class="pill amber">video + class prep</span><span class="small">Open faculty →</span></div>
+    </a>
+
+    <a class="role-card" href="admin.html">
+      <div class="role-card-top">
+        <div>
+          <div class="role-kicker">Administrator · local operations</div>
+          <h3 class="role-name">Admin</h3>
+        </div>
+        <span class="role-icon">A</span>
+      </div>
+      <ul class="role-list">
+        <li>Sees video-registry health, local storage state, gamification rules and the role matrix.</li>
+        <li>Can test an embed, export/import progress, reset the demo and review the audit log.</li>
+        <li>Cannot read a learner's device storage from a server — nothing is uploaded.</li>
+      </ul>
+      <div class="role-foot"><span class="pill ox">registry + data</span><span class="small">Open admin →</span></div>
+    </a>
+
+    <a class="role-card" href="reviewer.html">
+      <div class="role-card-top">
+        <div>
+          <div class="role-kicker">Team lead · sign-off</div>
+          <h3 class="role-name">Reviewer</h3>
+        </div>
+        <span class="role-icon">R</span>
+      </div>
+      <ul class="role-list">
+        <li>Sees the P7 scope, acceptance checklist, provider test matrix and demo script.</li>
+        <li>Can tick checks, record a verdict and sign off the demo.</li>
+        <li>Gets one page to verify that the P7 claims match what the other views do.</li>
+      </ul>
+      <div class="role-foot"><span class="pill navy">acceptance</span><span class="small">Open reviewer →</span></div>
+    </a>
+  </div>
+</section>
+
+<section style="margin-top:34px">
+  <div class="panel-head">
+    <h2 class="panel-title">End-to-end at a glance</h2>
+    <a class="small" href="workflow.html">Open the interactive node map →</a>
+  </div>
+  <div class="panel panel-pad">
+    <div class="flow-stage-rail" style="margin-top:0">
+      <div class="flow-stage"><b>01 · Discover</b><span>Visitor lands on the studio and sees the evidence exhibit.</span></div>
+      <div class="flow-stage"><b>02 · Learn</b><span>Module doctrine → video slot → three-question drill.</span></div>
+      <div class="flow-stage"><b>03 · Practise</b><span>Lab benches, branching investigations and twelve case cards.</span></div>
+      <div class="flow-stage"><b>04 · Prove</b><span>Points, badges, local leaderboard, export/import and sign-off.</span></div>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:16px">
+      <span class="pill teal">Landing</span><span class="muted">→</span>
+      <span class="pill teal">Role</span><span class="muted">→</span>
+      <span class="pill teal">Dashboard</span><span class="muted">→</span>
+      <span class="pill teal">Module</span><span class="muted">→</span>
+      <span class="pill amber">Video</span><span class="muted">→</span>
+      <span class="pill teal">Drill</span><span class="muted">→</span>
+      <span class="pill navy">Lab</span><span class="muted">→</span>
+      <span class="pill ox">Sims</span><span class="muted">→</span>
+      <span class="pill amber">Cases</span><span class="muted">→</span>
+      <span class="pill teal">Progress</span><span class="muted">→</span>
+      <span class="pill teal">Badges</span><span class="muted">→</span>
+      <span class="pill ox">Export</span>
+    </div>
+  </div>
+</section>
+
+<section style="margin-top:34px">
+  <div class="panel-head">
+    <h2 class="panel-title">P7 acceptance at a glance</h2>
+    <span class="panel-note">The reviewer page has the full checklist and test matrix.</span>
+  </div>
+  <div class="panel">
+    <div class="table-wrap">
+      <table class="table">
+        <thead><tr><th>P7 item</th><th>What is demonstrated</th><th>Status</th></tr></thead>
+        <tbody>
+          <tr><td><b>Cases</b></td><td>12 cards, search, reviewed/unreviewed filters, reveal all, persisted flip state, +5 points per card.</td><td><span class="pill ok">done</span></td></tr>
+          <tr><td><b>Progress</b></td><td>Module/lab/sim/case totals, reset that keeps videos and theme, versioned JSON export/import.</td><td><span class="pill ok">done</span></td></tr>
+          <tr><td><b>Videos</b></td><td>YouTube, Vimeo, Drive and direct-file slots; sandboxed iframe; empty slot is a clean attach state.</td><td><span class="pill ok">done</span></td></tr>
+          <tr><td><b>Gamification</b></td><td>Points breakdown, 14 badges, levels, local leaderboard, no double-awarding.</td><td><span class="pill ok">done</span></td></tr>
+          <tr><td><b>MOM follow-ups</b></td><td><a href="DEMO-EMAIL.md">Demo email</a> and <a href="ROLE-SCOPE.md">role-scope document</a>.</td><td><span class="pill ok">done</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<section style="margin-top:34px">
+  <div class="grid grid-2">
+    <div class="panel panel-pad">
+      <h2 class="panel-title">Five-minute demo path</h2>
+      <div class="timeline" style="margin-top:10px">
+        <div class="timeline-item done"><span class="timeline-mark">1</span><div class="timeline-body"><b>Learner overview</b><p>Show points, level, next action and the case-review count.</p></div></div>
+        <div class="timeline-item done"><span class="timeline-mark">2</span><div class="timeline-body"><b>Case deck</b><p>Search “Anvar”, reveal a card, watch the count and points move.</p></div></div>
+        <div class="timeline-item done"><span class="timeline-mark">3</span><div class="timeline-body"><b>Video slot</b><p>Play a linked lesson, then attach a sample to an empty slot.</p></div></div>
+        <div class="timeline-item done"><span class="timeline-mark">4</span><div class="timeline-body"><b>Progress</b><p>Export the JSON, clear progress, import it back; show that videos survive the reset.</p></div></div>
+        <div class="timeline-item done"><span class="timeline-mark">5</span><div class="timeline-body"><b>Workflow + sign-off</b><p>Play the node walkthrough and tick the reviewer checklist.</p></div></div>
+      </div>
+    </div>
+    <div class="panel panel-pad">
+      <h2 class="panel-title">What is real, what is seeded</h2>
+      <p class="small muted">
+        The UI, scoring rules, badge logic, export/import format, video normalisation and sandbox
+        policy mirror the Phase-1 app. The learner name, cohort rows and some scores are seeded so
+        the demo has something to show on first open. Reset the demo from the top bar at any time.
+      </p>
+      <div class="notice" style="margin-top:10px">
+        <b>No accounts in Phase-1.</b> Role pages are scopes for the demo, not an authentication
+        system. A real deployment has no server-side learner record, so there is no cohort analytics
+        or cross-device sync.
+      </div>
+      <div class="btnrow" style="margin-top:12px">
+        <a class="btn" href="README.md">README</a>
+        <a class="btn" href="ROLE-SCOPE.md">Role scope</a>
+        <a class="btn" href="DEMO-EMAIL.md">Demo email</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+(function () {
+  var D = window.CyberDemo;
+  var state = D.loadState();
+  var points = D.computePoints(state);
+  var level = D.levelFor(points);
+  var modules = D.completedModules(state);
+  var cases = D.reviewedCases(state);
+  var badges = D.badgesFor(state).filter(function (b) { return b.earned; }).length;
+  var el = document.getElementById("live-state");
+  if (el) {
+    el.innerHTML =
+      "<b>" + points + "</b> pts · Level " + level.level + " " + level.name +
+      " · " + modules + "/" + D.MODULES.length + " modules · " + cases + "/" + D.CASES.length +
+      " cases · " + badges + " badges";
+  }
+})();
+</script>

@@ -1,0 +1,566 @@
+<section class="hero" style="padding-bottom:22px">
+  <div>
+    <div class="eyebrow">Learner / client view · P1, P2 and P4 personas</div>
+    <h1 class="hero-title" style="max-width:20ch">What you see. <em>What you can do.</em></h1>
+    <p class="lede">
+      A learner opens one studio, not nine disconnected quizzes. Doctrine comes first, then a video
+      lesson, then an applied drill; the lab and investigations make the procedure concrete; the
+      case deck anchors the authorities. Every completed action updates progress, points and badges
+      on this device.
+    </p>
+    <div class="btnrow" style="margin-top:16px">
+      <button class="btn primary" type="button" data-open-tab="cases">Review case cards</button>
+      <button class="btn" type="button" data-open-tab="videos">Test a video slot</button>
+      <button class="btn ghost" type="button" data-open-tab="progress">See progress + export</button>
+    </div>
+  </div>
+  <aside class="panel panel-pad" style="display:flex;gap:20px;align-items:center">
+    <div class="ring" id="ring" style="--p:62">
+      <div><b id="ring-pct">62%</b><span>modules</span></div>
+    </div>
+    <div style="min-width:0">
+      <div class="stat-label">Points</div>
+      <div class="stat-value" id="stat-points" style="color:var(--ox)">620</div>
+      <div class="stat-note" id="stat-level">Level 3 · Junior counsel</div>
+      <div class="stat-note" style="margin-top:6px"><span id="stat-badges">8</span> badges · <span id="stat-cases">8</span>/12 cases</div>
+    </div>
+  </aside>
+</section>
+
+<div class="tabs" style="margin-top:22px" role="tablist" aria-label="Learner views">
+  <button class="tab active" type="button" data-tab="overview" role="tab" aria-selected="true">Overview</button>
+  <button class="tab" type="button" data-tab="cases" role="tab" aria-selected="false">Cases <span class="pill amber" id="tab-case-count">8</span></button>
+  <button class="tab" type="button" data-tab="videos" role="tab" aria-selected="false">Videos</button>
+  <button class="tab" type="button" data-tab="progress" role="tab" aria-selected="false">Progress</button>
+  <button class="tab" type="button" data-tab="leaderboard" role="tab" aria-selected="false">Leaderboard</button>
+</div>
+
+<section class="tab-panel active" id="tab-overview" role="tabpanel">
+  <div class="grid grid-side" style="margin-top:16px">
+    <div class="stack">
+      <div class="panel panel-pad">
+        <div class="panel-head">
+          <div>
+            <h2 class="panel-title">Welcome back, <span id="learner-name">Aarav</span></h2>
+            <p class="panel-note">Your next best action is chosen from saved progress, not a fixed syllabus order.</p>
+          </div>
+          <span class="pill teal">local only</span>
+        </div>
+        <div id="next-action" class="notice teal" style="margin-bottom:14px"></div>
+        <div class="grid grid-3">
+          <div class="stat"><div class="stat-label">Modules</div><div class="stat-value" id="ov-modules">5/9</div><div class="stat-note" id="ov-modules-note">3 left</div></div>
+          <div class="stat"><div class="stat-label">Lab checks</div><div class="stat-value" id="ov-labs">2/2</div><div class="stat-note">volatility + chain</div></div>
+          <div class="stat"><div class="stat-label">Investigations</div><div class="stat-value" id="ov-sims">2/3</div><div class="stat-note">one verdict left</div></div>
+        </div>
+        <div style="margin-top:16px">
+          <div class="panel-head" style="margin-bottom:6px"><b class="small">Module completion</b><span class="tiny muted" id="ov-module-count">5 of 9</span></div>
+          <div class="progress"><i id="ov-module-bar" style="width:56%"></i></div>
+          <div id="overview-module-list" style="margin-top:8px"></div>
+        </div>
+      </div>
+
+      <div class="panel panel-pad">
+        <div class="panel-head"><h2 class="panel-title">Badges earned</h2><button class="btn tiny ghost" type="button" data-open-tab="progress">All badges →</button></div>
+        <div class="badge-grid" id="overview-badges"></div>
+      </div>
+    </div>
+
+    <div class="stack">
+      <div class="panel panel-pad">
+        <div class="panel-head"><h2 class="panel-title">Local leaderboard</h2><button class="btn tiny ghost" type="button" data-open-tab="leaderboard">Open →</button></div>
+        <div id="overview-leaderboard"></div>
+        <p class="hint" style="margin-top:8px">Saved on this browser only. No class cloud, no server.</p>
+      </div>
+
+      <div class="panel panel-pad">
+        <h2 class="panel-title">What you can do</h2>
+        <ul class="role-list" style="margin-top:8px">
+          <li>Read doctrine and sit the three-question drill in each module.</li>
+          <li>Attach a lesson link from YouTube, Vimeo, Drive or a direct file.</li>
+          <li>Run the six lab benches and three branching investigations.</li>
+          <li>Review case cards, collect points and badges, save a local score.</li>
+          <li>Export progress as JSON, import it on another device, or clear it.</li>
+        </ul>
+        <div class="notice" style="margin-top:10px"><b>What you cannot do.</b> There is no sign-in, no cloud sync, no public profile and no way to see another learner's device data.</div>
+      </div>
+
+      <div class="panel panel-pad">
+        <div class="panel-head"><h2 class="panel-title">Recent activity</h2><span class="pill">this device</span></div>
+        <div class="timeline" id="activity"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="tab-panel" id="tab-cases" role="tabpanel">
+  <div class="panel panel-pad" style="margin-top:16px">
+    <div class="panel-head">
+      <div>
+        <h2 class="panel-title">Landmark authorities</h2>
+        <p class="panel-note">Tap a card to reveal the holding. A revealed card is marked reviewed and is worth 5 points.</p>
+      </div>
+      <span class="pill amber" id="case-count">8 of 12 reviewed</span>
+    </div>
+    <div class="progress amber" style="margin-bottom:14px"><i id="case-bar" style="width:66%"></i></div>
+    <div class="case-toolbar">
+      <label class="field grow"><span>Search authorities</span><input class="input" id="case-search" type="search" placeholder="Case, citation or holding…"></label>
+      <div class="tabs" id="case-filter" style="padding:3px" role="group" aria-label="Case filter">
+        <button class="tab active" type="button" data-filter="all">All</button>
+        <button class="tab" type="button" data-filter="reviewed">Reviewed</button>
+        <button class="tab" type="button" data-filter="unreviewed">Unreviewed</button>
+      </div>
+      <div class="btnrow">
+        <button class="btn tiny" type="button" id="case-reveal-all">Reveal all</button>
+        <button class="btn tiny ghost" type="button" id="case-hide-all">Hide all</button>
+      </div>
+    </div>
+    <div class="case-grid" id="case-grid"></div>
+    <p class="hint" style="margin-top:14px">Twelve cards, one holding each. Read the full judgment before relying on any proposition — these are study prompts, not a digest.</p>
+  </div>
+</section>
+
+<section class="tab-panel" id="tab-videos" role="tabpanel">
+  <div class="panel-head" style="margin-top:16px">
+    <div>
+      <h2 class="panel-title">Lesson video slots</h2>
+      <p class="panel-note">One slot per module. Linked videos play in a sandbox; an empty slot is a clean attach state, never a broken player.</p>
+    </div>
+    <span class="pill teal">4 providers tested</span>
+  </div>
+  <div class="video-grid" id="video-grid"></div>
+  <div class="panel panel-pad" style="margin-top:16px">
+    <div class="panel-head"><h2 class="panel-title">Provider test matrix</h2><span class="panel-note">Same normalisation as the app</span></div>
+    <div class="table-wrap">
+      <table class="table">
+        <thead><tr><th>Provider</th><th>Accepted input</th><th>Normalised player</th><th>Demo slot</th></tr></thead>
+        <tbody>
+          <tr><td><b>YouTube</b></td><td class="mono tiny">youtube.com/watch?v=… · youtu.be/… · shorts/…</td><td class="mono tiny">youtube-nocookie.com/embed/…</td><td><span class="pill ok">playing</span></td></tr>
+          <tr><td><b>Vimeo</b></td><td class="mono tiny">vimeo.com/… · player.vimeo.com/video/…</td><td class="mono tiny">player.vimeo.com/video/…</td><td><span class="pill ok">playing</span></td></tr>
+          <tr><td><b>Google Drive</b></td><td class="mono tiny">drive.google.com/file/d/…/view</td><td class="mono tiny">drive.google.com/file/d/…/preview</td><td><span class="pill ok">playing</span></td></tr>
+          <tr><td><b>Direct file</b></td><td class="mono tiny">https://…/lesson.mp4 · .webm · .ogg</td><td class="mono tiny">&lt;video controls&gt;</td><td><span class="pill ok">playing</span></td></tr>
+          <tr><td><b>Empty</b></td><td class="mono tiny">blank</td><td class="mono tiny">clean attach state</td><td><span class="pill">attach</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="notice" style="margin-top:12px"><b>Sandbox policy.</b> Iframes carry <span class="mono tiny">sandbox="allow-scripts allow-same-origin allow-presentation allow-popups"</span>, plus a strict referrer policy. The player cannot navigate the parent page or read its storage.</div>
+  </div>
+</section>
+
+<section class="tab-panel" id="tab-progress" role="tabpanel">
+  <div class="grid grid-4" style="margin-top:16px">
+    <div class="stat"><div class="stat-label">Points</div><div class="stat-value" id="points-total" style="color:var(--ox)">620</div><div class="stat-note" id="points-max-note">of 1,100 available</div></div>
+    <div class="stat"><div class="stat-label">Level</div><div class="stat-value" id="progress-level">3</div><div class="stat-note" id="progress-level-name">Junior counsel</div></div>
+    <div class="stat"><div class="stat-label">Modules</div><div class="stat-value" id="progress-modules">5/9</div><div class="stat-note">completion</div></div>
+    <div class="stat"><div class="stat-label">Badges</div><div class="stat-value" id="progress-badges">8/14</div><div class="stat-note">earned</div></div>
+  </div>
+
+  <div class="grid grid-2" style="margin-top:16px">
+    <div class="panel panel-pad">
+      <div class="panel-head"><h2 class="panel-title">Points breakdown</h2><span class="panel-note">computed, never double-awarded</span></div>
+      <div id="points-rows"></div>
+      <p class="hint" style="margin-top:10px">Only the saved score counts. Re-answering a drill cannot farm points.</p>
+    </div>
+    <div class="panel panel-pad">
+      <div class="panel-head"><h2 class="panel-title">Lab and investigation scores</h2><span class="panel-note">stored per device</span></div>
+      <div id="lab-sim"></div>
+    </div>
+  </div>
+
+  <div class="panel panel-pad" style="margin-top:16px">
+    <div class="panel-head"><h2 class="panel-title">All badges</h2><span class="panel-note" id="badge-count-note">8 of 14</span></div>
+    <div class="badge-grid" id="badge-grid"></div>
+  </div>
+
+  <div class="panel panel-pad" style="margin-top:16px">
+    <div class="panel-head"><h2 class="panel-title">Move or clear your progress</h2><span class="pill">versioned JSON</span></div>
+    <p class="small muted">Export before changing device. Import replaces the learning state on this browser; lesson links, theme, display name and leaderboard are included in the file.</p>
+    <div class="btnrow" style="margin-top:10px">
+      <button class="btn" type="button" id="export-btn">Export progress (.json)</button>
+      <button class="btn" type="button" id="import-btn">Import progress</button>
+      <input type="file" id="import-input" accept="application/json,.json" class="sr-only">
+      <button class="btn danger" type="button" id="reset-btn">Clear all saved progress</button>
+    </div>
+    <p class="hint" style="margin-top:8px">Clearing progress keeps lesson links, theme and display name. Export first if you want a copy.</p>
+    <div id="import-status" role="status" aria-live="polite" style="margin-top:10px"></div>
+  </div>
+
+  <div class="panel panel-pad" style="margin-top:16px">
+    <div class="panel-head"><h2 class="panel-title">Module ledger</h2><span class="panel-note">score / 3</span></div>
+    <div id="module-list"></div>
+  </div>
+</section>
+
+<section class="tab-panel" id="tab-leaderboard" role="tabpanel">
+  <div class="panel panel-pad" style="margin-top:16px">
+    <div class="panel-head">
+      <div><h2 class="panel-title">Local leaderboard</h2><p class="panel-note">Scores saved on this browser only. Nothing is shared between devices or learners.</p></div>
+      <span class="pill teal" id="leader-count">5 entries</span>
+    </div>
+    <div class="input-row" style="align-items:end">
+      <label class="field" style="flex:1;min-width:220px"><span>Display name</span><input class="input" id="leader-name" maxlength="60" placeholder="e.g. Aarav Mehta"></label>
+      <button class="btn primary" type="button" id="leader-save">Save score</button>
+    </div>
+    <div id="leader-table" style="margin-top:14px"></div>
+    <div class="notice" style="margin-top:12px"><b>Local means local.</b> A saved row is a snapshot. Finish more work, then save again to update your row.</div>
+  </div>
+</section>
+
+<script>
+(function () {
+  var D = window.CyberDemo;
+  var state = D.loadState();
+  var activeFilter = "all";
+  var editingVideo = null;
+  var SAMPLE = {
+    youtube: "https://www.youtube.com/watch?v=cQYACLLAPOw",
+    vimeo: "https://vimeo.com/76979871",
+    drive: "https://drive.google.com/file/d/1yKbrlk-2yuzVTX3P33kKEV4wMoJRMwMW/view",
+    mp4: "https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4"
+  };
+
+  function save() { D.saveState(state); }
+  function $(id) { return document.getElementById(id); }
+  function esc(value) { return D.escapeHtml(value); }
+
+  function badgeTile(badge) {
+    var pct = badge.target ? Math.round((badge.progress / badge.target) * 100) : 0;
+    return '<div class="badge-tile ' + badge.tone + (badge.earned ? " earned" : "") + '">' +
+      '<div class="badge-top"><span class="badge-mark">' + esc(badge.mark) + '</span><div><div class="badge-name">' + esc(badge.name) + (badge.earned ? ' <span class="tiny mono">earned</span>' : "") + '</div><div class="badge-desc">' + esc(badge.description) + '</div></div></div>' +
+      '<div class="badge-progress"><i style="width:' + pct + '%"></i></div>' +
+      '<div class="badge-meta">' + badge.progress + " / " + badge.target + "</div></div>";
+  }
+
+  function leaderRows(rows, compact) {
+    if (!rows.length) return '<p class="hint">No local scores saved yet. Finish some work and save a score.</p>';
+    return rows.slice(0, compact ? 4 : 25).map(function (row, index) {
+      var you = state.profile && row.name.trim().toLowerCase() === state.profile.trim().toLowerCase();
+      return '<div class="leader-row' + (you ? " you" : "") + '">' +
+        '<span class="leader-rank">' + (index + 1) + "</span>" +
+        '<span class="leader-name">' + esc(row.name) + (you ? ' <small>you</small>' : "") + "</span>" +
+        '<span class="leader-points">' + row.points + " pts</span></div>";
+    }).join("");
+  }
+
+  function renderHeader() {
+    var points = D.computePoints(state);
+    var level = D.levelFor(points);
+    var modules = D.completedModules(state);
+    var cases = D.reviewedCases(state);
+    var badges = D.badgesFor(state).filter(function (b) { return b.earned; }).length;
+    var pct = Math.round((modules / D.MODULES.length) * 100);
+    $("stat-points").textContent = points;
+    $("stat-level").textContent = "Level " + level.level + " · " + level.name;
+    $("stat-badges").textContent = badges;
+    $("stat-cases").textContent = cases;
+    $("ring").style.setProperty("--p", pct);
+    $("ring-pct").textContent = pct + "%";
+    $("tab-case-count").textContent = cases;
+    $("learner-name").textContent = (state.profile || "Learner").split(" ")[0];
+  }
+
+  function renderOverview() {
+    var points = D.computePoints(state);
+    var modules = D.completedModules(state);
+    var cases = D.reviewedCases(state);
+    var sims = D.SIMS.filter(function (s) { return state.scores["sim-" + s.id] !== undefined; }).length;
+    var labs = (state.scores.vol !== undefined ? 1 : 0) + (state.scores.coc !== undefined ? 1 : 0);
+    $("ov-modules").textContent = modules + "/" + D.MODULES.length;
+    $("ov-modules-note").textContent = (D.MODULES.length - modules) + " left";
+    $("ov-labs").textContent = labs + "/2";
+    $("ov-sims").textContent = sims + "/" + D.SIMS.length;
+    $("ov-module-count").textContent = modules + " of " + D.MODULES.length;
+    $("ov-module-bar").style.width = Math.round((modules / D.MODULES.length) * 100) + "%";
+
+    var next;
+    if (modules < D.MODULES.length) {
+      next = "Next: finish a module drill. " + (D.MODULES.length - modules) + " modules remain; each is worth up to 80 points.";
+    } else if (cases < D.CASES.length) {
+      next = "Next: review the case deck. " + (D.CASES.length - cases) + " cards remain, worth 5 points each.";
+    } else if (sims < D.SIMS.length) {
+      next = "Next: finish the remaining investigation. Scores are saved as sim-&lt;id&gt;.";
+    } else {
+      next = "Everything is complete. Export the progress file and save a local leaderboard score.";
+    }
+    $("next-action").innerHTML = "<b>" + next + "</b>";
+
+    $("overview-module-list").innerHTML = D.MODULES.map(function (module) {
+      var done = !!state.done[module.id];
+      var score = state.scores[module.id];
+      return '<div class="leader-row" style="grid-template-columns:16px 1fr auto;padding:6px 0">' +
+        '<span style="width:7px;height:7px;border-radius:50%;background:' + (done ? "var(--teal)" : "var(--line)") + '"></span>' +
+        '<span class="leader-name">' + esc(module.title) + '</span>' +
+        '<span class="leader-points">' + (score !== undefined ? score + "/" + module.quiz : "—") + "</span></div>";
+    }).join("");
+
+    $("overview-badges").innerHTML = D.badgesFor(state).filter(function (b) { return b.earned; }).slice(0, 6).map(badgeTile).join("") ||
+      '<p class="hint">No badges yet. Complete a module to start.</p>';
+
+    $("overview-leaderboard").innerHTML = leaderRows(D.boardWithCurrent(state), true);
+
+    var activity = [
+      { mark: "3", title: "Scored 3/3 on the access drill", note: "Module complete · 80 pts" },
+      { mark: "8", title: "Sequenced all eight volatile sources", note: "Lab · volatility order" },
+      { mark: "7", title: "Reached 7/8 on the departing associate", note: "Investigation · saved as sim-exfil" },
+      { mark: "8", title: "Reviewed eight of twelve authorities", note: "Case deck · 40 pts" },
+      { mark: "✓", title: "Saved a local leaderboard score", note: "This browser only" }
+    ];
+    $("activity").innerHTML = activity.map(function (item) {
+      return '<div class="timeline-item done"><span class="timeline-mark">' + esc(item.mark) + '</span><div class="timeline-body"><b>' + esc(item.title) + '</b><p>' + esc(item.note) + "</p></div></div>";
+    }).join("");
+  }
+
+  function renderCases() {
+    var reviewed = D.reviewedCases(state);
+    $("case-count").textContent = reviewed + " of " + D.CASES.length + " reviewed";
+    $("case-bar").style.width = Math.round((reviewed / D.CASES.length) * 100) + "%";
+    var query = ($("case-search").value || "").trim().toLowerCase();
+    var visible = D.CASES.map(function (item, index) { return { item: item, index: index }; }).filter(function (entry) {
+      var text = (entry.item.n + " " + entry.item.c + " " + entry.item.h).toLowerCase();
+      var isReviewed = !!state.flipped[entry.index];
+      var matchesFilter = activeFilter === "all" || (activeFilter === "reviewed" ? isReviewed : !isReviewed);
+      return matchesFilter && (!query || text.indexOf(query) !== -1);
+    });
+    if (!visible.length) {
+      $("case-grid").innerHTML = '<p class="hint" style="grid-column:1/-1;padding:20px;border:1px dashed var(--line);text-align:center">No authorities match that search and filter.</p>';
+      return;
+    }
+    $("case-grid").innerHTML = visible.map(function (entry) {
+      var c = entry.item;
+      var flipped = !!state.flipped[entry.index];
+      return '<button class="case-card' + (flipped ? " revealed" : "") + '" type="button" data-case="' + entry.index + '" aria-pressed="' + flipped + '">' +
+        '<div class="case-top"><h3 class="case-name">' + esc(c.n) + '</h3><span class="pill ' + (flipped ? "teal" : "") + '">' + (flipped ? "reviewed" : "open") + "</span></div>" +
+        '<div class="case-cite">' + esc(c.c) + "</div>" +
+        '<p class="case-holding">' + (flipped ? esc(c.h) : "Tap to reveal the holding.") + "</p>" +
+        '<div class="case-foot">' + (flipped ? "Reviewed · +5 pts" : "Unreviewed · +5 pts when opened") + "</div></button>";
+    }).join("");
+  }
+
+  function videoCard(module) {
+    var raw = state.videos[module.id] || "";
+    var parsed = D.embedUrl(raw);
+    var provider = D.providerOf(raw);
+    var isEditing = editingVideo === module.id;
+    var head = '<div class="video-card-head"><div><h3 class="video-card-title">' + esc(module.title) + '</h3><div class="video-card-sub">' + esc(module.tag) + " · " + esc(module.video) + "</div></div>" +
+      '<span class="pill ' + (raw ? "teal" : "") + '">' + (raw ? provider.label : "empty") + "</span></div>";
+
+    var media = "";
+    if (raw && parsed && !isEditing) {
+      media = parsed.kind === "file"
+        ? '<div class="video-frame"><video controls playsinline preload="metadata" src="' + esc(parsed.src) + '"></video></div>'
+        : '<div class="video-frame"><iframe src="' + esc(parsed.src) + '" title="' + esc(module.video) + '" loading="lazy" allowfullscreen allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" sandbox="allow-scripts allow-same-origin allow-presentation allow-popups allow-popups-to-escape-sandbox"></iframe></div>';
+    } else if (!raw) {
+      media = '<div class="video-empty"><div><b>No lesson linked yet</b><p>Paste a YouTube, Vimeo, Google Drive or direct .mp4/.webm/.ogg link. The slot stays clean until a valid link is attached.</p></div></div>';
+    }
+
+    var form = "";
+    if (isEditing || !raw) {
+      form = '<div class="video-form">' +
+        '<div class="input-row"><input class="input" id="vid-input-' + module.id + '" value="' + esc(raw) + '" placeholder="https://youtu.be/…" aria-label="Lesson link for ' + esc(module.title) + '">' +
+        '<button class="btn primary tiny" type="button" data-video-save="' + module.id + '">' + (raw ? "Save" : "Attach") + "</button>" +
+        (isEditing ? '<button class="btn tiny ghost" type="button" data-video-cancel="' + module.id + '">Cancel</button>' : "") + "</div>" +
+        '<div class="sample-row"><span class="tiny muted" style="align-self:center">Try:</span>' +
+        '<button class="btn tiny ghost" type="button" data-video-sample="' + module.id + '" data-sample="youtube">YouTube</button>' +
+        '<button class="btn tiny ghost" type="button" data-video-sample="' + module.id + '" data-sample="vimeo">Vimeo</button>' +
+        '<button class="btn tiny ghost" type="button" data-video-sample="' + module.id + '" data-sample="drive">Drive</button>' +
+        '<button class="btn tiny ghost" type="button" data-video-sample="' + module.id + '" data-sample="mp4">mp4</button></div>' +
+        '<p class="provider-note">The link stays on this device and overrides any shipped default.</p></div>';
+    }
+
+    var actions = "";
+    if (raw && !isEditing) {
+      actions = '<div class="video-actions">' +
+        '<button class="btn tiny" type="button" data-video-change="' + module.id + '">Change link</button>' +
+        '<button class="btn tiny ghost" type="button" data-video-copy="' + module.id + '">Copy link</button>' +
+        '<a class="btn tiny ghost" href="' + esc(raw) + '" target="_blank" rel="noreferrer">Open source</a>' +
+        '<button class="btn tiny danger" type="button" data-video-remove="' + module.id + '">Remove</button></div>';
+    }
+    return '<article class="video-card">' + head + media + form + actions + "</article>";
+  }
+
+  function renderVideos() {
+    $("video-grid").innerHTML = D.MODULES.map(videoCard).join("");
+  }
+
+  function renderProgress() {
+    var points = D.computePoints(state);
+    var level = D.levelFor(points);
+    var badges = D.badgesFor(state);
+    var earned = badges.filter(function (b) { return b.earned; }).length;
+    $("points-total").textContent = points;
+    $("points-max-note").textContent = "of " + D.maxPoints() + " available";
+    $("progress-level").textContent = level.level;
+    $("progress-level-name").textContent = level.name;
+    $("progress-modules").textContent = D.completedModules(state) + "/" + D.MODULES.length;
+    $("progress-badges").textContent = earned + "/" + badges.length;
+    $("badge-count-note").textContent = earned + " of " + badges.length;
+
+    $("points-rows").innerHTML = D.pointRows(state).map(function (row) {
+      var pct = row.max ? Math.round((row.earned / row.max) * 100) : 0;
+      return '<div style="padding:9px 0;border-bottom:1px solid var(--line)">' +
+        '<div style="display:flex;justify-content:space-between;gap:10px"><span class="small">' + esc(row.label) + '</span><span class="mono tiny">' + row.earned + " / " + row.max + "</span></div>" +
+        '<div class="progress" style="margin-top:5px"><i style="width:' + pct + '%"></i></div>' +
+        '<div class="tiny muted" style="margin-top:4px">' + esc(row.detail) + "</div></div>";
+    }).join("");
+
+    var labRows = [
+      ["Order of volatility", state.scores.vol !== undefined ? state.scores.vol + "/" + D.VOL_LEN : "—"],
+      ["Chain of custody", state.scores.coc !== undefined ? state.scores.coc + "/" + D.COC_LEN : "—"]
+    ];
+    D.SIMS.forEach(function (sim) {
+      var score = state.scores["sim-" + sim.id];
+      labRows.push([sim.title, score !== undefined ? score + "/" + (sim.steps * 2) : "—"]);
+    });
+    $("lab-sim").innerHTML = labRows.map(function (row) {
+      return '<div class="leader-row" style="grid-template-columns:1fr auto"><span class="leader-name">' + esc(row[0]) + '</span><span class="leader-points">' + esc(row[1]) + "</span></div>";
+    }).join("");
+
+    $("badge-grid").innerHTML = badges.map(badgeTile).join("");
+
+    $("module-list").innerHTML = D.MODULES.map(function (module) {
+      var done = !!state.done[module.id];
+      var score = state.scores[module.id];
+      return '<div class="leader-row" style="grid-template-columns:16px 1fr auto;padding:6px 0">' +
+        '<span style="width:7px;height:7px;border-radius:50%;background:' + (done ? "var(--teal)" : "var(--line)") + '"></span>' +
+        '<span class="leader-name">' + esc(module.title) + '</span>' +
+        '<span class="leader-points">' + (score !== undefined ? score + "/" + module.quiz : "—") + "</span></div>";
+    }).join("");
+  }
+
+  function renderLeaderboard() {
+    var rows = D.boardWithCurrent(state);
+    $("leader-count").textContent = rows.length + (rows.length === 1 ? " entry" : " entries");
+    $("leader-table").innerHTML = leaderRows(rows, false);
+    if (document.activeElement !== $("leader-name")) $("leader-name").value = state.profile || "";
+  }
+
+  function renderAll() {
+    renderHeader();
+    renderOverview();
+    renderCases();
+    renderVideos();
+    renderProgress();
+    renderLeaderboard();
+  }
+
+  function openTab(name) {
+    document.querySelectorAll(".tab[data-tab]").forEach(function (tab) {
+      tab.classList.toggle("active", tab.getAttribute("data-tab") === name);
+      tab.setAttribute("aria-selected", tab.getAttribute("data-tab") === name ? "true" : "false");
+    });
+    document.querySelectorAll(".tab-panel").forEach(function (panel) {
+      panel.classList.toggle("active", panel.id === "tab-" + name);
+    });
+    if (history.replaceState) history.replaceState(null, "", "#" + name);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  document.querySelectorAll(".tab[data-tab]").forEach(function (tab) {
+    tab.addEventListener("click", function () { openTab(tab.getAttribute("data-tab")); });
+  });
+  document.querySelectorAll("[data-open-tab]").forEach(function (button) {
+    button.addEventListener("click", function () { openTab(button.getAttribute("data-open-tab")); });
+  });
+
+  $("case-search").addEventListener("input", renderCases);
+  document.querySelectorAll("#case-filter .tab").forEach(function (button) {
+    button.addEventListener("click", function () {
+      activeFilter = button.getAttribute("data-filter");
+      document.querySelectorAll("#case-filter .tab").forEach(function (b) { b.classList.toggle("active", b === button); });
+      renderCases();
+    });
+  });
+  $("case-reveal-all").addEventListener("click", function () {
+    D.CASES.forEach(function (item, index) { state.flipped[index] = true; });
+    save(); renderAll(); D.toast("All twelve case cards marked reviewed.");
+  });
+  $("case-hide-all").addEventListener("click", function () {
+    D.CASES.forEach(function (item, index) { state.flipped[index] = false; });
+    save(); renderAll(); D.toast("Case cards reset to unreviewed.");
+  });
+  $("case-grid").addEventListener("click", function (event) {
+    var card = event.target.closest("[data-case]");
+    if (!card) return;
+    var index = Number(card.getAttribute("data-case"));
+    state.flipped[index] = !state.flipped[index];
+    save(); renderAll();
+    D.toast(state.flipped[index] ? "Case reviewed · +5 points." : "Case hidden · 5 points removed.");
+  });
+
+  $("video-grid").addEventListener("click", function (event) {
+    var saveButton = event.target.closest("[data-video-save]");
+    var changeButton = event.target.closest("[data-video-change]");
+    var cancelButton = event.target.closest("[data-video-cancel]");
+    var removeButton = event.target.closest("[data-video-remove]");
+    var copyButton = event.target.closest("[data-video-copy]");
+    var sampleButton = event.target.closest("[data-video-sample]");
+    if (saveButton) {
+      var id = saveButton.getAttribute("data-video-save");
+      var input = $("vid-input-" + id);
+      var raw = input ? input.value.trim() : "";
+      if (!raw || !D.embedUrl(raw)) {
+        D.toast("Paste a supported YouTube, Vimeo, Google Drive or direct video link.", "error");
+        return;
+      }
+      state.videos[id] = raw; save(); editingVideo = null; renderVideos();
+      D.toast("Lesson link attached on this device.");
+    } else if (changeButton) {
+      editingVideo = changeButton.getAttribute("data-video-change"); renderVideos();
+    } else if (cancelButton) {
+      editingVideo = null; renderVideos();
+    } else if (removeButton) {
+      delete state.videos[removeButton.getAttribute("data-video-remove")];
+      save(); editingVideo = null; renderVideos(); D.toast("Lesson link removed; slot is empty.");
+    } else if (copyButton) {
+      var copyId = copyButton.getAttribute("data-video-copy");
+      D.copyText(state.videos[copyId] || "").then(function () { D.toast("Lesson link copied."); });
+    } else if (sampleButton) {
+      var sampleId = sampleButton.getAttribute("data-video-sample");
+      var sample = SAMPLE[sampleButton.getAttribute("data-sample")];
+      state.videos[sampleId] = sample; save(); editingVideo = null; renderVideos();
+      D.toast("Sample " + sampleButton.getAttribute("data-sample") + " link attached.");
+    }
+  });
+
+  $("export-btn").addEventListener("click", function () {
+    D.downloadText("cyberlex-progress-" + new Date().toISOString().slice(0, 10) + ".json", D.exportPayload(state));
+    D.toast("Progress exported as JSON.");
+  });
+  $("import-btn").addEventListener("click", function () { $("import-input").click(); });
+  $("import-input").addEventListener("change", function (event) {
+    var file = event.target.files && event.target.files[0];
+    if (!file) return;
+    var reader = new FileReader();
+    reader.onload = function () {
+      try {
+        var result = D.parseImport(String(reader.result || ""));
+        state = result.state; save(); renderAll();
+        $("import-status").innerHTML = '<div class="notice teal"><b>Progress imported.</b> ' + esc(result.warnings.join(" ")) + "</div>";
+        D.toast("Progress imported.");
+      } catch (error) {
+        $("import-status").innerHTML = '<div class="notice ox"><b>Import failed.</b> ' + esc(error.message) + "</div>";
+        D.toast(error.message, "error");
+      }
+      event.target.value = "";
+    };
+    reader.readAsText(file);
+  });
+  $("reset-btn").addEventListener("click", function () {
+    if (!window.confirm("Clear modules, drills, lab and simulation scores, case reviews and the local leaderboard? Lesson links, theme and display name are kept.")) return;
+    state = D.clearProgress(state); save(); renderAll();
+    $("import-status").innerHTML = '<div class="notice teal"><b>Progress cleared.</b> Lesson links and theme were kept.</div>';
+    D.toast("Progress cleared. Lesson links and theme kept.");
+  });
+  $("leader-save").addEventListener("click", function () {
+    var name = $("leader-name").value.trim();
+    if (!name) { D.toast("Enter a display name first.", "error"); return; }
+    state = D.saveBoardEntry(state, name); save(); renderAll();
+    D.toast("Saved " + name + " at " + D.computePoints(state) + " points on this device.");
+  });
+  $("leader-name").addEventListener("keydown", function (event) {
+    if (event.key === "Enter") $("leader-save").click();
+  });
+
+  renderAll();
+  if (location.hash && document.getElementById("tab-" + location.hash.slice(1))) openTab(location.hash.slice(1));
+})();
+</script>

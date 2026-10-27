@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{TITLE}}</title>
+  <meta name="description" content="{{DESCRIPTION}}">
+  <style>
+{{STYLES}}
+  </style>
+  <script>
+{{SHARED}}
+  </script>
+</head>
+<body data-page="{{PAGE}}">
+  <div class="demo-bar">
+    <span class="dot" aria-hidden="true"></span>
+    <span>Phase-1 demo · P7 · Cases + Progress + Videos + Gamification</span>
+    <span class="demo-bar-right">No server · localStorage only · seeded demo data</span>
+  </div>
+
+  <header class="topbar">
+    <a class="brand" href="index.html">Cyber<span>Lex</span> <small>Phase-1 studio</small></a>
+    <nav class="mainnav" aria-label="Demo views">
+      <a href="index.html" data-nav="index">Hub</a>
+      <a href="client.html" data-nav="client">Learner</a>
+      <a href="faculty.html" data-nav="faculty">Faculty</a>
+      <a href="admin.html" data-nav="admin">Admin</a>
+      <a href="reviewer.html" data-nav="reviewer">Reviewer</a>
+      <a href="workflow.html" data-nav="workflow">Workflow</a>
+    </nav>
+    <div class="top-actions">
+      <span class="role-pill {{ROLE_CLASS}}">{{ROLE_LABEL}}</span>
+      <button class="btn tiny ghost" type="button" data-reset-demo>Reset demo</button>
+    </div>
+  </header>
+
+  <main class="wrap {{WRAP_CLASS}}">
+{{BODY}}
+  </main>
+
+  <div class="toast-host" id="toast-host" aria-live="polite" aria-atomic="false"></div>
+
+  <footer class="footer">
+    <div class="footer-row">
+      <span><b>CyberLex</b> · Phase-1 · P7 demo</span>
+      <a href="README.md">README</a>
+      <a href="ROLE-SCOPE.md">Role scope</a>
+      <a href="DEMO-EMAIL.md">Demo email</a>
+      <a href="workflow.html">End-to-end workflow</a>
+      <span class="footer-right">Teaching aid, not legal advice. Reset the seeded data from the top bar.</span>
+    </div>
+  </footer>
+</body>
+</html>

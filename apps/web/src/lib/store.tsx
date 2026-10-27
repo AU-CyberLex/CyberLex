@@ -1,12 +1,36 @@
 "use client";
 import React, { createContext, useContext, useEffect, useMemo, useState } from "react";
 
+export type LeaderboardEntry = {
+  /** Display name. Local-only; never sent anywhere. */
+  name: string;
+  /** Snapshot of total points when the score was saved. */
+  points: number;
+  /** Snapshot of completed modules. */
+  modules: number;
+  /** Snapshot of reviewed case cards. */
+  cases: number;
+  /** Epoch milliseconds. */
+  updatedAt: number;
+};
+
 export type CyberlexState = {
   done: Record<string, boolean>;
   scores: Record<string, number>;
   flipped: Record<string, boolean>;
   videos: Record<string, string>;
   theme?: "light" | "dark";
+  /** Learner display name for the local leaderboard. */
+  profile?: string;
+  /** Device-local leaderboard snapshots. */
+  board?: LeaderboardEntry[];
+};
+
+export const EMPTY_STATE: CyberlexState = {
+  done: {},
+  scores: {},
+  flipped: {},
+  videos: {},
 };
 
 const KEY = "cyberlex";
@@ -16,7 +40,7 @@ const Ctx = createContext<{
 } | null>(null);
 
 function read(): CyberlexState {
-  if (typeof window === "undefined") return { done: {}, scores: {}, flipped: {}, videos: {} };
+  if (typeof window === "undefined") return { ...EMPTY_STATE };
   try {
     const raw = JSON.parse(localStorage.getItem(KEY) || "{}");
     return {
@@ -24,15 +48,17 @@ function read(): CyberlexState {
       scores: raw.scores || {},
       flipped: raw.flipped || {},
       videos: raw.videos || {},
-      theme: raw.theme,
+      theme: raw.theme === "light" || raw.theme === "dark" ? raw.theme : undefined,
+      profile: typeof raw.profile === "string" ? raw.profile : undefined,
+      board: Array.isArray(raw.board) ? raw.board : [],
     };
   } catch {
-    return { done: {}, scores: {}, flipped: {}, videos: {} };
+    return { ...EMPTY_STATE };
   }
 }
 
 export function StoreProvider({ children }: { children: React.ReactNode }) {
-  const [state, setState] = useState<CyberlexState>({ done: {}, scores: {}, flipped: {}, videos: {} });
+  const [state, setState] = useState<CyberlexState>({ ...EMPTY_STATE });
   const [ready, setReady] = useState(false);
   useEffect(() => {
     setState(read());

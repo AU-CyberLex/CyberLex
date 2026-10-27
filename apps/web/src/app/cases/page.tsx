@@ -4,7 +4,7 @@ import { CaseDeck } from "@/components/CaseDeck";
 export const metadata: Metadata = {
   title: "Landmark authorities",
   description:
-    "Twelve judgments that carry most of the weight in an Indian cyber law paper — tap a card to reveal the holding.",
+    "Twelve judgments that carry most of the weight in an Indian cyber law paper — search, filter, and reveal the holding.",
 };
 
 export default function CasesPage() {
