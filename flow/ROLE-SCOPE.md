@@ -26,9 +26,9 @@ This is not a gap in P7. It is the product's P-3/P-4 principle: **no accounts, e
 | Attach / replace / clear a lesson video | Own device | Yes | Test / clear | No |
 | Preview the learner video player | Yes | Yes | Yes, in embed test | No |
 | Copy a lesson link | Own device | Yes | Yes | No |
-| Export progress | Own file | Own device | Demo file | No |
-| Import progress | Own file | Own device | Demo file | No |
-| Clear learning progress | Own device | Own device | Demo state | No |
+| Export progress | Own file | No (learner view) | Demo file | No |
+| Import progress | Own file | No (learner view) | Demo file | No |
+| Clear learning progress | Own device | No (learner view) | Demo state | No |
 | Reset the seeded demo | Yes | Yes | Yes | Yes |
 | See another learner's device data | **No** | **No** | **No** | **No** |
 | Create or manage accounts | **No** | **No** | **No** | **No** |

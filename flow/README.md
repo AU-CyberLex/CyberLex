@@ -14,6 +14,8 @@ The demo has no backend, no accounts, no API keys and no build step at runtime. 
 
 Open `flow/index.html` in a browser. Every page works as a single file.
 
+> Direct `file://` opens are fine for a single page. Browsers vary in whether they share `localStorage` across `file://` URLs, so use Option B when you need a faculty link to appear in the learner view or a progress file to move between pages.
+
 ### Option B — serve the folder (recommended for the full demo)
 
 Serving the folder gives every role page the same origin, so a lesson link attached in **Faculty** is visible in **Learner**, and progress exported from **Learner** can be imported in **Admin**.
@@ -153,7 +155,7 @@ Levels:
 | Doctrine five | Complete five modules |
 | Nine of nine | Complete all nine modules |
 | Clean drill | Score 3/3 on any drill |
-| Every drill sat | Attempt every module drill |
+| Every drill sat | Record a score on every module drill |
 | Volatility order | Sequence all eight volatility sources |
 | Chain intact | Build the full chain of custody |
 | First verdict | Finish one investigation |
