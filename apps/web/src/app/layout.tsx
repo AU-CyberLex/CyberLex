@@ -34,12 +34,22 @@ export const metadata: Metadata = {
     "Learn cyber law the way it is actually litigated: statutory modules, a working forensics lab, and branching investigations built on Indian law.",
 };
 
+/**
+ * Apply an explicitly chosen theme before first paint. Without this, a learner
+ * who chose dark mode sees a light flash while React hydrates the store.
+ */
+const THEME_BOOT = `(function(){try{var raw=localStorage.getItem("cyberlex");if(!raw)return;var parsed=JSON.parse(raw);var theme=parsed&&parsed.state?parsed.state.theme:parsed&&parsed.theme;if(theme==="light"||theme==="dark")document.documentElement.setAttribute("data-theme",theme);}catch(e){}})();`;
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html
       lang="en"
       className={`${spectral.variable} ${plexSans.variable} ${plexMono.variable}`}
+      suppressHydrationWarning
     >
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: THEME_BOOT }} />
+      </head>
       <body className="font-sans text-[16px] leading-[1.55] antialiased">
         <StoreProvider>
           <SiteHeader />

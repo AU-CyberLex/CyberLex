@@ -235,7 +235,15 @@ export function ProgressView() {
               {modules} of {MODULES.length}
             </span>
           </div>
-          <div className="my-3 h-2 overflow-hidden rounded-full" style={{ background: "var(--surface-2)" }}>
+          <div
+            className="my-3 h-2 overflow-hidden rounded-full"
+            style={{ background: "var(--surface-2)" }}
+            role="progressbar"
+            aria-label="Modules completed"
+            aria-valuemin={0}
+            aria-valuemax={MODULES.length}
+            aria-valuenow={modules}
+          >
             <i className="block h-full" style={{ width: modulePct + "%", background: "var(--forensic)" }} />
           </div>
           <div>
@@ -266,7 +274,15 @@ export function ProgressView() {
                 {level.name}
               </span>
             </div>
-            <div className="mt-3 h-2 overflow-hidden rounded-full" style={{ background: "var(--surface-2)" }}>
+            <div
+              className="mt-3 h-2 overflow-hidden rounded-full"
+              style={{ background: "var(--surface-2)" }}
+              role="progressbar"
+              aria-label="Progress to the next level"
+              aria-valuemin={0}
+              aria-valuemax={100}
+              aria-valuenow={Math.round(level.progress * 100)}
+            >
               <i className="block h-full" style={{ width: Math.round(level.progress * 100) + "%", background: "var(--seal)" }} />
             </div>
             <p className="mt-2 text-[0.82rem]" style={{ color: "var(--muted)" }}>
@@ -283,7 +299,15 @@ export function ProgressView() {
                 {cases} of {CASES.length}
               </span>
             </div>
-            <div className="mt-3 h-2 overflow-hidden rounded-full" style={{ background: "var(--surface-2)" }}>
+            <div
+              className="mt-3 h-2 overflow-hidden rounded-full"
+              style={{ background: "var(--surface-2)" }}
+              role="progressbar"
+              aria-label="Case cards reviewed"
+              aria-valuemin={0}
+              aria-valuemax={CASES.length}
+              aria-valuenow={cases}
+            >
               <i className="block h-full" style={{ width: casePct + "%", background: "var(--amber)" }} />
             </div>
             <p className="mt-2 text-[0.82rem]" style={{ color: "var(--muted)" }}>
@@ -363,6 +387,7 @@ export function ProgressView() {
                 if (e.key === "Enter") saveScore();
               }}
               maxLength={60}
+              autoComplete="nickname"
               placeholder="e.g. Aarav Mehta"
               className="w-full rounded border px-3 py-2 text-sm"
               style={{ background: "var(--surface-2)", borderColor: "var(--rule)", color: "var(--text)" }}
@@ -379,6 +404,7 @@ export function ProgressView() {
           {savedRow ? (
             <span className="text-[0.8rem]" style={{ color: "var(--muted)" }}>
               Saved snapshot: {savedRow.points} pts
+              {snapshotIsStale ? " · save again to update your row" : ""}
             </span>
           ) : null}
         </div>
@@ -386,11 +412,15 @@ export function ProgressView() {
         {board.length ? (
           <div className="mt-4 overflow-x-auto">
             <table className="w-full border-collapse text-[0.86rem]">
+              <caption className="sr-only">
+                Local leaderboard. Scores are saved snapshots stored in this browser only.
+              </caption>
               <thead>
                 <tr style={{ background: "var(--surface-2)" }}>
-                  {["#", "Learner", "Points", "Modules", "Cases", "Saved"].map((h) => (
+                  {["#", "Learner", "Saved points", "Modules", "Cases", "Saved"].map((h) => (
                     <th
                       key={h}
+                      scope="col"
                       className="border px-3 py-2 text-left font-medium"
                       style={{ borderColor: "var(--rule)", color: "var(--muted)" }}
                     >

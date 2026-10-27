@@ -9,7 +9,7 @@ import {
   type LeaderboardEntry,
 } from "./progress";
 
-export { MAX_POINTS, POINT_RULES } from "./progress";
+export { MAX_IMPORT_CHARS, MAX_POINTS, POINT_RULES } from "./progress";
 
 /* ------------------------------------------------------------------ */
 /* Points                                                              */

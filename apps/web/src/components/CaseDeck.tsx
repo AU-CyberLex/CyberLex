@@ -49,7 +49,11 @@ export function CaseDeck() {
           <div>
             <div className="flex items-baseline gap-2">
               <b className="font-serif text-lg font-medium">Case review</b>
-              <span className="font-mono text-[0.76rem]" style={{ color: "var(--muted)" }}>
+              <span
+                className="font-mono text-[0.76rem]"
+                style={{ color: "var(--muted)" }}
+                aria-live="polite"
+              >
                 {reviewed} of {CASES.length}
               </span>
             </div>
@@ -62,7 +66,8 @@ export function CaseDeck() {
             <button
               type="button"
               onClick={() => setAll(true)}
-              className="rounded border px-2.5 py-1.5 text-[0.8rem]"
+              disabled={reviewed === CASES.length}
+              className="rounded border px-2.5 py-1.5 text-[0.8rem] disabled:cursor-not-allowed disabled:opacity-50"
               style={{ borderColor: "var(--rule)", background: "var(--surface-2)" }}
             >
               Reveal all
@@ -70,22 +75,33 @@ export function CaseDeck() {
             <button
               type="button"
               onClick={() => setAll(false)}
-              className="rounded border px-2.5 py-1.5 text-[0.8rem]"
+              disabled={reviewed === 0}
+              className="rounded border px-2.5 py-1.5 text-[0.8rem] disabled:cursor-not-allowed disabled:opacity-50"
               style={{ borderColor: "var(--rule)", background: "var(--surface-2)" }}
             >
               Hide all
             </button>
           </div>
         </div>
-        <div className="mt-3 h-1.5 overflow-hidden rounded-full" style={{ background: "var(--surface-2)" }}>
+        <div
+          className="mt-3 h-1.5 overflow-hidden rounded-full"
+          style={{ background: "var(--surface-2)" }}
+          role="progressbar"
+          aria-label="Case cards reviewed"
+          aria-valuemin={0}
+          aria-valuemax={CASES.length}
+          aria-valuenow={reviewed}
+        >
           <i className="block h-full" style={{ width: pct + "%", background: "var(--amber)" }} />
         </div>
         <div className="mt-4 flex flex-wrap items-center gap-2">
           <label className="min-w-[240px] flex-1">
             <span className="sr-only">Search authorities</span>
             <input
+              type="search"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
+              autoComplete="off"
               placeholder="Search by case, citation or holding…"
               className="w-full rounded border px-3 py-2 text-sm"
               style={{ background: "var(--surface-2)", borderColor: "var(--rule)", color: "var(--text)" }}
@@ -135,8 +151,8 @@ export function CaseDeck() {
                   borderColor: flipped ? "var(--forensic)" : "var(--rule)",
                 }}
               >
-                <div className="flex items-start justify-between gap-2">
-                  <h4 className="font-serif text-[1.02rem] font-medium leading-snug">{c.n}</h4>
+                <span className="flex items-start justify-between gap-2">
+                  <span className="font-serif text-[1.02rem] font-medium leading-snug">{c.n}</span>
                   <span
                     className="mt-0.5 flex-none rounded-sm border px-1.5 py-0.5 font-mono text-[0.66rem]"
                     style={{
@@ -147,16 +163,16 @@ export function CaseDeck() {
                   >
                     {flipped ? "reviewed" : "open"}
                   </span>
-                </div>
+                </span>
                 <span className="mt-1 block font-mono text-[0.74rem]" style={{ color: "var(--muted)" }}>
                   {c.c}
                 </span>
-                <p
-                  className="mt-3 text-[0.84rem] leading-relaxed"
+                <span
+                  className="mt-3 block text-[0.84rem] leading-relaxed"
                   style={{ color: flipped ? "var(--text)" : "var(--muted)" }}
                 >
                   {flipped ? c.h : "Tap to reveal the holding."}
-                </p>
+                </span>
                 <span className="mt-auto pt-3 text-[0.72rem]" style={{ color: "var(--muted)" }}>
                   {flipped ? "Reviewed · +5 pts" : "Unreviewed · +5 pts when opened"}
                 </span>

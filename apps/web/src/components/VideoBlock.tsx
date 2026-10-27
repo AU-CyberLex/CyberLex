@@ -16,9 +16,16 @@ function providerLabel(raw: string): string {
 
 export function VideoBlock({ moduleId, title }: { moduleId: string; title: string }) {
   const { state, setState } = useStore();
-  const raw = state.videos?.[moduleId] || VIDEOS[moduleId] || "";
+  const stored = state.videos?.[moduleId];
+  const shipped = VIDEOS[moduleId];
+  const raw =
+    typeof stored === "string" && stored
+      ? stored
+      : typeof shipped === "string"
+        ? shipped
+        : "";
   const v = embedUrl(raw);
-  const custom = !!state.videos?.[moduleId];
+  const custom = typeof stored === "string" && stored.length > 0;
   const [draft, setDraft] = useState(raw);
   const [editing, setEditing] = useState(false);
   const [error, setError] = useState("");
@@ -36,7 +43,9 @@ export function VideoBlock({ moduleId, title }: { moduleId: string; title: strin
       return;
     }
     if (!embedUrl(next)) {
-      setError(`That link is not a supported ${PROVIDERS} URL.`);
+      setError(
+        `That link is not a supported ${PROVIDERS} URL. Use a public https:// link from one of those providers.`
+      );
       return;
     }
     setState((s) => ({ ...s, videos: { ...s.videos, [moduleId]: next } }));
@@ -103,7 +112,10 @@ export function VideoBlock({ moduleId, title }: { moduleId: string; title: strin
         )}
         <div className="mt-2 flex gap-2">
           <input
-            type="text"
+            type="url"
+            inputMode="url"
+            autoComplete="url"
+            spellCheck={false}
             value={draft}
             onChange={(e) => {
               setDraft(e.target.value);
@@ -112,9 +124,10 @@ export function VideoBlock({ moduleId, title }: { moduleId: string; title: strin
             onKeyDown={(e) => {
               if (e.key === "Enter") attach(draft);
             }}
-            placeholder={error || "https://youtu.be/…"}
+            placeholder="https://youtu.be/…"
             aria-label={"Video link for " + title}
             aria-invalid={!!error}
+            aria-describedby={`video-help-${moduleId}`}
             className="min-w-0 flex-1 rounded border px-2.5 py-2 text-sm"
             style={{
               borderColor: error ? "var(--seal)" : "var(--rule)",
@@ -132,12 +145,22 @@ export function VideoBlock({ moduleId, title }: { moduleId: string; title: strin
           </button>
         </div>
         {error ? (
-          <p role="alert" className="mt-1 text-[0.82rem]" style={{ color: "var(--seal)" }}>
+          <p
+            id={`video-help-${moduleId}`}
+            role="alert"
+            className="mt-1 text-[0.82rem]"
+            style={{ color: "var(--seal)" }}
+          >
             {error}
           </p>
         ) : (
-          <p className="mt-1 text-[0.76rem]" style={{ color: "var(--muted)" }}>
-            Accepted: YouTube, Vimeo, Google Drive share links, or a direct .mp4/.webm/.ogg URL.
+          <p
+            id={`video-help-${moduleId}`}
+            className="mt-1 text-[0.76rem]"
+            style={{ color: "var(--muted)" }}
+          >
+            Accepted: public https:// links from YouTube, Vimeo or Google Drive, or a direct
+            .mp4/.webm/.ogg file.
           </p>
         )}
       </div>

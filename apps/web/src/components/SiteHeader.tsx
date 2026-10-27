@@ -15,7 +15,7 @@ const LINKS = [
 
 export function SiteHeader() {
   const pathname = usePathname();
-  const { state, setState } = useStore();
+  const { state, setState, storageError } = useStore();
   const [mounted, setMounted] = useState(false);
   const [systemDark, setSystemDark] = useState(false);
   useEffect(() => {
@@ -47,6 +47,7 @@ export function SiteHeader() {
             <Link
               key={l.href}
               href={l.href}
+              aria-current={isActive(l.href) ? "page" : undefined}
               className="rounded border px-2.5 py-1.5 text-[0.86rem] no-underline"
               style={
                 isActive(l.href)
@@ -76,11 +77,28 @@ export function SiteHeader() {
           }}
           className="rounded border px-2.5 py-1.5 text-[0.78rem]"
           style={{ borderColor: "var(--rule)", color: "var(--muted)" }}
-          aria-label="Toggle theme"
+          aria-label={
+            mounted ? `Switch to ${dark ? "light" : "dark"} theme` : "Toggle theme"
+          }
           suppressHydrationWarning
         >
           {!mounted ? "Theme" : dark ? "Light" : "Dark"}
         </button>
+        {storageError ? (
+          <div
+            role="status"
+            aria-live="polite"
+            className="basis-full rounded border px-2.5 py-1.5 text-[0.78rem]"
+            style={{
+              borderColor: "var(--seal)",
+              background: "var(--seal-soft)",
+              color: "var(--seal)",
+            }}
+          >
+            Local storage is unavailable. Progress works for this visit but will not survive a
+            reload.
+          </div>
+        ) : null}
       </div>
     </header>
   );
