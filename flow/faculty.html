@@ -1,0 +1,1652 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Faculty / instructor view · CyberLex Phase-1</title>
+  <meta name="description" content="What faculty sees and can do: attach lesson videos, check module readiness, run the lab in class and review a local cohort snapshot.">
+  <style>
+/* ==========================================================================
+   CyberLex Phase-1 · P7 demo
+   A self-contained editorial UI. No external fonts, scripts or images.
+   ========================================================================== */
+
+:root {
+  --ink: #172033;
+  --ink-2: #26324a;
+  --paper: #f3efe5;
+  --paper-2: #ebe5d8;
+  --surface: #fffdf8;
+  --surface-2: #f7f3ea;
+  --line: #d8d0c0;
+  --line-strong: #b9ae9a;
+  --muted: #6e6a60;
+  --ox: #8c2f39;
+  --ox-soft: #f4e3e4;
+  --teal: #14635c;
+  --teal-soft: #dcece8;
+  --amber: #9a6b16;
+  --amber-soft: #f6ecd7;
+  --navy: #1d3557;
+  --navy-soft: #e4e9f2;
+  --ok: #1d6b4f;
+  --ok-soft: #e0f0e7;
+  --warn: #9a6b16;
+  --shadow: 0 1px 0 rgba(23, 32, 51, 0.04), 0 18px 44px -28px rgba(23, 32, 51, 0.42);
+  --serif: "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Palatino, Georgia, serif;
+  --sans: "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+  --mono: "Cascadia Code", "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  color: var(--ink);
+  background:
+    radial-gradient(circle at 12% 0%, rgba(140, 47, 57, 0.045), transparent 28rem),
+    radial-gradient(circle at 88% 8%, rgba(20, 99, 92, 0.05), transparent 30rem),
+    var(--paper);
+  font-family: var(--sans);
+  font-size: 15px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+a { color: inherit; text-decoration-thickness: 1px; text-underline-offset: 2px; }
+button, input, select, textarea { font: inherit; }
+button { cursor: pointer; }
+img, svg { max-width: 100%; }
+h1, h2, h3, h4, p { margin-top: 0; }
+code, pre, .mono { font-family: var(--mono); }
+
+.demo-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 34px;
+  padding: 6px 20px;
+  background: var(--ink);
+  color: #f7f3ea;
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.035em;
+}
+.demo-bar .dot {
+  width: 7px;
+  height: 7px;
+  flex: none;
+  border-radius: 50%;
+  background: #d6a745;
+  box-shadow: 0 0 0 3px rgba(214, 167, 69, 0.18);
+}
+.demo-bar-right { margin-left: auto; color: #b9c2d2; white-space: nowrap; }
+
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
+  padding: 12px 20px;
+  border-bottom: 1px solid var(--line);
+  background: rgba(255, 253, 248, 0.94);
+  backdrop-filter: blur(10px);
+}
+.brand {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 8px;
+  margin-right: auto;
+  font-family: var(--serif);
+  font-size: 1.42rem;
+  font-weight: 600;
+  letter-spacing: -0.025em;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.brand span { color: var(--ox); }
+.brand small {
+  font-family: var(--mono);
+  font-size: 0.6rem;
+  font-weight: 400;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.mainnav { display: flex; flex-wrap: wrap; gap: 2px; }
+.mainnav a {
+  padding: 6px 9px;
+  border: 1px solid transparent;
+  border-radius: 3px;
+  color: var(--muted);
+  font-size: 0.82rem;
+  text-decoration: none;
+}
+.mainnav a:hover { color: var(--ink); background: var(--surface-2); }
+.mainnav a.active {
+  color: var(--ink);
+  background: var(--surface-2);
+  border-color: var(--line);
+  font-weight: 600;
+}
+.top-actions { display: flex; align-items: center; gap: 8px; }
+.role-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 8px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--surface);
+  font-family: var(--mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--muted);
+  white-space: nowrap;
+}
+.role-pill::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--teal);
+}
+.role-pill.ox::before { background: var(--ox); }
+.role-pill.amber::before { background: var(--amber); }
+.role-pill.navy::before { background: var(--navy); }
+
+.wrap {
+  width: min(1240px, calc(100% - 40px));
+  margin: 0 auto;
+  padding: 34px 0 72px;
+}
+.wrap.narrow { width: min(920px, calc(100% - 40px)); }
+.wrap.wide { width: min(1420px, calc(100% - 32px)); }
+
+.eyebrow {
+  margin-bottom: 8px;
+  color: var(--ox);
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+}
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.25fr) minmax(280px, 0.75fr);
+  gap: 38px;
+  align-items: start;
+  padding-bottom: 28px;
+  border-bottom: 1px solid var(--line);
+}
+.hero-title {
+  max-width: 18ch;
+  margin-bottom: 16px;
+  font-family: var(--serif);
+  font-size: clamp(2.2rem, 5.1vw, 4rem);
+  font-weight: 500;
+  line-height: 1.08;
+  letter-spacing: -0.035em;
+}
+.hero-title em { color: var(--ox); font-style: italic; }
+.lede { max-width: 62ch; color: var(--muted); font-size: 1rem; }
+.small { font-size: 0.84rem; }
+.tiny { font-size: 0.76rem; }
+.muted { color: var(--muted); }
+.ox { color: var(--ox); }
+.teal { color: var(--teal); }
+.amber { color: var(--amber); }
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  min-height: 36px;
+  padding: 8px 13px;
+  border: 1px solid var(--line-strong);
+  border-radius: 3px;
+  background: var(--surface);
+  color: var(--ink);
+  font-size: 0.84rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: transform 0.12s ease, box-shadow 0.12s ease, background 0.12s ease;
+}
+.btn:hover { transform: translateY(-1px); box-shadow: 0 4px 14px -8px rgba(23, 32, 51, 0.45); }
+.btn.primary { border-color: var(--ox); background: var(--ox); color: #fff; }
+.btn.dark { border-color: var(--ink); background: var(--ink); color: #fff; }
+.btn.ghost { border-color: var(--line); background: transparent; }
+.btn.ghost:hover { background: var(--surface-2); }
+.btn.tiny { min-height: 28px; padding: 4px 8px; font-size: 0.74rem; }
+.btn.danger { border-color: var(--ox); background: var(--ox-soft); color: var(--ox); }
+.btn:disabled { cursor: default; opacity: 0.5; transform: none; box-shadow: none; }
+.btnrow { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+
+.panel {
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background: var(--surface);
+  box-shadow: var(--shadow);
+}
+.panel-pad { padding: 20px; }
+.panel-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+.panel-title {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: 1.12rem;
+  font-weight: 600;
+  letter-spacing: -0.015em;
+}
+.panel-note { color: var(--muted); font-size: 0.78rem; }
+
+.grid { display: grid; gap: 16px; }
+.grid-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.grid-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.grid-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.grid-side { grid-template-columns: minmax(0, 1.4fr) minmax(280px, 0.6fr); }
+.stack { display: grid; gap: 16px; }
+.stack-sm { display: grid; gap: 8px; }
+.span-2 { grid-column: span 2; }
+
+.stat {
+  padding: 15px 16px;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background: var(--surface);
+}
+.stat-label {
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: 0.64rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.stat-value {
+  margin-top: 3px;
+  font-family: var(--serif);
+  font-size: 1.7rem;
+  font-weight: 600;
+  line-height: 1.1;
+}
+.stat-note { margin-top: 3px; color: var(--muted); font-size: 0.76rem; }
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 2px 7px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--surface-2);
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: 0.64rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.pill.teal { border-color: #a9cec8; background: var(--teal-soft); color: var(--teal); }
+.pill.amber { border-color: #dfc58e; background: var(--amber-soft); color: var(--amber); }
+.pill.ox { border-color: #d8aeb2; background: var(--ox-soft); color: var(--ox); }
+.pill.navy { border-color: #b8c4d8; background: var(--navy-soft); color: var(--navy); }
+.pill.ok { border-color: #a9d4bd; background: var(--ok-soft); color: var(--ok); }
+
+.progress {
+  height: 7px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: var(--surface-2);
+}
+.progress > i { display: block; height: 100%; background: var(--teal); }
+.progress.amber > i { background: var(--amber); }
+.progress.ox > i { background: var(--ox); }
+
+.ring {
+  --p: 62;
+  display: grid;
+  place-items: center;
+  width: 132px;
+  height: 132px;
+  border-radius: 50%;
+  background: conic-gradient(var(--teal) calc(var(--p) * 1%), var(--surface-2) 0);
+  position: relative;
+}
+.ring::before {
+  content: "";
+  position: absolute;
+  inset: 9px;
+  border-radius: 50%;
+  background: var(--surface);
+}
+.ring > div { position: relative; text-align: center; }
+.ring b { display: block; font-family: var(--serif); font-size: 1.65rem; line-height: 1; }
+.ring span { color: var(--muted); font-family: var(--mono); font-size: 0.62rem; text-transform: uppercase; letter-spacing: 0.06em; }
+
+.tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 3px;
+  padding: 4px;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background: var(--surface-2);
+}
+.tab {
+  padding: 7px 11px;
+  border: 1px solid transparent;
+  border-radius: 3px;
+  background: transparent;
+  color: var(--muted);
+  font-size: 0.82rem;
+}
+.tab:hover { color: var(--ink); }
+.tab.active { border-color: var(--line); background: var(--surface); color: var(--ink); font-weight: 600; }
+.tab-panel { display: none; }
+.tab-panel.active { display: block; }
+
+.input, .select, .textarea {
+  width: 100%;
+  min-height: 36px;
+  padding: 8px 10px;
+  border: 1px solid var(--line);
+  border-radius: 3px;
+  background: var(--surface-2);
+  color: var(--ink);
+  font-size: 0.86rem;
+}
+.input:focus, .select:focus, .textarea:focus {
+  outline: 2px solid rgba(20, 99, 92, 0.22);
+  outline-offset: 1px;
+  border-color: var(--teal);
+}
+.field { display: grid; gap: 4px; }
+.field > span { color: var(--muted); font-size: 0.76rem; }
+.input-row { display: flex; gap: 8px; flex-wrap: wrap; }
+.input-row .input { flex: 1; min-width: 180px; }
+.hint { color: var(--muted); font-size: 0.76rem; }
+.error { color: var(--ox); font-size: 0.8rem; }
+
+.table-wrap { overflow-x: auto; }
+.table { width: 100%; border-collapse: collapse; font-size: 0.84rem; }
+.table th, .table td { padding: 8px 10px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; }
+.table th {
+  background: var(--surface-2);
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: 0.66rem;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+.table tr:last-child td { border-bottom: 0; }
+.table .num { font-family: var(--mono); font-size: 0.78rem; white-space: nowrap; }
+
+.role-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+.role-card {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 20px;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background: var(--surface);
+  box-shadow: var(--shadow);
+  text-decoration: none;
+  transition: transform 0.14s ease, border-color 0.14s ease;
+}
+.role-card:hover { transform: translateY(-2px); border-color: var(--line-strong); }
+.role-card-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; }
+.role-kicker { color: var(--muted); font-family: var(--mono); font-size: 0.64rem; letter-spacing: 0.08em; text-transform: uppercase; }
+.role-name { margin: 2px 0 0; font-family: var(--serif); font-size: 1.3rem; font-weight: 600; }
+.role-icon {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  flex: none;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  background: var(--surface-2);
+  color: var(--ox);
+  font-family: var(--serif);
+  font-size: 1rem;
+}
+.role-list { margin: 0; padding-left: 17px; color: var(--muted); font-size: 0.84rem; }
+.role-list li { margin: 3px 0; }
+.role-foot { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-top: auto; padding-top: 10px; border-top: 1px solid var(--line); font-size: 0.78rem; }
+
+.timeline { display: grid; gap: 0; }
+.timeline-item {
+  display: grid;
+  grid-template-columns: 28px minmax(0, 1fr);
+  gap: 10px;
+  padding: 9px 0;
+  border-bottom: 1px solid var(--line);
+}
+.timeline-item:last-child { border-bottom: 0; }
+.timeline-mark {
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  background: var(--surface-2);
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: 0.62rem;
+}
+.timeline-item.done .timeline-mark { border-color: var(--teal); background: var(--teal-soft); color: var(--teal); }
+.timeline-body { min-width: 0; }
+.timeline-body b { font-size: 0.86rem; font-weight: 600; }
+.timeline-body p { margin: 2px 0 0; color: var(--muted); font-size: 0.78rem; }
+
+.case-toolbar { display: flex; flex-wrap: wrap; align-items: end; gap: 10px; }
+.case-toolbar .grow { flex: 1; min-width: 220px; }
+.case-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; margin-top: 16px; }
+.case-card {
+  display: flex;
+  min-height: 208px;
+  flex-direction: column;
+  padding: 15px;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background: var(--surface);
+  color: var(--ink);
+  text-align: left;
+  transition: border-color 0.14s ease, background 0.14s ease, transform 0.14s ease;
+}
+.case-card:hover { transform: translateY(-1px); border-color: var(--line-strong); }
+.case-card.revealed { border-color: var(--teal); background: var(--teal-soft); }
+.case-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; }
+.case-name { margin: 0; font-family: var(--serif); font-size: 1rem; font-weight: 600; line-height: 1.3; }
+.case-cite { margin-top: 3px; color: var(--muted); font-family: var(--mono); font-size: 0.7rem; }
+.case-holding { margin: 11px 0 0; color: var(--muted); font-size: 0.82rem; line-height: 1.5; }
+.case-card.revealed .case-holding { color: var(--ink); }
+.case-foot { margin-top: auto; padding-top: 10px; color: var(--muted); font-family: var(--mono); font-size: 0.66rem; }
+.case-card.revealed .case-foot { color: var(--teal); }
+
+.video-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+.video-card { border: 1px solid var(--line); border-radius: 4px; background: var(--surface); overflow: hidden; }
+.video-card-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; padding: 13px 15px 0; }
+.video-card-title { margin: 0; font-family: var(--serif); font-size: 1rem; font-weight: 600; }
+.video-card-sub { margin-top: 2px; color: var(--muted); font-size: 0.75rem; }
+.video-frame { position: relative; margin-top: 10px; background: #0d1117; aspect-ratio: 16 / 9; }
+.video-frame iframe, .video-frame video { display: block; width: 100%; height: 100%; border: 0; object-fit: cover; }
+.video-empty {
+  display: grid;
+  place-items: center;
+  min-height: 150px;
+  margin: 10px 15px 0;
+  padding: 16px;
+  border: 1px dashed var(--line-strong);
+  border-radius: 3px;
+  background: var(--surface-2);
+  text-align: center;
+}
+.video-empty b { display: block; font-family: var(--serif); font-size: 0.98rem; }
+.video-empty p { max-width: 44ch; margin: 4px 0 0; color: var(--muted); font-size: 0.78rem; }
+.video-actions { display: flex; flex-wrap: wrap; gap: 6px; padding: 10px 15px 14px; }
+.video-actions .btn { min-height: 30px; padding: 4px 8px; font-size: 0.75rem; }
+.video-form { padding: 10px 15px 14px; }
+.video-form .input-row { margin-top: 6px; }
+.video-form .input { min-width: 120px; }
+.sample-row { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 6px; }
+.sample-row .btn { min-height: 26px; padding: 3px 6px; font-size: 0.68rem; font-weight: 500; }
+.provider-note { margin-top: 8px; color: var(--muted); font-size: 0.72rem; }
+
+.badge-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+.badge-tile {
+  padding: 11px;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background: var(--surface);
+  opacity: 0.76;
+}
+.badge-tile.earned { opacity: 1; }
+.badge-tile.teal.earned { border-color: var(--teal); background: var(--teal-soft); }
+.badge-tile.amber.earned { border-color: var(--amber); background: var(--amber-soft); }
+.badge-tile.ox.earned { border-color: var(--ox); background: var(--ox-soft); }
+.badge-tile.navy.earned { border-color: var(--navy); background: var(--navy-soft); }
+.badge-top { display: flex; align-items: flex-start; gap: 8px; }
+.badge-mark {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  flex: none;
+  border: 1px solid var(--line);
+  border-radius: 3px;
+  background: var(--surface-2);
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: 0.64rem;
+  font-weight: 600;
+}
+.badge-tile.earned .badge-mark { border-color: currentColor; background: var(--surface); }
+.badge-tile.teal.earned .badge-mark { color: var(--teal); }
+.badge-tile.amber.earned .badge-mark { color: var(--amber); }
+.badge-tile.ox.earned .badge-mark { color: var(--ox); }
+.badge-tile.navy.earned .badge-mark { color: var(--navy); }
+.badge-name { font-size: 0.8rem; font-weight: 600; line-height: 1.3; }
+.badge-desc { margin-top: 2px; color: var(--muted); font-size: 0.72rem; line-height: 1.35; }
+.badge-meta { margin-top: 7px; color: var(--muted); font-family: var(--mono); font-size: 0.64rem; }
+.badge-progress { height: 4px; margin-top: 5px; overflow: hidden; border-radius: 999px; background: var(--surface-2); }
+.badge-progress > i { display: block; height: 100%; background: var(--muted); }
+.badge-tile.teal.earned .badge-progress > i { background: var(--teal); }
+.badge-tile.amber.earned .badge-progress > i { background: var(--amber); }
+.badge-tile.ox.earned .badge-progress > i { background: var(--ox); }
+.badge-tile.navy.earned .badge-progress > i { background: var(--navy); }
+
+.leader-row {
+  display: grid;
+  grid-template-columns: 28px minmax(0, 1fr) auto;
+  gap: 10px;
+  align-items: center;
+  padding: 9px 0;
+  border-bottom: 1px solid var(--line);
+  font-size: 0.84rem;
+}
+.leader-row:last-child { border-bottom: 0; }
+.leader-row.you { margin: 0 -8px; padding: 9px 8px; background: var(--teal-soft); }
+.leader-rank { color: var(--muted); font-family: var(--mono); font-size: 0.72rem; }
+.leader-name { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.leader-name small { color: var(--muted); font-family: var(--mono); font-size: 0.64rem; }
+.leader-points { font-family: var(--mono); font-size: 0.76rem; white-space: nowrap; }
+
+.notice {
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--amber);
+  border-radius: 3px;
+  background: var(--amber-soft);
+  color: var(--ink);
+  font-size: 0.82rem;
+}
+.notice.teal { border-left-color: var(--teal); background: var(--teal-soft); }
+.notice.ox { border-left-color: var(--ox); background: var(--ox-soft); }
+.notice b { font-weight: 600; }
+
+.kbd {
+  display: inline-block;
+  padding: 1px 5px;
+  border: 1px solid var(--line);
+  border-bottom-width: 2px;
+  border-radius: 3px;
+  background: var(--surface);
+  font-family: var(--mono);
+  font-size: 0.7rem;
+}
+
+/* Flow graph --------------------------------------------------------------- */
+.flow-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  padding: 10px;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background: var(--surface);
+}
+.flow-toolbar .sep { width: 1px; height: 24px; margin: 0 3px; background: var(--line); }
+.flow-toolbar .spacer { flex: 1; }
+.flow-shell { display: grid; grid-template-columns: minmax(0, 1fr) 310px; gap: 16px; align-items: start; margin-top: 16px; }
+.flow-canvas-wrap {
+  overflow: auto;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background:
+    linear-gradient(rgba(23, 32, 51, 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(23, 32, 51, 0.035) 1px, transparent 1px),
+    var(--surface);
+  background-size: 24px 24px;
+  box-shadow: var(--shadow);
+}
+.flow-canvas { position: relative; width: 1120px; height: 540px; min-width: 1120px; }
+.flow-edges { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+.flow-node {
+  position: absolute;
+  width: 190px;
+  min-height: 82px;
+  padding: 10px 11px;
+  border: 1px solid var(--line);
+  border-left: 4px solid var(--navy);
+  border-radius: 4px;
+  background: var(--surface);
+  color: var(--ink);
+  text-align: left;
+  box-shadow: 0 8px 20px -18px rgba(23, 32, 51, 0.55);
+  transition: opacity 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease, transform 0.15s ease;
+}
+.flow-node:hover { transform: translateY(-1px); border-color: var(--line-strong); }
+.flow-node.learner { border-left-color: var(--teal); }
+.flow-node.faculty { border-left-color: var(--amber); }
+.flow-node.admin { border-left-color: var(--ox); }
+.flow-node.reviewer { border-left-color: var(--navy); }
+.flow-node.system { border-left-color: var(--line-strong); }
+.flow-node.active {
+  border-color: var(--ink);
+  box-shadow: 0 0 0 2px rgba(23, 32, 51, 0.12), 0 12px 28px -18px rgba(23, 32, 51, 0.6);
+}
+.flow-node.dim { opacity: 0.24; }
+.flow-node .fn-top { display: flex; align-items: center; justify-content: space-between; gap: 6px; }
+.flow-node .fn-step { color: var(--muted); font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.06em; text-transform: uppercase; }
+.flow-node .fn-role { font-family: var(--mono); font-size: 0.56rem; letter-spacing: 0.05em; text-transform: uppercase; }
+.flow-node.learner .fn-role { color: var(--teal); }
+.flow-node.faculty .fn-role { color: var(--amber); }
+.flow-node.admin .fn-role { color: var(--ox); }
+.flow-node.reviewer .fn-role { color: var(--navy); }
+.flow-node.system .fn-role { color: var(--muted); }
+.flow-node b { display: block; margin-top: 4px; font-family: var(--serif); font-size: 0.9rem; font-weight: 600; line-height: 1.25; }
+.flow-node span { display: block; margin-top: 2px; color: var(--muted); font-size: 0.68rem; line-height: 1.35; }
+.flow-node .fn-status { margin-top: 6px; }
+.node-detail { position: sticky; top: 92px; }
+.node-detail .detail-kicker { color: var(--muted); font-family: var(--mono); font-size: 0.64rem; letter-spacing: 0.07em; text-transform: uppercase; }
+.node-detail h3 { margin: 4px 0 6px; font-family: var(--serif); font-size: 1.3rem; line-height: 1.2; }
+.node-detail p { color: var(--muted); font-size: 0.84rem; }
+.detail-list { display: grid; gap: 7px; margin: 12px 0 0; padding: 0; list-style: none; }
+.detail-list li { padding-top: 7px; border-top: 1px solid var(--line); font-size: 0.78rem; }
+.detail-list b { display: block; color: var(--muted); font-family: var(--mono); font-size: 0.62rem; font-weight: 500; letter-spacing: 0.05em; text-transform: uppercase; }
+.legend { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 10px; color: var(--muted); font-size: 0.72rem; }
+.legend span { display: inline-flex; align-items: center; gap: 5px; }
+.legend i { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
+.flow-stage-rail { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; margin-top: 16px; }
+.flow-stage { padding: 8px 10px; border: 1px solid var(--line); border-radius: 3px; background: var(--surface); }
+.flow-stage b { display: block; font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
+.flow-stage span { font-size: 0.76rem; }
+
+/* Modal -------------------------------------------------------------------- */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  display: none;
+  place-items: center;
+  padding: 20px;
+  background: rgba(14, 20, 30, 0.62);
+}
+.modal-backdrop.open { display: grid; }
+.modal {
+  width: min(860px, 100%);
+  max-height: calc(100vh - 40px);
+  overflow: auto;
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  background: var(--surface);
+  box-shadow: 0 30px 80px -30px rgba(0, 0, 0, 0.6);
+}
+.modal-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; padding: 16px 18px; border-bottom: 1px solid var(--line); }
+.modal-head h3 { margin: 0; font-family: var(--serif); font-size: 1.2rem; }
+.modal-body { padding: 16px 18px; }
+.modal-close { border: 1px solid var(--line); border-radius: 3px; background: var(--surface-2); padding: 4px 8px; font-size: 0.8rem; }
+
+/* Toast -------------------------------------------------------------------- */
+.toast-host { position: fixed; right: 18px; bottom: 18px; z-index: 100; display: grid; gap: 8px; width: min(360px, calc(100% - 36px)); }
+.toast {
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--teal);
+  border-radius: 3px;
+  background: var(--surface);
+  box-shadow: 0 14px 40px -20px rgba(0, 0, 0, 0.5);
+  font-size: 0.82rem;
+  animation: toast-in 0.18s ease-out;
+}
+.toast.error { border-left-color: var(--ox); }
+@keyframes toast-in { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+
+/* Footer ------------------------------------------------------------------- */
+.footer {
+  margin-top: 48px;
+  padding-top: 18px;
+  border-top: 1px solid var(--line);
+  color: var(--muted);
+  font-size: 0.76rem;
+}
+.footer .footer-row { display: flex; flex-wrap: wrap; gap: 8px 18px; align-items: baseline; }
+.footer b { color: var(--ink); font-family: var(--serif); font-size: 0.9rem; }
+.footer a { color: var(--muted); }
+.footer .footer-right { margin-left: auto; }
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Responsive --------------------------------------------------------------- */
+@media (max-width: 1050px) {
+  .hero { grid-template-columns: 1fr; gap: 22px; }
+  .grid-4 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .grid-side { grid-template-columns: 1fr; }
+  .case-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .flow-shell { grid-template-columns: 1fr; }
+  .node-detail { position: static; }
+}
+@media (max-width: 760px) {
+  .demo-bar { font-size: 0.62rem; }
+  .demo-bar-right { display: none; }
+  .topbar { gap: 10px; padding: 10px 14px; }
+  .brand { font-size: 1.2rem; }
+  .brand small { display: none; }
+  .mainnav { order: 3; width: 100%; overflow-x: auto; flex-wrap: nowrap; padding-bottom: 2px; }
+  .mainnav a { white-space: nowrap; }
+  .role-pill { display: none; }
+  .wrap, .wrap.narrow, .wrap.wide { width: calc(100% - 28px); padding-top: 22px; }
+  .grid-2, .grid-3, .grid-4, .role-grid, .video-grid, .badge-grid, .case-grid { grid-template-columns: 1fr; }
+  .span-2 { grid-column: span 1; }
+  .flow-stage-rail { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .hero-title { font-size: clamp(1.9rem, 9vw, 2.8rem); }
+  .panel-pad { padding: 15px; }
+  .flow-toolbar { gap: 6px; }
+  .flow-toolbar .sep { display: none; }
+}
+@media print {
+  .demo-bar, .topbar, .toast-host, .btn, .flow-toolbar { display: none !important; }
+  body { background: #fff; }
+  .panel, .role-card, .stat { box-shadow: none; }
+}
+
+  </style>
+  <script>
+/* ==========================================================================
+   Shared demo state, scoring and helpers.
+   Everything lives in localStorage. No network calls.
+   ========================================================================== */
+(function () {
+  "use strict";
+
+  var DEMO_KEY = "cybernova.p7.demo.v1";
+
+  var MODULES = [
+    { id: "access", title: "Unauthorised access and data theft", tag: "§43 · §66", video: "Unauthorised access: §43 and §66", quiz: 3 },
+    { id: "identity", title: "Identity theft and cheating by personation", tag: "§66C · §66D", video: "Identity theft and personation: §66C and §66D", quiz: 3 },
+    { id: "obscene", title: "Obscene and sexually explicit material", tag: "§67 · §67A · §67B", video: "Obscenity online: §67, §67A and §67B", quiz: 3 },
+    { id: "intermediary", title: "Intermediary liability and safe harbour", tag: "§79 · IT Rules 2021", video: "Safe harbour and the IT Rules 2021", quiz: 3 },
+    { id: "dpdp", title: "Data protection under the DPDP Act", tag: "DPDP Act 2023", video: "DPDP Act 2023: consent, notice and penalties", quiz: 3 },
+    { id: "evidence", title: "Electronic evidence and the certificate", tag: "§63 BSA", video: "Electronic evidence and the §63 BSA certificate", quiz: 3 },
+    { id: "jurisdiction", title: "Jurisdiction and extra-territorial reach", tag: "§1(2) · §75", video: "Jurisdiction and §75", quiz: 3 },
+    { id: "interception", title: "Interception, blocking and protected systems", tag: "§69 · §69A · §69B · §70", video: "Interception, blocking and protected systems", quiz: 3 },
+    { id: "terror", title: "Cyber terrorism and source code offences", tag: "§66F · §65", video: "Cyber terrorism and source code offences", quiz: 3 }
+  ];
+
+  var SIMS = [
+    { id: "exfil", title: "The departing associate", steps: 4 },
+    { id: "mule", title: "The customer care call", steps: 4 },
+    { id: "platform", title: "The morphed image", steps: 4 }
+  ];
+
+  var CASES = [
+    {
+      n: "Shreya Singhal v. Union of India",
+      c: "(2015) 5 SCC 1",
+      h: "Struck down section 66A as vague and overbroad, violating Article 19(1)(a) and not saved by Article 19(2). Upheld section 69A and the Blocking Rules. Read down section 79(3)(b) so that \"actual knowledge\" means a court order or government notification. Drew the distinction between discussion or advocacy, which is protected, and incitement, which may be restricted."
+    },
+    {
+      n: "K.S. Puttaswamy v. Union of India",
+      c: "(2017) 10 SCC 1",
+      h: "Nine judges held privacy to be a fundamental right under Article 21, including informational privacy. Any restriction must satisfy legality, legitimate State aim, proportionality and procedural safeguards. The constitutional foundation of the DPDP Act and of every challenge to surveillance powers."
+    },
+    {
+      n: "Anvar P.V. v. P.K. Basheer",
+      c: "(2014) 10 SCC 473",
+      h: "Overruled Navjot Sandhu. Section 65B is a complete code for secondary electronic evidence; the certificate is mandatory and cannot be substituted by oral evidence. Where the original device is produced, no certificate is required."
+    },
+    {
+      n: "Arjun Panditrao Khotkar v. Kailash Gorantyal",
+      c: "(2020) 7 SCC 1",
+      h: "Three judges overruled Shafhi Mohammad, restored Anvar, and held the certificate mandatory. A party unable to obtain it may apply to the court to summon it. The certificate may be produced at any stage before the trial concludes, in the court's discretion."
+    },
+    {
+      n: "Aveek Sarkar v. State of West Bengal",
+      c: "(2014) 4 SCC 257",
+      h: "Discarded the Hicklin test for obscenity and adopted contemporary community standards. Material is judged as a whole, in context, from the standpoint of an average person. Nudity alone is not obscenity."
+    },
+    {
+      n: "Sharat Babu Digumarti v. Govt of NCT of Delhi",
+      c: "(2017) 2 SCC 18",
+      h: "Where obscene material is in electronic form, section 67 of the IT Act is the special provision and overrides section 292 IPC by operation of section 81. The accused could not be prosecuted under the general penal provision."
+    },
+    {
+      n: "Christian Louboutin SAS v. Nakul Bajaj",
+      c: "2018 SCC OnLine Del 12215",
+      h: "Listed the activities that convert an e-commerce marketplace from a passive conduit into an active participant — identifying sellers, warehousing, authenticating, guaranteeing, promoting. Enough of them, and section 79 safe harbour is lost."
+    },
+    {
+      n: "MySpace Inc. v. Super Cassettes Industries",
+      c: "2016 SCC OnLine Del 6382",
+      h: "Division Bench held that automated processing of content for format and advertisement insertion is not \"modification\" that defeats safe harbour. Actual knowledge for copyright purposes requires specific identification of the infringing material, not a general notice."
+    },
+    {
+      n: "Anuradha Bhasin v. Union of India",
+      c: "(2020) 3 SCC 637",
+      h: "Internet shutdown orders must be published, must record reasons, must be proportionate and limited in duration, and are subject to periodic review and to judicial review. Freedom of trade through the internet is protected under Article 19(1)(g)."
+    },
+    {
+      n: "State of Tamil Nadu v. Suhas Katti",
+      c: "CC No. 4680 of 2004, Egmore",
+      h: "The first conviction in India under section 67 of the IT Act, obtained within about seven months of the charge sheet. Obscene messages about a divorced woman were posted in a Yahoo group. Significant as a procedural landmark for speed and for reliance on electronic records."
+    },
+    {
+      n: "CBI v. Arif Azim (Sony Sambandh)",
+      c: "Delhi, 2003",
+      h: "First reported cybercrime conviction in India. A call centre employee used stolen credit card details to order goods. Convicted of cheating under the IPC; the court noted the IT Act did not then cover the conduct comprehensively, and released him on probation given his age."
+    },
+    {
+      n: "Shafhi Mohammad v. State of Himachal Pradesh",
+      c: "(2018) 2 SCC 801",
+      h: "Relaxed the section 65B certificate where the party did not possess the device, reasoning that procedure should not defeat justice. Overruled by Arjun Panditrao in 2020. Learn it as the wrong turn in the line, because examiners ask what happened to it."
+    }
+  ];
+
+  var VOL_LEN = 8;
+  var COC_LEN = 8;
+  var POINT_RULES = { moduleComplete: 50, drillCorrect: 10, labCorrect: 5, simPoint: 10, caseReviewed: 5 };
+
+  var DEFAULT_STATE = {
+    profile: "Aarav Mehta",
+    done: { access: true, identity: true, obscene: true, dpdp: true, evidence: true },
+    scores: { access: 3, identity: 2, obscene: 3, dpdp: 2, evidence: 3, vol: 8, coc: 8, "sim-exfil": 7, "sim-mule": 5 },
+    flipped: { 0: true, 1: true, 2: true, 3: true, 4: true, 5: true, 6: true, 7: true },
+    videos: {
+      access: "https://www.youtube.com/watch?v=cQYACLLAPOw",
+      identity: "https://vimeo.com/76979871",
+      evidence: "https://drive.google.com/file/d/1yKbrlk-2yuzVTX3P33kKEV4wMoJRMwMW/view",
+      dpdp: "https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4"
+    },
+    board: [
+      { name: "Meera Nair", points: 710, modules: 7, cases: 12, updatedAt: 1761000000000 },
+      { name: "Aarav Mehta", points: 620, modules: 5, cases: 8, updatedAt: 1761001200000 },
+      { name: "Rohan Iyer", points: 540, modules: 5, cases: 10, updatedAt: 1760998000000 },
+      { name: "Ishita Rao", points: 480, modules: 4, cases: 9, updatedAt: 1760995000000 },
+      { name: "Kabir Sethi", points: 300, modules: 3, cases: 5, updatedAt: 1760990000000 }
+    ],
+    theme: "light"
+  };
+
+  function clone(value) {
+    return JSON.parse(JSON.stringify(value));
+  }
+
+  function defaultState() {
+    return clone(DEFAULT_STATE);
+  }
+
+  function loadState() {
+    try {
+      var raw = localStorage.getItem(DEMO_KEY);
+      if (!raw) return defaultState();
+      var parsed = JSON.parse(raw);
+      var base = defaultState();
+      return {
+        profile: typeof parsed.profile === "string" ? parsed.profile : base.profile,
+        done: parsed.done && typeof parsed.done === "object" ? parsed.done : {},
+        scores: parsed.scores && typeof parsed.scores === "object" ? parsed.scores : {},
+        flipped: parsed.flipped && typeof parsed.flipped === "object" ? parsed.flipped : {},
+        videos: parsed.videos && typeof parsed.videos === "object" ? parsed.videos : {},
+        board: Array.isArray(parsed.board) ? parsed.board : [],
+        theme: parsed.theme === "dark" ? "dark" : "light"
+      };
+    } catch (error) {
+      return defaultState();
+    }
+  }
+
+  function saveState(state) {
+    try {
+      localStorage.setItem(DEMO_KEY, JSON.stringify(state));
+    } catch (error) {
+      /* file:// or private mode may refuse storage; the page still works in memory. */
+    }
+  }
+
+  function resetDemo() {
+    try {
+      localStorage.removeItem(DEMO_KEY);
+    } catch (error) {}
+    location.reload();
+  }
+
+  function clearProgress(state) {
+    return Object.assign({}, state, { done: {}, scores: {}, flipped: {}, board: [] });
+  }
+
+  function toast(message, kind) {
+    var host = document.getElementById("toast-host");
+    if (!host) return;
+    var node = document.createElement("div");
+    node.className = "toast" + (kind === "error" ? " error" : "");
+    node.textContent = message;
+    host.appendChild(node);
+    setTimeout(function () {
+      node.style.opacity = "0";
+      node.style.transform = "translateY(4px)";
+      setTimeout(function () { node.remove(); }, 180);
+    }, 2600);
+  }
+
+  function escapeHtml(value) {
+    return String(value == null ? "" : value)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#39;");
+  }
+
+  function providerOf(raw) {
+    var value = String(raw || "");
+    if (/youtu\.?be/i.test(value)) return { label: "YouTube", kind: "frame" };
+    if (/vimeo\.com/i.test(value)) return { label: "Vimeo", kind: "frame" };
+    if (/drive\.google\.com/i.test(value)) return { label: "Google Drive", kind: "frame" };
+    if (/\.(mp4|webm|ogg)(\?|$)/i.test(value)) return { label: "Direct file", kind: "file" };
+    return { label: "Embed", kind: "frame" };
+  }
+
+  function embedUrl(raw) {
+    var value = String(raw || "").trim();
+    if (!value) return null;
+    if (/^https?:\/\/\S+\.(mp4|webm|ogg)(\?\S*)?$/i.test(value)) return { kind: "file", src: value };
+    var match;
+    if ((match = value.match(/(?:youtube\.com\/(?:watch\?(?:\S*&)?v=|embed\/|live\/|shorts\/)|youtu\.be\/)([\w-]{11})/))) {
+      return { kind: "frame", src: "https://www.youtube-nocookie.com/embed/" + match[1] + "?rel=0" };
+    }
+    if ((match = value.match(/vimeo\.com\/(?:video\/)?(\d+)/))) {
+      return { kind: "frame", src: "https://player.vimeo.com/video/" + match[1] };
+    }
+    if ((match = value.match(/drive\.google\.com\/file\/d\/([\w-]+)/))) {
+      return { kind: "frame", src: "https://drive.google.com/file/d/" + match[1] + "/preview" };
+    }
+    if (/^https?:\/\//i.test(value)) return { kind: "frame", src: value };
+    return null;
+  }
+
+  function finite(value) {
+    return typeof value === "number" && Number.isFinite(value) ? Math.max(0, value) : 0;
+  }
+
+  function completedModules(state) {
+    return MODULES.reduce(function (n, module) { return n + (state.done && state.done[module.id] ? 1 : 0); }, 0);
+  }
+
+  function reviewedCases(state) {
+    return CASES.reduce(function (n, item, index) { return n + (state.flipped && state.flipped[index] ? 1 : 0); }, 0);
+  }
+
+  function pointRows(state) {
+    var moduleDone = MODULES.reduce(function (n, module) { return n + (state.done && state.done[module.id] ? POINT_RULES.moduleComplete : 0); }, 0);
+    var moduleMax = MODULES.length * POINT_RULES.moduleComplete;
+    var drillDone = MODULES.reduce(function (n, module) {
+      return n + Math.min(finite(state.scores && state.scores[module.id]), module.quiz) * POINT_RULES.drillCorrect;
+    }, 0);
+    var drillMax = MODULES.reduce(function (n, module) { return n + module.quiz; }, 0) * POINT_RULES.drillCorrect;
+    var vol = Math.min(finite(state.scores && state.scores.vol), VOL_LEN);
+    var coc = Math.min(finite(state.scores && state.scores.coc), COC_LEN);
+    var labDone = (vol + coc) * POINT_RULES.labCorrect;
+    var labMax = (VOL_LEN + COC_LEN) * POINT_RULES.labCorrect;
+    var simDone = SIMS.reduce(function (n, sim) {
+      var max = sim.steps * 2;
+      return n + Math.min(finite(state.scores && state.scores["sim-" + sim.id]), max) * POINT_RULES.simPoint;
+    }, 0);
+    var simMax = SIMS.reduce(function (n, sim) { return n + sim.steps * 2; }, 0) * POINT_RULES.simPoint;
+    var cases = reviewedCases(state);
+    return [
+      { id: "modules", label: "Modules completed", earned: moduleDone, max: moduleMax, detail: completedModules(state) + " of " + MODULES.length + " × " + POINT_RULES.moduleComplete + " pts" },
+      { id: "drills", label: "Drill answers", earned: drillDone, max: drillMax, detail: (drillDone / POINT_RULES.drillCorrect) + " correct × " + POINT_RULES.drillCorrect + " pts" },
+      { id: "labs", label: "Lab checks", earned: labDone, max: labMax, detail: "Volatility " + vol + "/" + VOL_LEN + " · chain " + coc + "/" + COC_LEN + " × " + POINT_RULES.labCorrect + " pts" },
+      { id: "sims", label: "Investigation points", earned: simDone, max: simMax, detail: "Simulation score × " + POINT_RULES.simPoint + " pts" },
+      { id: "cases", label: "Case cards reviewed", earned: cases * POINT_RULES.caseReviewed, max: CASES.length * POINT_RULES.caseReviewed, detail: cases + " of " + CASES.length + " × " + POINT_RULES.caseReviewed + " pts" }
+    ];
+  }
+
+  function computePoints(state) {
+    return pointRows(state).reduce(function (n, row) { return n + row.earned; }, 0);
+  }
+
+  function maxPoints() {
+    return pointRows({
+      done: MODULES.reduce(function (o, module) { o[module.id] = true; return o; }, {}),
+      scores: MODULES.reduce(function (o, module) { o[module.id] = module.quiz; return o; }, {
+        vol: VOL_LEN,
+        coc: COC_LEN,
+        "sim-exfil": 8,
+        "sim-mule": 8,
+        "sim-platform": 8
+      }),
+      flipped: CASES.reduce(function (o, item, index) { o[index] = true; return o; }, {})
+    }).reduce(function (n, row) { return n + row.max; }, 0);
+  }
+
+  var LEVELS = [
+    { min: 0, name: "Junior clerk" },
+    { min: 200, name: "Associate" },
+    { min: 450, name: "Junior counsel" },
+    { min: 750, name: "Senior counsel" },
+    { min: 1000, name: "Silk" }
+  ];
+
+  function levelFor(points) {
+    var index = 0;
+    for (var i = 0; i < LEVELS.length; i++) {
+      if (points >= LEVELS[i].min) index = i;
+    }
+    var current = LEVELS[index];
+    var next = LEVELS[index + 1] || null;
+    return {
+      level: index + 1,
+      name: current.name,
+      min: current.min,
+      next: next ? next.min : null,
+      progress: next ? Math.min(1, (points - current.min) / (next.min - current.min)) : 1
+    };
+  }
+
+  function badgesFor(state) {
+    var modules = completedModules(state);
+    var cases = reviewedCases(state);
+    var points = computePoints(state);
+    var drillScores = MODULES.map(function (module) { return finite(state.scores && state.scores[module.id]); });
+    var simScores = SIMS.map(function (sim) { return finite(state.scores && state.scores["sim-" + sim.id]); });
+    var perfectDrill = MODULES.some(function (module, index) { return drillScores[index] === module.quiz; });
+    var allDrills = drillScores.filter(function (n) { return n > 0; }).length;
+    var firstSim = simScores.some(function (n, index) { return n > 0 || (state.scores && state.scores["sim-" + SIMS[index].id] !== undefined); });
+    var allSims = SIMS.filter(function (sim) { return state.scores && state.scores["sim-" + sim.id] !== undefined; }).length;
+    var perfectSim = SIMS.some(function (sim, index) { return simScores[index] === sim.steps * 2; });
+    function badge(id, name, description, tone, progress, target, mark) {
+      return {
+        id: id, name: name, description: description, tone: tone,
+        earned: progress >= target, progress: Math.min(progress, target), target: target, mark: mark
+      };
+    }
+    return [
+      badge("first-module", "First authority", "Complete one statutory module.", "teal", modules, 1, "I"),
+      badge("five-modules", "Doctrine five", "Complete five of the nine modules.", "teal", modules, 5, "V"),
+      badge("all-modules", "Nine of nine", "Complete every statutory module.", "teal", modules, 9, "IX"),
+      badge("perfect-drill", "Clean drill", "Score 3/3 on any applied drill.", "amber", perfectDrill ? 1 : 0, 1, "3"),
+      badge("all-drills", "Every drill sat", "Attempt the drill in every module.", "amber", allDrills, MODULES.length, "A"),
+      badge("volatility", "Volatility order", "Sequence all eight sources correctly.", "navy", finite(state.scores && state.scores.vol), VOL_LEN, "8"),
+      badge("custody", "Chain intact", "Build the full chain of custody correctly.", "navy", finite(state.scores && state.scores.coc), COC_LEN, "C"),
+      badge("first-sim", "First verdict", "Finish one branching investigation.", "ox", firstSim ? 1 : 0, 1, "1"),
+      badge("all-sims", "Three verdicts", "Finish all three investigations.", "ox", allSims, SIMS.length, "3"),
+      badge("perfect-sim", "No ground given", "Score the maximum on any investigation.", "ox", perfectSim ? 1 : 0, 1, "M"),
+      badge("ten-cases", "Case brief", "Review ten of the twelve authorities.", "amber", cases, 10, "X"),
+      badge("all-cases", "Twelve authorities", "Review every landmark authority card.", "amber", cases, CASES.length, "XII"),
+      badge("points-500", "Five hundred", "Reach 500 points.", "teal", points, 500, "500"),
+      badge("points-1000", "One thousand", "Reach 1,000 points.", "ox", points, 1000, "1k")
+    ];
+  }
+
+  function boardWithCurrent(state) {
+    var rows = (state.board || []).slice();
+    if (state.profile) {
+      var name = state.profile.trim().toLowerCase();
+      var existing = rows.filter(function (row) { return row.name.trim().toLowerCase() === name; })[0];
+      rows = rows.filter(function (row) { return row.name.trim().toLowerCase() !== name; });
+      rows.push({
+        name: state.profile,
+        points: computePoints(state),
+        modules: completedModules(state),
+        cases: reviewedCases(state),
+        updatedAt: existing ? existing.updatedAt : Date.now()
+      });
+    }
+    return rows.sort(function (a, b) { return b.points - a.points || a.name.localeCompare(b.name); });
+  }
+
+  function saveBoardEntry(state, name) {
+    var clean = String(name || "").trim().slice(0, 60);
+    if (!clean) return state;
+    var entry = {
+      name: clean,
+      points: computePoints(state),
+      modules: completedModules(state),
+      cases: reviewedCases(state),
+      updatedAt: Date.now()
+    };
+    var rows = (state.board || []).filter(function (row) { return row.name.trim().toLowerCase() !== clean.toLowerCase(); });
+    rows.push(entry);
+    rows.sort(function (a, b) { return b.points - a.points || a.name.localeCompare(b.name); });
+    var next = Object.assign({}, state, { profile: clean, board: rows.slice(0, 25) });
+    return next;
+  }
+
+  function exportPayload(state) {
+    return JSON.stringify({
+      app: "cyberlex",
+      version: 1,
+      exportedAt: new Date().toISOString(),
+      state: state
+    }, null, 2);
+  }
+
+  function parseImport(text) {
+    var parsed;
+    try {
+      parsed = JSON.parse(text);
+    } catch (error) {
+      throw new Error("That file is not valid JSON.");
+    }
+    if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) {
+      throw new Error("The progress file must contain a JSON object.");
+    }
+    var raw = parsed.state && typeof parsed.state === "object" && !Array.isArray(parsed.state) ? parsed.state : parsed;
+    var keys = ["done", "scores", "flipped", "videos", "profile", "board", "theme"];
+    var found = keys.some(function (key) { return key in raw; });
+    if (!found) throw new Error("No recognisable progress fields were found in that file.");
+    function record(source, mapper) {
+      var out = {};
+      if (!source || typeof source !== "object" || Array.isArray(source)) return out;
+      Object.keys(source).forEach(function (key) {
+        var value = mapper(source[key]);
+        if (value !== undefined) out[key] = value;
+      });
+      return out;
+    }
+    var scores = record(raw.scores, function (value) {
+      return typeof value === "number" && Number.isFinite(value) ? Math.max(0, Math.round(value)) : undefined;
+    });
+    var done = record(raw.done, function (value) { return typeof value === "boolean" ? value : undefined; });
+    var flipped = record(raw.flipped, function (value) { return typeof value === "boolean" ? value : undefined; });
+    var videos = record(raw.videos, function (value) {
+      return typeof value === "string" && value.trim() ? value.trim().slice(0, 2048) : undefined;
+    });
+    var board = Array.isArray(raw.board) ? raw.board.filter(function (row) {
+      return row && typeof row === "object" && typeof row.name === "string" && row.name.trim();
+    }).map(function (row) {
+      return {
+        name: row.name.trim().slice(0, 60),
+        points: finite(row.points),
+        modules: finite(row.modules),
+        cases: finite(row.cases),
+        updatedAt: finite(row.updatedAt)
+      };
+    }).sort(function (a, b) { return b.points - a.points || a.name.localeCompare(b.name); }).slice(0, 25) : [];
+    return {
+      state: {
+        done: done,
+        scores: scores,
+        flipped: flipped,
+        videos: videos,
+        profile: typeof raw.profile === "string" && raw.profile.trim() ? raw.profile.trim().slice(0, 60) : undefined,
+        board: board,
+        theme: raw.theme === "dark" ? "dark" : "light"
+      },
+      warnings: parsed.version > 1 ? ["The file was exported by a newer version; unknown fields were ignored."] : []
+    };
+  }
+
+  function formatDate(value) {
+    if (!value) return "—";
+    try {
+      return new Date(value).toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" });
+    } catch (error) {
+      return "—";
+    }
+  }
+
+  function downloadText(filename, text) {
+    var blob = new Blob([text], { type: "application/json" });
+    var url = URL.createObjectURL(blob);
+    var anchor = document.createElement("a");
+    anchor.href = url;
+    anchor.download = filename;
+    document.body.appendChild(anchor);
+    anchor.click();
+    anchor.remove();
+    URL.revokeObjectURL(url);
+  }
+
+  function copyText(text) {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      return navigator.clipboard.writeText(text);
+    }
+    var area = document.createElement("textarea");
+    area.value = text;
+    area.style.position = "fixed";
+    area.style.opacity = "0";
+    document.body.appendChild(area);
+    area.select();
+    try { document.execCommand("copy"); } catch (error) {}
+    area.remove();
+    return Promise.resolve();
+  }
+
+  function setActiveNav() {
+    var page = document.body.getAttribute("data-page");
+    document.querySelectorAll("[data-nav]").forEach(function (link) {
+      if (link.getAttribute("data-nav") === page) link.classList.add("active");
+    });
+  }
+
+  function initShell() {
+    setActiveNav();
+    var reset = document.querySelector("[data-reset-demo]");
+    if (reset) {
+      reset.addEventListener("click", function () {
+        if (window.confirm("Reset the seeded P7 demo data? This clears the demo progress stored in this browser.")) resetDemo();
+      });
+    }
+    var theme = document.querySelector("[data-theme-toggle]");
+    if (theme) {
+      theme.addEventListener("click", function () {
+        var state = loadState();
+        state.theme = state.theme === "dark" ? "light" : "dark";
+        saveState(state);
+        document.documentElement.setAttribute("data-theme", state.theme);
+        theme.textContent = state.theme === "dark" ? "Light" : "Dark";
+      });
+    }
+    var state = loadState();
+    if (state.theme === "dark") document.documentElement.setAttribute("data-theme", "dark");
+  }
+
+  window.CyberDemo = {
+    DEMO_KEY: DEMO_KEY,
+    MODULES: MODULES,
+    SIMS: SIMS,
+    CASES: CASES,
+    VOL_LEN: VOL_LEN,
+    COC_LEN: COC_LEN,
+    POINT_RULES: POINT_RULES,
+    DEFAULT_STATE: DEFAULT_STATE,
+    loadState: loadState,
+    saveState: saveState,
+    resetDemo: resetDemo,
+    clearProgress: clearProgress,
+    toast: toast,
+    escapeHtml: escapeHtml,
+    providerOf: providerOf,
+    embedUrl: embedUrl,
+    computePoints: computePoints,
+    pointRows: pointRows,
+    maxPoints: maxPoints,
+    completedModules: completedModules,
+    reviewedCases: reviewedCases,
+    levelFor: levelFor,
+    badgesFor: badgesFor,
+    boardWithCurrent: boardWithCurrent,
+    saveBoardEntry: saveBoardEntry,
+    exportPayload: exportPayload,
+    parseImport: parseImport,
+    formatDate: formatDate,
+    downloadText: downloadText,
+    copyText: copyText
+  };
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initShell);
+  } else {
+    initShell();
+  }
+})();
+
+  </script>
+</head>
+<body data-page="faculty">
+  <div class="demo-bar">
+    <span class="dot" aria-hidden="true"></span>
+    <span>Phase-1 demo · P7 · Cases + Progress + Videos + Gamification</span>
+    <span class="demo-bar-right">No server · localStorage only · seeded demo data</span>
+  </div>
+
+  <header class="topbar">
+    <a class="brand" href="index.html">Cyber<span>Lex</span> <small>Phase-1 studio</small></a>
+    <nav class="mainnav" aria-label="Demo views">
+      <a href="index.html" data-nav="index">Hub</a>
+      <a href="client.html" data-nav="client">Learner</a>
+      <a href="faculty.html" data-nav="faculty">Faculty</a>
+      <a href="admin.html" data-nav="admin">Admin</a>
+      <a href="reviewer.html" data-nav="reviewer">Reviewer</a>
+      <a href="workflow.html" data-nav="workflow">Workflow</a>
+    </nav>
+    <div class="top-actions">
+      <span class="role-pill amber">Faculty view</span>
+      <button class="btn tiny ghost" type="button" data-reset-demo>Reset demo</button>
+    </div>
+  </header>
+
+  <main class="wrap ">
+<section class="hero" style="padding-bottom:22px">
+  <div>
+    <div class="eyebrow">Faculty / instructor view · P3 persona</div>
+    <h1 class="hero-title" style="max-width:21ch">Prepare the lesson. <em>Keep the learner's data where it belongs.</em></h1>
+    <p class="lede">
+      Faculty can attach a recording to any module without a CMS, a developer or a redeploy. The
+      link lives on the teaching device, overrides the shipped default, and plays inside the same
+      sandboxed slot the learner sees. There is no cohort cloud in Phase-1 — and that is a feature,
+      not a gap.
+    </p>
+    <div class="btnrow" style="margin-top:16px">
+      <button class="btn primary" type="button" data-faculty-tab="videos">Manage lesson videos</button>
+      <a class="btn" href="client.html">See the learner view</a>
+      <a class="btn ghost" href="DEMO-EMAIL.md">Open demo email</a>
+    </div>
+  </div>
+  <aside class="panel panel-pad">
+    <div class="panel-head" style="margin-bottom:10px"><h2 class="panel-title">Teaching readiness</h2><span class="pill amber">local device</span></div>
+    <div class="grid grid-2">
+      <div class="stat"><div class="stat-label">Lessons linked</div><div class="stat-value" id="fac-linked">4/9</div><div class="stat-note">overrides</div></div>
+      <div class="stat"><div class="stat-label">Lab benches</div><div class="stat-value">6</div><div class="stat-note">ready to run</div></div>
+      <div class="stat"><div class="stat-label">Investigations</div><div class="stat-value">3</div><div class="stat-note">scored</div></div>
+      <div class="stat"><div class="stat-label">Authorities</div><div class="stat-value">12</div><div class="stat-note">case cards</div></div>
+    </div>
+    <div class="notice" style="margin-top:12px"><b>No learner PII.</b> A faculty device can see its own saved video links and a seeded demo cohort. It cannot read a learner's browser storage.</div>
+  </aside>
+</section>
+
+<div class="tabs" style="margin-top:22px" role="tablist" aria-label="Faculty views">
+  <button class="tab active" type="button" data-faculty-tab="videos" role="tab" aria-selected="true">Video manager</button>
+  <button class="tab" type="button" data-faculty-tab="readiness" role="tab" aria-selected="false">Class readiness</button>
+  <button class="tab" type="button" data-faculty-tab="cohort" role="tab" aria-selected="false">Cohort snapshot</button>
+  <button class="tab" type="button" data-faculty-tab="boundary" role="tab" aria-selected="false">Role boundary</button>
+</div>
+
+<section class="tab-panel active" id="fac-panel-videos" role="tabpanel">
+  <div class="grid grid-side" style="margin-top:16px">
+    <div class="panel panel-pad">
+      <div class="panel-head">
+        <div>
+          <h2 class="panel-title">Module video slots</h2>
+          <p class="panel-note">Attach, replace, preview or clear a lesson. The learner sees the same slot.</p>
+        </div>
+        <span class="pill teal" id="fac-linked-pill">4 linked</span>
+      </div>
+      <div id="faculty-video-list"></div>
+    </div>
+
+    <div class="stack">
+      <div class="panel panel-pad">
+        <div class="panel-head"><h2 class="panel-title">Preview</h2><span class="pill amber" id="fac-preview-provider">YouTube</span></div>
+        <div id="faculty-preview"></div>
+        <div id="faculty-preview-actions" class="btnrow" style="margin-top:10px"></div>
+      </div>
+      <div class="panel panel-pad">
+        <h2 class="panel-title">How the slot behaves</h2>
+        <ul class="role-list" style="margin-top:8px">
+          <li>YouTube, Vimeo and Drive links are normalised to their embed URL.</li>
+          <li>Direct .mp4 / .webm / .ogg links render a native video player.</li>
+          <li>An empty slot is a clean attach state, not a broken iframe.</li>
+          <li>Iframes are sandboxed and use a strict referrer policy.</li>
+          <li>The link is stored on this device only; clearing the browser clears it.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="tab-panel" id="fac-panel-readiness" role="tabpanel">
+  <div class="grid grid-2" style="margin-top:16px">
+    <div class="panel panel-pad">
+      <div class="panel-head"><h2 class="panel-title">Module readiness</h2><span class="panel-note">lesson linked / not linked</span></div>
+      <div id="faculty-readiness"></div>
+    </div>
+    <div class="panel panel-pad">
+      <h2 class="panel-title">What is ready for class</h2>
+      <div class="timeline" style="margin-top:10px">
+        <div class="timeline-item done"><span class="timeline-mark">9</span><div class="timeline-body"><b>Statutory modules</b><p>Doctrine, video slot and a three-question drill each.</p></div></div>
+        <div class="timeline-item done"><span class="timeline-mark">6</span><div class="timeline-body"><b>Forensics workbenches</b><p>Integrity, volatility, file signatures, chain of custody, certificates, toolkit.</p></div></div>
+        <div class="timeline-item done"><span class="timeline-mark">3</span><div class="timeline-body"><b>Branching investigations</b><p>Four scored decisions each; no undo, saved as sim-&lt;id&gt;.</p></div></div>
+        <div class="timeline-item done"><span class="timeline-mark">12</span><div class="timeline-body"><b>Landmark authorities</b><p>Searchable cards with holding, citation and a review count.</p></div></div>
+        <div class="timeline-item"><span class="timeline-mark">!</span><div class="timeline-body"><b>No cloud cohort</b><p>Phase-1 has no accounts or server, so class analytics stay local.</p></div></div>
+      </div>
+      <div class="notice teal" style="margin-top:12px"><b>Demo tip.</b> Attach a lesson in the Video manager, then open the learner page in the same browser profile. The slot is shared because both pages use the same local demo key.</div>
+    </div>
+  </div>
+</section>
+
+<section class="tab-panel" id="fac-panel-cohort" role="tabpanel">
+  <div class="panel panel-pad" style="margin-top:16px">
+    <div class="panel-head">
+      <div><h2 class="panel-title">Demo cohort snapshot</h2><p class="panel-note">Seeded rows for the walkthrough. Not a real class roster.</p></div>
+      <span class="pill">local demo only</span>
+    </div>
+    <div class="table-wrap">
+      <table class="table">
+        <thead><tr><th>#</th><th>Learner</th><th>Points</th><th>Modules</th><th>Cases</th><th>Saved</th></tr></thead>
+        <tbody id="faculty-cohort"></tbody>
+      </table>
+    </div>
+    <div class="notice ox" style="margin-top:12px"><b>Why there is no real cohort table.</b> The product deliberately keeps learner state on the learner's device. A faculty account cannot read another browser's localStorage, and there is no backend to aggregate it. Phase-2 could add an opt-in class code, but that is out of scope for P7.</div>
+  </div>
+</section>
+
+<section class="tab-panel" id="fac-panel-boundary" role="tabpanel">
+  <div class="grid grid-2" style="margin-top:16px">
+    <div class="panel panel-pad">
+      <h2 class="panel-title">Faculty can</h2>
+      <ul class="role-list" style="margin-top:8px">
+        <li>Attach, replace or clear a video link per module on this device.</li>
+        <li>Preview the exact player the learner will see.</li>
+        <li>Copy a lesson link for a class handout or LMS.</li>
+        <li>Run the lab benches, investigations and case deck in class.</li>
+        <li>Reset the demo state on this device.</li>
+      </ul>
+    </div>
+    <div class="panel panel-pad">
+      <h2 class="panel-title">Faculty cannot</h2>
+      <ul class="role-list" style="margin-top:8px">
+        <li>See a learner's scores, name or progress from another device.</li>
+        <li>Create accounts, enrol learners or run a cloud cohort.</li>
+        <li>Edit the statutory text or the 12 case holdings from this view.</li>
+        <li>Publish a video to every device — the link is local by design.</li>
+        <li>Bypass the sandbox or inject scripts into the learner page.</li>
+      </ul>
+      <div class="notice" style="margin-top:10px"><b>Owner boundary.</b> Legal copy changes belong to the content owner (P2/P3); P7 owns the video slot, cases, progress and gamification surfaces.</div>
+    </div>
+  </div>
+</section>
+
+<script>
+(function () {
+  var D = window.CyberDemo;
+  var state = D.loadState();
+  var selected = "access";
+  var editing = null;
+  var SAMPLE = {
+    youtube: "https://www.youtube.com/watch?v=cQYACLLAPOw",
+    vimeo: "https://vimeo.com/76979871",
+    drive: "https://drive.google.com/file/d/1yKbrlk-2yuzVTX3P33kKEV4wMoJRMwMW/view",
+    mp4: "https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4"
+  };
+  function $(id) { return document.getElementById(id); }
+  function esc(value) { return D.escapeHtml(value); }
+  function save() { D.saveState(state); }
+  function linkedCount() { return D.MODULES.filter(function (m) { return !!state.videos[m.id]; }).length; }
+
+  function renderStats() {
+    $("fac-linked").textContent = linkedCount() + "/" + D.MODULES.length;
+    $("fac-linked-pill").textContent = linkedCount() + " linked";
+  }
+
+  function formFor(module) {
+    var raw = state.videos[module.id] || "";
+    return '<div class="video-form" style="padding:8px 0 0">' +
+      '<div class="input-row"><input class="input" id="fac-edit-' + module.id + '" value="' + esc(raw) + '" placeholder="https://youtu.be/…" aria-label="Lesson link for ' + esc(module.title) + '">' +
+      '<button class="btn primary tiny" type="button" data-fac-save="' + module.id + '">' + (raw ? "Save" : "Attach") + '</button>' +
+      '<button class="btn tiny ghost" type="button" data-fac-cancel="' + module.id + '">Cancel</button></div>' +
+      '<div class="sample-row"><span class="tiny muted" style="align-self:center">Try:</span>' +
+      '<button class="btn tiny ghost" type="button" data-fac-sample="' + module.id + '" data-sample="youtube">YouTube</button>' +
+      '<button class="btn tiny ghost" type="button" data-fac-sample="' + module.id + '" data-sample="vimeo">Vimeo</button>' +
+      '<button class="btn tiny ghost" type="button" data-fac-sample="' + module.id + '" data-sample="drive">Drive</button>' +
+      '<button class="btn tiny ghost" type="button" data-fac-sample="' + module.id + '" data-sample="mp4">mp4</button></div></div>';
+  }
+
+  function renderList() {
+    $("faculty-video-list").innerHTML = D.MODULES.map(function (module) {
+      var raw = state.videos[module.id] || "";
+      var provider = raw ? D.providerOf(raw).label : "Empty";
+      var active = selected === module.id;
+      return '<div style="padding:10px 0;border-bottom:1px solid var(--line);' + (active ? 'background:var(--surface-2);margin:0 -8px;padding-left:8px;padding-right:8px;' : '') + '">' +
+        '<div style="display:flex;align-items:flex-start;gap:10px;flex-wrap:wrap">' +
+        '<div style="min-width:0;flex:1"><div class="small" style="font-weight:600">' + esc(module.title) + '</div><div class="tiny muted">' + esc(module.tag) + ' · ' + esc(module.video) + '</div></div>' +
+        '<span class="pill ' + (raw ? 'teal' : '') + '">' + esc(provider) + '</span></div>' +
+        (editing === module.id ? formFor(module) : '') +
+        '<div class="btnrow" style="margin-top:7px">' +
+        '<button class="btn tiny" type="button" data-fac-preview="' + module.id + '">Preview</button>' +
+        '<button class="btn tiny ghost" type="button" data-fac-change="' + module.id + '">' + (raw ? "Change" : "Attach") + '</button>' +
+        (raw ? '<button class="btn tiny ghost" type="button" data-fac-copy="' + module.id + '">Copy link</button>' : '') +
+        (raw ? '<button class="btn tiny danger" type="button" data-fac-clear="' + module.id + '">Clear</button>' : '') +
+        '</div></div>';
+    }).join("");
+  }
+
+  function renderPreview() {
+    var module = D.MODULES.filter(function (m) { return m.id === selected; })[0] || D.MODULES[0];
+    var raw = state.videos[module.id] || "";
+    var parsed = D.embedUrl(raw);
+    var provider = raw ? D.providerOf(raw) : null;
+    $("fac-preview-provider").textContent = provider ? provider.label : "Empty";
+    $("fac-preview-provider").className = "pill " + (raw ? "amber" : "");
+    if (!raw || !parsed) {
+      $("faculty-preview").innerHTML = '<div class="video-empty" style="margin:0"><div><b>No lesson linked</b><p>' + esc(module.title) + ' is showing the clean empty state. Attach a link from the list or use a sample below.</p></div></div>' +
+        '<div class="sample-row" style="margin-top:8px"><button class="btn tiny" type="button" data-fac-sample="' + module.id + '" data-sample="youtube">YouTube sample</button><button class="btn tiny ghost" type="button" data-fac-sample="' + module.id + '" data-sample="vimeo">Vimeo sample</button><button class="btn tiny ghost" type="button" data-fac-sample="' + module.id + '" data-sample="drive">Drive sample</button><button class="btn tiny ghost" type="button" data-fac-sample="' + module.id + '" data-sample="mp4">mp4 sample</button></div>';
+      $("faculty-preview-actions").innerHTML = "";
+      return;
+    }
+    $("faculty-preview").innerHTML = parsed.kind === "file"
+      ? '<div class="video-frame" style="margin-top:0;border-radius:3px;overflow:hidden"><video controls playsinline preload="metadata" src="' + esc(parsed.src) + '"></video></div>'
+      : '<div class="video-frame" style="margin-top:0;border-radius:3px;overflow:hidden"><iframe src="' + esc(parsed.src) + '" title="' + esc(module.video) + '" loading="lazy" allowfullscreen allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" sandbox="allow-scripts allow-same-origin allow-presentation allow-popups allow-popups-to-escape-sandbox"></iframe></div>';
+    $("faculty-preview-actions").innerHTML =
+      '<button class="btn tiny" type="button" data-fac-change="' + module.id + '">Change link</button>' +
+      '<button class="btn tiny ghost" type="button" data-fac-copy="' + module.id + '">Copy link</button>' +
+      '<button class="btn tiny danger" type="button" data-fac-clear="' + module.id + '">Clear slot</button>';
+  }
+
+  function renderReadiness() {
+    $("faculty-readiness").innerHTML = D.MODULES.map(function (module) {
+      var raw = state.videos[module.id] || "";
+      return '<div class="leader-row" style="grid-template-columns:16px 1fr auto;padding:7px 0">' +
+        '<span style="width:7px;height:7px;border-radius:50%;background:' + (raw ? "var(--teal)" : "var(--line)") + '"></span>' +
+        '<span class="leader-name">' + esc(module.title) + '</span>' +
+        '<span class="leader-points">' + (raw ? "linked" : "empty") + '</span></div>';
+    }).join("");
+  }
+
+  function renderCohort() {
+    var rows = D.boardWithCurrent(state).slice(0, 6);
+    $("faculty-cohort").innerHTML = rows.map(function (row, index) {
+      return '<tr><td class="num">' + (index + 1) + '</td><td>' + esc(row.name) + '</td><td class="num">' + row.points + '</td><td class="num">' + row.modules + '</td><td class="num">' + row.cases + '</td><td class="tiny muted">' + esc(D.formatDate(row.updatedAt)) + '</td></tr>';
+    }).join("");
+  }
+
+  function renderAll() {
+    renderStats();
+    renderList();
+    renderPreview();
+    renderReadiness();
+    renderCohort();
+  }
+
+  function attach(id, raw) {
+    var clean = String(raw || "").trim();
+    if (!clean || !D.embedUrl(clean)) {
+      D.toast("Paste a supported YouTube, Vimeo, Google Drive or direct video link.", "error");
+      return;
+    }
+    state.videos[id] = clean;
+    save();
+    editing = null;
+    selected = id;
+    renderAll();
+    D.toast("Lesson link saved on this device.");
+  }
+
+  function clearVideo(id) {
+    delete state.videos[id];
+    save();
+    editing = null;
+    renderAll();
+    D.toast("Lesson link cleared; the slot is empty.");
+  }
+
+  function openFacultyTab(name) {
+    document.querySelectorAll(".tab[data-faculty-tab]").forEach(function (tab) {
+      tab.classList.toggle("active", tab.getAttribute("data-faculty-tab") === name);
+      tab.setAttribute("aria-selected", tab.getAttribute("data-faculty-tab") === name ? "true" : "false");
+    });
+    document.querySelectorAll(".tab-panel[id^='fac-panel-']").forEach(function (panel) {
+      panel.classList.toggle("active", panel.id === "fac-panel-" + name);
+    });
+  }
+
+  document.querySelectorAll(".tab[data-faculty-tab]").forEach(function (tab) {
+    tab.addEventListener("click", function () { openFacultyTab(tab.getAttribute("data-faculty-tab")); });
+  });
+  document.querySelectorAll("[data-faculty-tab]").forEach(function (button) {
+    if (button.classList.contains("tab")) return;
+    button.addEventListener("click", function () { openFacultyTab(button.getAttribute("data-faculty-tab")); });
+  });
+
+  document.addEventListener("click", function (event) {
+    var preview = event.target.closest("[data-fac-preview]");
+    var change = event.target.closest("[data-fac-change]");
+    var saveButton = event.target.closest("[data-fac-save]");
+    var cancel = event.target.closest("[data-fac-cancel]");
+    var clear = event.target.closest("[data-fac-clear]");
+    var copy = event.target.closest("[data-fac-copy]");
+    var sample = event.target.closest("[data-fac-sample]");
+    if (preview) {
+      selected = preview.getAttribute("data-fac-preview");
+      editing = null;
+      renderAll();
+    } else if (change) {
+      editing = change.getAttribute("data-fac-change");
+      selected = editing;
+      renderAll();
+    } else if (saveButton) {
+      var id = saveButton.getAttribute("data-fac-save");
+      var input = $("fac-edit-" + id);
+      attach(id, input ? input.value : "");
+    } else if (cancel) {
+      editing = null;
+      renderAll();
+    } else if (clear) {
+      clearVideo(clear.getAttribute("data-fac-clear"));
+    } else if (copy) {
+      var copyId = copy.getAttribute("data-fac-copy");
+      D.copyText(state.videos[copyId] || "").then(function () { D.toast("Lesson link copied."); });
+    } else if (sample) {
+      var sampleId = sample.getAttribute("data-fac-sample");
+      attach(sampleId, SAMPLE[sample.getAttribute("data-sample")]);
+    }
+  });
+
+  renderAll();
+})();
+</script>
+
+  </main>
+
+  <div class="toast-host" id="toast-host" aria-live="polite" aria-atomic="false"></div>
+
+  <footer class="footer">
+    <div class="footer-row">
+      <span><b>CyberLex</b> · Phase-1 · P7 demo</span>
+      <a href="README.md">README</a>
+      <a href="ROLE-SCOPE.md">Role scope</a>
+      <a href="DEMO-EMAIL.md">Demo email</a>
+      <a href="workflow.html">End-to-end workflow</a>
+      <span class="footer-right">Teaching aid, not legal advice. Reset the seeded data from the top bar.</span>
+    </div>
+  </footer>
+</body>
+</html>

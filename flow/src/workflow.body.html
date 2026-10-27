@@ -1,0 +1,292 @@
+<section class="hero" style="padding-bottom:22px">
+  <div>
+    <div class="eyebrow">End-to-end workflow · node map</div>
+    <h1 class="hero-title" style="max-width:22ch">From first visit to <em>signed-off progress.</em></h1>
+    <p class="lede">
+      The learner path is the solid line: land, choose a view, read a module, play the lesson, sit
+      the drill, practise in the lab and investigations, review the authorities, then prove progress.
+      The dashed lines are the faculty and admin support paths that make the learner path possible.
+    </p>
+    <div class="btnrow" style="margin-top:16px">
+      <button class="btn primary" type="button" id="flow-play">Play walkthrough</button>
+      <a class="btn" href="client.html">Open learner view</a>
+      <a class="btn ghost" href="reviewer.html">Open sign-off</a>
+    </div>
+  </div>
+  <aside class="panel panel-pad">
+    <h2 class="panel-title">How to read it</h2>
+    <ul class="role-list" style="margin-top:8px">
+      <li>Click any node to see what happens, who can do it, what is written and how to verify it.</li>
+      <li>Use the role filter to dim everything outside one scope.</li>
+      <li>Play the walkthrough to move through the learner path in order.</li>
+      <li>The canvas scrolls horizontally on a phone; the detail panel follows the selected node.</li>
+    </ul>
+    <div class="legend">
+      <span><i style="background:var(--teal)"></i>Learner</span>
+      <span><i style="background:var(--amber)"></i>Faculty</span>
+      <span><i style="background:var(--ox)"></i>Admin</span>
+      <span><i style="background:var(--navy)"></i>Reviewer</span>
+      <span><i style="background:var(--line-strong)"></i>System</span>
+    </div>
+  </aside>
+</section>
+
+<div class="flow-toolbar" style="margin-top:20px">
+  <span class="tiny muted">Filter</span>
+  <button class="btn tiny dark" type="button" data-role-filter="all">All</button>
+  <button class="btn tiny ghost" type="button" data-role-filter="learner">Learner</button>
+  <button class="btn tiny ghost" type="button" data-role-filter="faculty">Faculty</button>
+  <button class="btn tiny ghost" type="button" data-role-filter="admin">Admin</button>
+  <button class="btn tiny ghost" type="button" data-role-filter="reviewer">Reviewer</button>
+  <span class="sep"></span>
+  <button class="btn tiny" type="button" id="flow-reset">Reset view</button>
+  <span class="spacer"></span>
+  <span class="tiny muted">Solid = learner path · dashed = support path</span>
+</div>
+
+<div class="flow-stage-rail">
+  <div class="flow-stage"><b>01 · Discover</b><span>Landing → role view → dashboard</span></div>
+  <div class="flow-stage"><b>02 · Learn</b><span>Module → video → drill</span></div>
+  <div class="flow-stage"><b>03 · Practise</b><span>Lab → investigations → cases</span></div>
+  <div class="flow-stage"><b>04 · Prove</b><span>Progress → points → export → sign-off</span></div>
+</div>
+
+<div class="flow-shell">
+  <div>
+    <div class="flow-canvas-wrap" id="flow-wrap">
+      <div class="flow-canvas" id="flow-canvas" style="height:500px">
+        <svg class="flow-edges" id="flow-edges" width="1120" height="500" viewBox="0 0 1120 500" aria-hidden="true"></svg>
+        <div id="flow-nodes"></div>
+      </div>
+    </div>
+    <div class="legend" style="margin-top:8px">
+      <span><i style="background:var(--teal)"></i>Learner path</span>
+      <span><i style="background:var(--amber)"></i>Faculty support</span>
+      <span><i style="background:var(--ox)"></i>Admin support</span>
+      <span><i style="background:var(--navy)"></i>Reviewer gate</span>
+      <span>Click a node for the acceptance note.</span>
+    </div>
+    <p class="hint" style="margin-top:4px">The map is a demo canvas, not a runtime router. Each node links to the page that demonstrates it.</p>
+  </div>
+
+  <aside class="panel panel-pad node-detail" id="node-detail"></aside>
+</div>
+
+<script>
+(function () {
+  var D = window.CyberDemo;
+  var NODES = [
+    { id: "landing", x: 20, y: 40, step: "01", title: "Visitor lands", sub: "Hero, hash exhibit, route shell", role: "system", status: "done", what: "A first-time visitor sees the studio promise, a live SHA-256 exhibit and the four counts. No account is requested.", who: "Anyone with the URL.", writes: "Nothing. A theme preference is stored only after a toggle.", acceptance: "No console errors; hero hash works on file:// and localhost." },
+    { id: "role", x: 240, y: 40, step: "02", title: "Role view", sub: "Learner, faculty, admin, reviewer", role: "system", status: "done", what: "The demo exposes role scopes as separate pages. In Phase-1 there is no auth; the role is a scope, not a login.", who: "Anyone in the demo; a real deployment would gate this.", writes: "Nothing.", acceptance: "Each role page states what it can and cannot do." },
+    { id: "dashboard", x: 460, y: 40, step: "03", title: "Learner dashboard", sub: "Points, level, next action", role: "learner", status: "done", what: "The learner sees progress, the next best action, badges and a local leaderboard preview.", who: "Learner / client.", writes: "Reads done, scores and flipped; no write until an action.", acceptance: "Next action changes with progress; no stale zero state." },
+    { id: "module", x: 680, y: 40, step: "04", title: "Module reader", sub: "Doctrine, video, drill", role: "learner", status: "done", what: "Doctrine is taught first; the video slot follows; the three-question drill closes the loop.", who: "Learner, with faculty supplying the lesson link.", writes: "done[module] and scores[module] on drill completion.", acceptance: "P2 modules 1–4 and P3 modules 5–9 readable; drills scorable." },
+    { id: "video", x: 900, y: 40, step: "05", title: "Video slot", sub: "YouTube, Vimeo, Drive, mp4", role: "learner", also: ["faculty"], status: "done", what: "A linked lesson plays in a sandbox; an empty slot is a clean attach prompt, never a broken player.", who: "Learner watches; faculty attaches and clears.", writes: "videos[module] on this device.", acceptance: "Four providers play; empty slot clean; sandbox attribute present." },
+    { id: "drill", x: 900, y: 205, step: "06", title: "Applied drill", sub: "3 questions, locked answers", role: "learner", status: "done", what: "Each answer locks; the third answer saves the score and marks the module complete.", who: "Learner.", writes: "scores[module], done[module].", acceptance: "Score persists; explanation shown; re-answering cannot farm points." },
+    { id: "lab", x: 680, y: 205, step: "07", title: "Forensics lab", sub: "6 workbenches", role: "learner", status: "done", what: "Integrity, volatility, file signatures, chain of custody, certificates and the toolkit.", who: "Learner, or faculty in a class demo.", writes: "scores.vol and scores.coc where the bench is scored.", acceptance: "Volatility 8/8 and chain 8/8; mobile readable." },
+    { id: "sim", x: 460, y: 205, step: "08", title: "Investigations", sub: "3 branching simulations", role: "learner", status: "done", what: "Facts unfold a step at a time; every choice has a consequence and there is no undo.", who: "Learner.", writes: "scores[sim-id] as sim-exfil, sim-mule, sim-platform.", acceptance: "No double-score; max = steps × 2; negative scores render." },
+    { id: "cases", x: 240, y: 205, step: "09", title: "Case law", sub: "12 landmark authorities", role: "learner", status: "done", what: "Search, filter and reveal the holding. A reviewed card is worth 5 points and persists.", who: "Learner; reviewer can inspect.", writes: "flipped[i] for each reviewed card.", acceptance: "12 cards; search/filter; persisted review; +5 points each." },
+    { id: "progress", x: 20, y: 205, step: "10", title: "Progress", sub: "Scores, reset, export/import", role: "learner", status: "done", what: "The learner sees module, drill, lab, sim and case totals. Reset keeps videos and theme; export is versioned JSON.", who: "Learner; admin can inspect the demo state.", writes: "Import replaces state; reset clears learning data.", acceptance: "Reset fixed; export/import round-trip; no server." },
+    { id: "gamify", x: 20, y: 370, step: "11", title: "Points + badges", sub: "Computed from saved state", role: "learner", status: "done", what: "Points are derived, never stored separately. Fourteen badges and five level thresholds.", who: "Learner; reviewer can verify the rules.", writes: "Nothing new; all computed from the same state.", acceptance: "No double-award; badges update; 1,100 max." },
+    { id: "export", x: 240, y: 370, step: "12", title: "Export / import", sub: "Versioned JSON", role: "learner", also: ["admin"], status: "done", what: "A single file moves progress between devices; import validates and clamps every score.", who: "Learner; admin can move the demo state.", writes: "localStorage replace on import.", acceptance: "Round-trip restores points and cases; invalid JSON rejected." },
+    { id: "signoff", x: 460, y: 370, step: "13", title: "Reviewer sign-off", sub: "Checklist + test matrix", role: "reviewer", status: "gate", what: "The team lead verifies P7 and records a verdict. The sign-off is a local note, not a server record.", who: "Team leader / reviewer.", writes: "A local review note only.", acceptance: "Every P7 claim maps to a test and a demo step." },
+    { id: "faculty", x: 680, y: 370, step: "F1", title: "Faculty prep", sub: "Attach / preview / clear", role: "faculty", status: "done", what: "Faculty attaches a recording without code; the link is local and the preview matches the learner view.", who: "Faculty / instructor.", writes: "videos[module].", acceptance: "All four providers accepted; copy link; clear returns the empty state." },
+    { id: "admin", x: 900, y: 370, step: "A1", title: "Admin console", sub: "Registry, data, gamification, roles", role: "admin", status: "done", what: "Admin tests embeds, inspects the local JSON, exports/imports, resets and reviews the role matrix.", who: "Administrator / demo operator.", writes: "Videos and progress on this device only.", acceptance: "No PII; no server; audit log; docs linked." }
+  ];
+  var EDGES = [
+    { from: "landing", to: "role" },
+    { from: "role", to: "dashboard" },
+    { from: "dashboard", to: "module" },
+    { from: "module", to: "video" },
+    { from: "video", to: "drill" },
+    { from: "drill", to: "lab" },
+    { from: "lab", to: "sim" },
+    { from: "sim", to: "cases" },
+    { from: "cases", to: "progress" },
+    { from: "progress", to: "gamify" },
+    { from: "gamify", to: "export" },
+    { from: "export", to: "signoff" },
+    { from: "role", to: "faculty", dashed: true, tone: "amber" },
+    { from: "role", to: "admin", dashed: true, tone: "ox" },
+    { from: "faculty", to: "video", dashed: true, tone: "amber" },
+    { from: "admin", to: "export", dashed: true, tone: "ox", via: "bottom" }
+  ];
+  var filter = "all";
+  var active = "landing";
+  var timer = null;
+  var playIndex = 0;
+  var PLAY = ["landing", "role", "dashboard", "module", "video", "drill", "lab", "sim", "cases", "progress", "gamify", "export", "signoff", "faculty", "admin"];
+
+  function $(id) { return document.getElementById(id); }
+  function esc(value) { return D.escapeHtml(value); }
+  function nodeById(id) { return NODES.filter(function (node) { return node.id === id; })[0]; }
+  function matches(node) {
+    return filter === "all" || node.role === "system" || node.role === filter || (node.also || []).indexOf(filter) !== -1;
+  }
+  function center(node) { return { x: node.x + 95, y: node.y + 41 }; }
+  function roleLabel(role) {
+    return role === "learner" ? "Learner" : role === "faculty" ? "Faculty" : role === "admin" ? "Admin" : role === "reviewer" ? "Reviewer" : "System";
+  }
+  function statusPill(status) {
+    return status === "gate" ? '<span class="pill navy">gate</span>' : status === "done" ? '<span class="pill ok">verified</span>' : '<span class="pill">next</span>';
+  }
+  function hrefFor(role) {
+    return role === "faculty" ? "faculty.html" : role === "admin" ? "admin.html" : role === "reviewer" ? "reviewer.html" : role === "system" ? "index.html" : "client.html";
+  }
+
+  function renderNodes() {
+    $("flow-nodes").innerHTML = NODES.map(function (node) {
+      var visible = matches(node);
+      return '<button class="flow-node ' + node.role + (active === node.id ? " active" : "") + (visible ? "" : " dim") + '" type="button" data-node="' + node.id + '" style="left:' + node.x + 'px;top:' + node.y + 'px" aria-pressed="' + (active === node.id) + '">' +
+        '<div class="fn-top"><span class="fn-step">' + esc(node.step) + '</span><span class="fn-role">' + roleLabel(node.role) + '</span></div>' +
+        '<b>' + esc(node.title) + '</b><span>' + esc(node.sub) + '</span>' +
+        '<div class="fn-status">' + statusPill(node.status) + '</div></button>';
+    }).join("");
+  }
+
+  function marker(id, color) {
+    return '<marker id="' + id + '" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="' + color + '"></path></marker>';
+  }
+
+  function pathFor(edge) {
+    var a = center(nodeById(edge.from));
+    var b = center(nodeById(edge.to));
+    if (edge.via === "bottom") {
+      return "M " + a.x + " " + a.y + " C " + a.x + " 478, " + b.x + " 478, " + b.x + " " + (b.y + 6);
+    }
+    var dx = b.x - a.x;
+    var dy = b.y - a.y;
+    var len = Math.sqrt(dx * dx + dy * dy) || 1;
+    var ex = b.x - (dx / len) * 14;
+    var ey = b.y - (dy / len) * 14;
+    if (Math.abs(dx) < 40) {
+      return "M " + a.x + " " + a.y + " C " + a.x + " " + (a.y + dy * 0.45) + ", " + ex + " " + (ey - dy * 0.2) + ", " + ex + " " + ey;
+    }
+    return "M " + a.x + " " + a.y + " C " + (a.x + dx * 0.45) + " " + a.y + ", " + (ex - dx * 0.2) + " " + ey + ", " + ex + " " + ey;
+  }
+
+  function drawEdges() {
+    var svg = $("flow-edges");
+    var defs = '<defs>' + marker("arrow", "#b9ae9a") + marker("arrow-teal", "#14635c") + marker("arrow-amber", "#9a6b16") + marker("arrow-ox", "#8c2f39") + marker("arrow-navy", "#1d3557") + '</defs>';
+    svg.innerHTML = defs + EDGES.map(function (edge, index) {
+      var from = nodeById(edge.from);
+      var to = nodeById(edge.to);
+      var dim = !matches(from) || !matches(to);
+      var tone = edge.tone || (from.role === "learner" && to.role === "learner" ? "teal" : "line");
+      var color = tone === "teal" ? "#14635c" : tone === "amber" ? "#9a6b16" : tone === "ox" ? "#8c2f39" : tone === "navy" ? "#1d3557" : "#b9ae9a";
+      var markerId = tone === "teal" ? "arrow-teal" : tone === "amber" ? "arrow-amber" : tone === "ox" ? "arrow-ox" : tone === "navy" ? "arrow-navy" : "arrow";
+      var activeEdge = edge.from === active || edge.to === active;
+      return '<path class="flow-edge' + (edge.dashed ? " dashed" : "") + (dim ? " dim" : "") + (activeEdge ? " active" : "") + '" d="' + pathFor(edge) + '" fill="none" stroke="' + color + '" stroke-width="' + (activeEdge ? "2.2" : "1.35") + '" stroke-linecap="round" stroke-dasharray="' + (edge.dashed ? "5 5" : "0") + '" marker-end="url(#' + markerId + ')" opacity="' + (dim ? "0.12" : edge.dashed ? "0.62" : "0.9") + '"></path>';
+    }).join("");
+  }
+
+  function renderDetail() {
+    var node = nodeById(active) || NODES[0];
+    $("node-detail").innerHTML =
+      '<div class="detail-kicker">Node ' + esc(node.step) + ' · ' + roleLabel(node.role) + '</div>' +
+      '<h3>' + esc(node.title) + '</h3>' +
+      '<p>' + esc(node.what) + '</p>' +
+      '<ul class="detail-list">' +
+      '<li><b>Who can do it</b>' + esc(node.who) + '</li>' +
+      '<li><b>What is written</b>' + esc(node.writes) + '</li>' +
+      '<li><b>Acceptance check</b>' + esc(node.acceptance) + '</li>' +
+      '</ul>' +
+      '<div class="btnrow" style="margin-top:12px"><a class="btn tiny" href="' + hrefFor(node.role) + '">Open this view</a><button class="btn tiny ghost" type="button" id="detail-next">Next node →</button></div>';
+    var next = $("detail-next");
+    if (next) next.addEventListener("click", function () { stepNode(1); });
+  }
+
+  function render() {
+    renderNodes();
+    drawEdges();
+    renderDetail();
+  }
+
+  function selectNode(id) {
+    active = id;
+    render();
+    var node = nodeById(id);
+    var wrap = $("flow-wrap");
+    if (node && wrap) wrap.scrollTo({ left: Math.max(0, node.x - 140), top: Math.max(0, node.y - 40), behavior: "smooth" });
+  }
+
+  function stepNode(direction) {
+    var index = PLAY.indexOf(active);
+    if (index === -1) index = 0;
+    var next = (index + direction + PLAY.length) % PLAY.length;
+    active = PLAY[next];
+    render();
+    var node = nodeById(active);
+    var wrap = $("flow-wrap");
+    if (node && wrap) wrap.scrollTo({ left: Math.max(0, node.x - 140), top: Math.max(0, node.y - 40), behavior: "smooth" });
+  }
+
+  function setFilter(next) {
+    filter = next;
+    document.querySelectorAll("[data-role-filter]").forEach(function (button) {
+      button.classList.toggle("dark", button.getAttribute("data-role-filter") === next);
+      button.classList.toggle("ghost", button.getAttribute("data-role-filter") !== next);
+    });
+    render();
+  }
+
+  function stopPlay() {
+    if (timer) { clearInterval(timer); timer = null; }
+    $("flow-play").textContent = "Play walkthrough";
+    $("flow-play").classList.remove("danger");
+    $("flow-play").classList.add("primary");
+  }
+
+  function startPlay() {
+    stopPlay();
+    filter = "all";
+    setFilter("all");
+    playIndex = 0;
+    active = PLAY[0];
+    render();
+    $("flow-play").textContent = "Stop walkthrough";
+    $("flow-play").classList.remove("primary");
+    $("flow-play").classList.add("danger");
+    timer = setInterval(function () {
+      playIndex += 1;
+      if (playIndex >= PLAY.length) {
+        stopPlay();
+        active = "signoff";
+        render();
+        D.toast("Walkthrough complete. The reviewer gate is ready.");
+        return;
+      }
+      active = PLAY[playIndex];
+      render();
+      var node = nodeById(active);
+      var wrap = $("flow-wrap");
+      if (node && wrap) wrap.scrollTo({ left: Math.max(0, node.x - 140), top: Math.max(0, node.y - 40), behavior: "smooth" });
+    }, 1500);
+  }
+
+  $("flow-nodes").addEventListener("click", function (event) {
+    var node = event.target.closest("[data-node]");
+    if (!node) return;
+    stopPlay();
+    selectNode(node.getAttribute("data-node"));
+  });
+  document.querySelectorAll("[data-role-filter]").forEach(function (button) {
+    button.addEventListener("click", function () { stopPlay(); setFilter(button.getAttribute("data-role-filter")); });
+  });
+  $("flow-play").addEventListener("click", function () {
+    if (timer) { stopPlay(); D.toast("Walkthrough stopped."); }
+    else startPlay();
+  });
+  $("flow-reset").addEventListener("click", function () {
+    stopPlay();
+    filter = "all";
+    setFilter("all");
+    active = "landing";
+    render();
+    $("flow-wrap").scrollTo({ left: 0, top: 0, behavior: "smooth" });
+    D.toast("Flow view reset.");
+  });
+
+  setFilter("all");
+  render();
+})();
+</script>

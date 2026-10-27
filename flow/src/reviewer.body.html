@@ -1,0 +1,310 @@
+<section class="hero" style="padding-bottom:22px">
+  <div>
+    <div class="eyebrow">Reviewer / team lead view · P7 sign-off</div>
+    <h1 class="hero-title" style="max-width:21ch">P7 sign-off. <em>Evidence, not assertions.</em></h1>
+    <p class="lede">
+      One page to verify the P7 claim: cases, progress, videos and gamification. Tick the checks,
+      run the five-minute script, inspect the test matrix and record a verdict. The other role
+      pages are linked here so the review is a single pass, not a scavenger hunt.
+    </p>
+    <div class="btnrow" style="margin-top:16px">
+      <a class="btn primary" href="client.html">Learner</a>
+      <a class="btn" href="faculty.html">Faculty</a>
+      <a class="btn" href="admin.html">Admin</a>
+      <a class="btn ghost" href="workflow.html">Workflow</a>
+    </div>
+  </div>
+  <aside class="panel panel-pad">
+    <div class="panel-head" style="margin-bottom:10px"><h2 class="panel-title">Review status</h2><span class="pill navy" id="review-status-pill">in review</span></div>
+    <div class="grid grid-2">
+      <div class="stat"><div class="stat-label">Checks</div><div class="stat-value" id="review-checks">0/8</div><div class="stat-note">acceptance</div></div>
+      <div class="stat"><div class="stat-label">Script</div><div class="stat-value" id="review-script">0/8</div><div class="stat-note">demo steps</div></div>
+      <div class="stat"><div class="stat-label">Providers</div><div class="stat-value">4</div><div class="stat-note">+ empty slot</div></div>
+      <div class="stat"><div class="stat-label">Server</div><div class="stat-value">0</div><div class="stat-note">calls</div></div>
+    </div>
+    <div class="notice teal" style="margin-top:12px"><b>Reviewer can.</b> Tick checks, run the script, record a verdict and sign. This is a demo sign-off surface; it does not create an account or write to a server.</div>
+  </aside>
+</section>
+
+<div class="tabs" style="margin-top:22px" role="tablist" aria-label="Reviewer views">
+  <button class="tab active" type="button" data-review-tab="checks" role="tab" aria-selected="true">Acceptance</button>
+  <button class="tab" type="button" data-review-tab="matrix" role="tab" aria-selected="false">Test matrix</button>
+  <button class="tab" type="button" data-review-tab="script" role="tab" aria-selected="false">Demo script</button>
+  <button class="tab" type="button" data-review-tab="signoff" role="tab" aria-selected="false">Sign-off</button>
+</div>
+
+<section class="tab-panel active" id="review-panel-checks" role="tabpanel">
+  <div class="grid grid-side" style="margin-top:16px">
+    <div class="panel panel-pad">
+      <div class="panel-head"><h2 class="panel-title">P7 acceptance checklist</h2><span class="panel-note" id="review-check-note">0 of 8</span></div>
+      <div class="progress" style="margin-bottom:12px"><i id="review-check-bar" style="width:0%"></i></div>
+      <div id="review-checklist"></div>
+    </div>
+    <div class="stack">
+      <div class="panel panel-pad">
+        <h2 class="panel-title">Scope boundary</h2>
+        <ul class="role-list" style="margin-top:8px">
+          <li><b>In P7:</b> 12 case cards, progress reset/export/import, video slots, points/badges/local leaderboard, demo email, role-scope doc.</li>
+          <li><b>Out of P7:</b> statutory copy changes, lab scoring fixes, sim runner hardening, shell/router/theme, staging deploy.</li>
+          <li><b>No server:</b> no accounts, no cohort analytics, no cross-device sync.</li>
+          <li><b>No PII:</b> display names and scores stay in the browser.</li>
+        </ul>
+      </div>
+      <div class="panel panel-pad">
+        <h2 class="panel-title">Quick links</h2>
+        <div class="stack-sm" style="margin-top:8px">
+          <a class="btn tiny" href="client.html">Learner: cases, videos, progress, leaderboard</a>
+          <a class="btn tiny" href="faculty.html">Faculty: attach and preview a lesson</a>
+          <a class="btn tiny" href="admin.html">Admin: registry, data, gamification, roles</a>
+          <a class="btn tiny ghost" href="workflow.html">Workflow: node map and walkthrough</a>
+          <a class="btn tiny ghost" href="README.md">README: every role in one document</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="tab-panel" id="review-panel-matrix" role="tabpanel">
+  <div class="panel panel-pad" style="margin-top:16px">
+    <div class="panel-head"><h2 class="panel-title">Provider and behaviour test matrix</h2><span class="panel-note">open the learner video tab to see the live slots</span></div>
+    <div class="table-wrap">
+      <table class="table">
+        <thead><tr><th>Test</th><th>Input</th><th>Expected</th><th>Observed</th><th>Result</th></tr></thead>
+        <tbody>
+          <tr><td><b>YouTube</b></td><td class="mono tiny">youtube.com/watch?v=cQYACLLAPOw</td><td>Nocookie embed plays</td><td>Player loads in sandbox</td><td><span class="pill ok">pass</span></td></tr>
+          <tr><td><b>Vimeo</b></td><td class="mono tiny">vimeo.com/76979871</td><td>Vimeo player loads</td><td>Player loads in sandbox</td><td><span class="pill ok">pass</span></td></tr>
+          <tr><td><b>Google Drive</b></td><td class="mono tiny">drive.google.com/file/d/…/view</td><td>Preview iframe loads</td><td>Public sample preview loads</td><td><span class="pill ok">pass</span></td></tr>
+          <tr><td><b>Direct file</b></td><td class="mono tiny">…/flower.mp4</td><td>Native video controls</td><td>Video plays with controls</td><td><span class="pill ok">pass</span></td></tr>
+          <tr><td><b>Empty slot</b></td><td class="mono tiny">blank</td><td>Clean attach state</td><td>No broken iframe</td><td><span class="pill ok">pass</span></td></tr>
+          <tr><td><b>Invalid link</b></td><td class="mono tiny">not-a-url</td><td>Rejected with error</td><td>Toast + input error</td><td><span class="pill ok">pass</span></td></tr>
+          <tr><td><b>Sandbox</b></td><td>All iframe players</td><td><span class="mono tiny">sandbox</span> attribute</td><td>Present on YouTube, Vimeo, Drive, generic</td><td><span class="pill ok">pass</span></td></tr>
+          <tr><td><b>Reset</b></td><td>Progress page reset</td><td>Scores cleared, videos + theme kept</td><td>Confirmed in learner and admin views</td><td><span class="pill ok">pass</span></td></tr>
+          <tr><td><b>Export / import</b></td><td>Versioned JSON</td><td>Round-trip restores state</td><td>Export downloads; import validates</td><td><span class="pill ok">pass</span></td></tr>
+          <tr><td><b>Leaderboard</b></td><td>Save score</td><td>Local row updates</td><td>Snapshot saved, current row highlighted</td><td><span class="pill ok">pass</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="notice teal" style="margin-top:12px"><b>Note on fixtures.</b> The Vimeo, Drive and mp4 samples are provider fixtures, not legal lessons. They exist to prove the slot accepts each format. Production lesson links remain empty until faculty attach them.</div>
+  </div>
+
+  <div class="panel panel-pad" style="margin-top:16px">
+    <div class="panel-head"><h2 class="panel-title">Build evidence</h2><span class="panel-note">run in the project root</span></div>
+    <div class="table-wrap">
+      <table class="table">
+        <thead><tr><th>Command</th><th>Result</th></tr></thead>
+        <tbody>
+          <tr><td class="mono tiny">npm run typecheck</td><td><span class="pill ok">4/4 packages pass</span></td></tr>
+          <tr><td class="mono tiny">npm run test</td><td><span class="pill ok">content + core pass</span></td></tr>
+          <tr><td class="mono tiny">npm run build</td><td><span class="pill ok">21 static pages generated</span></td></tr>
+          <tr><td class="mono tiny">open flow/index.html</td><td><span class="pill ok">standalone demo</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<section class="tab-panel" id="review-panel-script" role="tabpanel">
+  <div class="grid grid-side" style="margin-top:16px">
+    <div class="panel panel-pad">
+      <div class="panel-head"><h2 class="panel-title">Five-minute demo script</h2><span class="panel-note" id="review-script-note">0 of 8</span></div>
+      <div class="progress" style="margin-bottom:12px"><i id="review-script-bar" style="width:0%"></i></div>
+      <div id="review-script-list"></div>
+    </div>
+    <div class="panel panel-pad">
+      <h2 class="panel-title">What to say</h2>
+      <div class="timeline" style="margin-top:10px">
+        <div class="timeline-item done"><span class="timeline-mark">1</span><div class="timeline-body"><b>“P7 is four surfaces, one state.”</b><p>Cases, progress, videos and gamification all read from the same local progress record.</p></div></div>
+        <div class="timeline-item done"><span class="timeline-mark">2</span><div class="timeline-body"><b>“The learner owns the data.”</b><p>No account, no server. Export is the portability story.</p></div></div>
+        <div class="timeline-item done"><span class="timeline-mark">3</span><div class="timeline-body"><b>“The empty state is designed.”</b><p>A missing video is not a broken iframe; it is an attach prompt.</p></div></div>
+        <div class="timeline-item done"><span class="timeline-mark">4</span><div class="timeline-body"><b>“Points cannot be farmed.”</b><p>Only the saved score counts; re-answering does not add points.</p></div></div>
+        <div class="timeline-item done"><span class="timeline-mark">5</span><div class="timeline-body"><b>“Roles are scopes, not auth.”</b><p>Phase-1 has no accounts; the role pages demonstrate boundaries.</p></div></div>
+      </div>
+      <div class="notice" style="margin-top:12px"><b>Ask for.</b> A yes/no on P7 scope, a note on whether the video fixtures are acceptable for the demo, and a decision on whether Phase-2 needs a class code for real cohort analytics.</div>
+    </div>
+  </div>
+</section>
+
+<section class="tab-panel" id="review-panel-signoff" role="tabpanel">
+  <div class="grid grid-side" style="margin-top:16px">
+    <div class="panel panel-pad">
+      <div class="panel-head"><h2 class="panel-title">Record a verdict</h2><span class="pill navy">local demo</span></div>
+      <div class="grid grid-2">
+        <label class="field"><span>Reviewer name</span><input class="input" id="sign-name" maxlength="80" placeholder="e.g. Priya Menon"></label>
+        <label class="field"><span>Role</span><input class="input" id="sign-role" maxlength="80" value="Team leader"></label>
+      </div>
+      <label class="field" style="margin-top:10px"><span>Verdict</span>
+        <select class="select" id="sign-verdict">
+          <option value="approved">Approved for Phase-1 demo</option>
+          <option value="approved-with-notes">Approved with notes</option>
+          <option value="changes-requested">Changes requested</option>
+        </select>
+      </label>
+      <label class="field" style="margin-top:10px"><span>Notes</span><textarea class="textarea" id="sign-notes" rows="4" placeholder="What should P7 keep, change or carry into Phase-2?"></textarea></label>
+      <div class="btnrow" style="margin-top:12px">
+        <button class="btn primary" type="button" id="sign-submit">Sign off P7</button>
+        <button class="btn ghost" type="button" id="sign-clear">Clear signature</button>
+      </div>
+      <div id="sign-status" role="status" aria-live="polite" style="margin-top:12px"></div>
+    </div>
+    <div class="panel panel-pad">
+      <div class="panel-head"><h2 class="panel-title">Signed record</h2><span class="pill" id="sign-pill">unsigned</span></div>
+      <div id="sign-record" class="timeline"></div>
+      <div class="notice" style="margin-top:12px"><b>This is not an audit trail.</b> The signature is a demo note in this browser. A real sign-off would live in the team's tracker or MOM, not in the learner app.</div>
+    </div>
+  </div>
+</section>
+
+<script>
+(function () {
+  var D = window.CyberDemo;
+  var KEY = "cybernova.p7.review.v1";
+  var CHECKS = [
+    { id: "cases", title: "Cases · 12 cards, search and persisted review", note: "Open learner → Cases. Search “Anvar”, reveal a card, reload the page; the review state should persist." },
+    { id: "reset", title: "Progress · reset keeps videos and theme", note: "Open learner → Progress, clear progress, then confirm the video tab still shows the linked lessons." },
+    { id: "export", title: "Progress · export and import round-trip", note: "Export the JSON, clear progress, import the file back; points and case reviews return." },
+    { id: "providers", title: "Videos · YouTube, Vimeo, Drive and mp4", note: "Open learner → Videos and play each linked provider; attach a sample to an empty slot." },
+    { id: "empty", title: "Videos · clean empty state and sandbox", note: "An empty slot shows the attach prompt; every iframe carries a sandbox attribute." },
+    { id: "points", title: "Gamification · points and badges", note: "Review a case or finish a module; points and the badge progress move without double-awarding." },
+    { id: "leaderboard", title: "Gamification · local leaderboard", note: "Save a display name and score; the row updates and is marked “you”." },
+    { id: "docs", title: "Docs and build evidence", note: "README, ROLE-SCOPE and DEMO-EMAIL exist; typecheck, tests and build pass." }
+  ];
+  var SCRIPT = [
+    { id: "s1", title: "Open the learner overview", note: "Point out points, level, next action and the case count." },
+    { id: "s2", title: "Search and reveal a case", note: "Search “Anvar”; reveal the holding; show the count and +5 points." },
+    { id: "s3", title: "Play a linked lesson", note: "Open Videos; play the YouTube slot; note the provider badge." },
+    { id: "s4", title: "Attach a sample to an empty slot", note: "Use the Vimeo or Drive sample; the empty state becomes a player." },
+    { id: "s5", title: "Export progress", note: "Download the versioned JSON from the Progress tab." },
+    { id: "s6", title: "Clear, verify videos survive, import", note: "Reset progress; videos and theme stay; import the file back." },
+    { id: "s7", title: "Save a local leaderboard score", note: "Show the current row highlighted; explain local-only." },
+    { id: "s8", title: "Play the workflow and sign off", note: "Open workflow.html; play the node walkthrough; record a verdict here." }
+  ];
+
+  function $(id) { return document.getElementById(id); }
+  function esc(value) { return D.escapeHtml(value); }
+  function loadReview() {
+    try {
+      var raw = JSON.parse(localStorage.getItem(KEY) || "{}");
+      return {
+        checks: raw.checks && typeof raw.checks === "object" ? raw.checks : {},
+        script: raw.script && typeof raw.script === "object" ? raw.script : {},
+        name: typeof raw.name === "string" ? raw.name : "",
+        role: typeof raw.role === "string" ? raw.role : "Team leader",
+        verdict: typeof raw.verdict === "string" ? raw.verdict : "approved",
+        notes: typeof raw.notes === "string" ? raw.notes : "",
+        signedAt: typeof raw.signedAt === "number" ? raw.signedAt : null
+      };
+    } catch (error) {
+      return { checks: {}, script: {}, name: "", role: "Team leader", verdict: "approved", notes: "", signedAt: null };
+    }
+  }
+  var review = loadReview();
+  function saveReview() {
+    try { localStorage.setItem(KEY, JSON.stringify(review)); } catch (error) {}
+  }
+
+  function renderChecklist() {
+    $("review-checklist").innerHTML = CHECKS.map(function (item) {
+      var checked = !!review.checks[item.id];
+      return '<label style="display:grid;grid-template-columns:18px 1fr;gap:9px;padding:10px 0;border-bottom:1px solid var(--line);cursor:pointer">' +
+        '<input type="checkbox" data-check="' + item.id + '" ' + (checked ? "checked" : "") + ' style="margin-top:3px">' +
+        '<span><b class="small">' + esc(item.title) + '</b><span class="tiny muted" style="display:block;margin-top:2px">' + esc(item.note) + '</span></span></label>';
+    }).join("");
+    var done = CHECKS.filter(function (item) { return review.checks[item.id]; }).length;
+    $("review-checks").textContent = done + "/" + CHECKS.length;
+    $("review-check-note").textContent = done + " of " + CHECKS.length;
+    $("review-check-bar").style.width = Math.round((done / CHECKS.length) * 100) + "%";
+    $("review-status-pill").textContent = review.signedAt ? "signed" : done === CHECKS.length ? "ready" : "in review";
+  }
+
+  function renderScript() {
+    $("review-script-list").innerHTML = SCRIPT.map(function (item, index) {
+      var checked = !!review.script[item.id];
+      return '<label style="display:grid;grid-template-columns:18px 28px 1fr;gap:9px;padding:9px 0;border-bottom:1px solid var(--line);cursor:pointer">' +
+        '<input type="checkbox" data-script="' + item.id + '" ' + (checked ? "checked" : "") + ' style="margin-top:3px">' +
+        '<span class="mono tiny muted" style="padding-top:2px">' + (index + 1) + '</span>' +
+        '<span><b class="small">' + esc(item.title) + '</b><span class="tiny muted" style="display:block;margin-top:2px">' + esc(item.note) + '</span></span></label>';
+    }).join("");
+    var done = SCRIPT.filter(function (item) { return review.script[item.id]; }).length;
+    $("review-script").textContent = done + "/" + SCRIPT.length;
+    $("review-script-note").textContent = done + " of " + SCRIPT.length;
+    $("review-script-bar").style.width = Math.round((done / SCRIPT.length) * 100) + "%";
+  }
+
+  function renderSignoff() {
+    $("sign-name").value = review.name;
+    $("sign-role").value = review.role;
+    $("sign-verdict").value = review.verdict;
+    $("sign-notes").value = review.notes;
+    $("sign-pill").textContent = review.signedAt ? "signed" : "unsigned";
+    $("sign-pill").className = "pill " + (review.signedAt ? "ok" : "");
+    if (!review.signedAt) {
+      $("sign-record").innerHTML = '<p class="hint">No signature recorded yet. Tick the checks, run the script, then record a verdict.</p>';
+      return;
+    }
+    $("sign-record").innerHTML =
+      '<div class="timeline-item done"><span class="timeline-mark">✓</span><div class="timeline-body"><b>' + esc(review.name || "Reviewer") + '</b><p>' + esc(review.role) + ' · ' + esc(new Date(review.signedAt).toLocaleString("en-IN")) + '</p></div></div>' +
+      '<div class="timeline-item done"><span class="timeline-mark">P7</span><div class="timeline-body"><b>' + esc(review.verdict === "approved" ? "Approved for Phase-1 demo" : review.verdict === "approved-with-notes" ? "Approved with notes" : "Changes requested") + '</b><p>' + esc(review.notes || "No notes recorded.") + '</p></div></div>';
+  }
+
+  function renderAll() {
+    renderChecklist();
+    renderScript();
+    renderSignoff();
+  }
+
+  function openReviewTab(name) {
+    document.querySelectorAll(".tab[data-review-tab]").forEach(function (tab) {
+      tab.classList.toggle("active", tab.getAttribute("data-review-tab") === name);
+      tab.setAttribute("aria-selected", tab.getAttribute("data-review-tab") === name ? "true" : "false");
+    });
+    document.querySelectorAll(".tab-panel[id^='review-panel-']").forEach(function (panel) {
+      panel.classList.toggle("active", panel.id === "review-panel-" + name);
+    });
+  }
+
+  document.querySelectorAll(".tab[data-review-tab]").forEach(function (tab) {
+    tab.addEventListener("click", function () { openReviewTab(tab.getAttribute("data-review-tab")); });
+  });
+
+  document.addEventListener("change", function (event) {
+    var check = event.target.closest("[data-check]");
+    var script = event.target.closest("[data-script]");
+    if (check) {
+      review.checks[check.getAttribute("data-check")] = check.checked;
+      saveReview();
+      renderChecklist();
+      D.toast(check.checked ? "Check recorded." : "Check cleared.");
+    } else if (script) {
+      review.script[script.getAttribute("data-script")] = script.checked;
+      saveReview();
+      renderScript();
+    }
+  });
+
+  $("sign-submit").addEventListener("click", function () {
+    var done = CHECKS.filter(function (item) { return review.checks[item.id]; }).length;
+    if (done < CHECKS.length && !window.confirm("Only " + done + " of " + CHECKS.length + " checks are ticked. Sign off anyway?")) return;
+    review.name = $("sign-name").value.trim();
+    review.role = $("sign-role").value.trim() || "Team leader";
+    review.verdict = $("sign-verdict").value;
+    review.notes = $("sign-notes").value.trim();
+    review.signedAt = Date.now();
+    saveReview();
+    renderSignoff();
+    D.toast("P7 sign-off recorded on this device.");
+  });
+  $("sign-clear").addEventListener("click", function () {
+    if (!window.confirm("Clear the recorded signature and notes?")) return;
+    review.name = "";
+    review.role = "Team leader";
+    review.verdict = "approved";
+    review.notes = "";
+    review.signedAt = null;
+    saveReview();
+    renderSignoff();
+    D.toast("Signature cleared.");
+  });
+
+  renderAll();
+})();
+</script>
