@@ -1,5 +1,15 @@
 import { CASES, COC, MODULES, SIMS, VOL } from "@cyberlex/content";
-import type { CyberlexState, LeaderboardEntry } from "./store";
+import {
+  MAX_BOARD_ENTRIES,
+  MAX_IMPORT_CHARS,
+  MAX_NAME_LENGTH,
+  POINT_RULES,
+  sanitizeState,
+  type CyberlexState,
+  type LeaderboardEntry,
+} from "./progress";
+
+export { MAX_POINTS, POINT_RULES } from "./progress";
 
 /* ------------------------------------------------------------------ */
 /* Points                                                              */
@@ -13,16 +23,10 @@ export type PointRow = {
   detail: string;
 };
 
-export const POINT_RULES = {
-  moduleComplete: 50,
-  drillCorrect: 10,
-  labCorrect: 5,
-  simPoint: 10,
-  caseReviewed: 5,
-} as const;
-
 function finiteScore(value: unknown): number {
-  return typeof value === "number" && Number.isFinite(value) ? Math.max(0, value) : 0;
+  return typeof value === "number" && Number.isFinite(value)
+    ? Math.max(0, Math.floor(value))
+    : 0;
 }
 
 export function reviewedCases(state: CyberlexState): number {
@@ -104,18 +108,6 @@ export function totalPoints(state: CyberlexState): number {
   return pointRows(state).reduce((n, row) => n + row.earned, 0);
 }
 
-export const MAX_POINTS = pointRows({
-  done: Object.fromEntries(MODULES.map((m) => [m.id, true])),
-  scores: {
-    ...Object.fromEntries(MODULES.map((m) => [m.id, m.quiz.length])),
-    vol: VOL.length,
-    coc: COC.length,
-    ...Object.fromEntries(SIMS.map((s) => ["sim-" + s.id, s.steps.length * 2])),
-  },
-  flipped: Object.fromEntries(CASES.map((_, i) => [i, true])),
-  videos: {},
-}).reduce((n, row) => n + row.max, 0);
-
 /* ------------------------------------------------------------------ */
 /* Levels                                                              */
 /* ------------------------------------------------------------------ */
@@ -194,8 +186,8 @@ export function badgesFor(state: CyberlexState): Badge[] {
   const drillScores = MODULES.map((m) => finiteScore(state.scores?.[m.id]));
   const simScores = SIMS.map((s) => finiteScore(state.scores?.["sim-" + s.id]));
   const perfectDrill = MODULES.some((m, i) => drillScores[i] === m.quiz.length);
-  const allDrills = MODULES.every((_, i) => drillScores[i] > 0);
-  const firstSim = SIMS.some((_, i) => simScores[i] > 0 || state.scores?.["sim-" + SIMS[i].id] !== undefined);
+  const drillsSat = MODULES.filter((m) => !!state.done?.[m.id]).length;
+  const firstSim = SIMS.some((s) => state.scores?.["sim-" + s.id] !== undefined);
   const allSims = SIMS.every((s) => state.scores?.["sim-" + s.id] !== undefined);
   const perfectSim = SIMS.some((s, i) => simScores[i] === s.steps.length * 2);
 
@@ -204,7 +196,7 @@ export function badgesFor(state: CyberlexState): Badge[] {
     badge("five-modules", "Doctrine five", "Complete five of the nine modules.", "teal", modules, 5, "V"),
     badge("all-modules", "Nine of nine", "Complete every statutory module.", "teal", modules, 9, "IX"),
     badge("perfect-drill", "Clean drill", "Score 3/3 on any applied drill.", "amber", perfectDrill ? 1 : 0, 1, "3"),
-    badge("all-drills", "Every drill sat", "Attempt the drill in every module.", "amber", drillScores.filter((n) => n > 0).length, MODULES.length, "A"),
+    badge("all-drills", "Every drill sat", "Attempt the drill in every module.", "amber", drillsSat, MODULES.length, "A"),
     badge("volatility", "Volatility order", "Sequence all eight sources correctly.", "navy", finiteScore(state.scores?.vol), VOL.length, "8"),
     badge("custody", "Chain intact", "Build the full chain of custody correctly.", "navy", finiteScore(state.scores?.coc), COC.length, "C"),
     badge("first-sim", "First verdict", "Finish one branching investigation.", "oxblood", firstSim ? 1 : 0, 1, "1"),
@@ -221,26 +213,20 @@ export function badgesFor(state: CyberlexState): Badge[] {
 /* Local leaderboard                                                   */
 /* ------------------------------------------------------------------ */
 
+/**
+ * Leaderboard rows are saved snapshots, not live totals. A learner has to press
+ * "Save score" again after finishing more work; that is what the UI promises.
+ * A profile with no saved row (for example after clearing progress) must not
+ * reappear as a phantom zero-point entry.
+ */
 export function boardWithCurrent(state: CyberlexState): LeaderboardEntry[] {
-  const rows = [...(state.board || [])];
-  if (state.profile) {
-    const name = state.profile.trim().toLowerCase();
-    const withoutCurrent = rows.filter((row) => row.name.trim().toLowerCase() !== name);
-    withoutCurrent.push({
-      name: state.profile,
-      points: totalPoints(state),
-      modules: completedModules(state),
-      cases: reviewedCases(state),
-      updatedAt:
-        rows.find((row) => row.name.trim().toLowerCase() === name)?.updatedAt ?? Date.now(),
-    });
-    return withoutCurrent.sort((a, b) => b.points - a.points || a.name.localeCompare(b.name));
-  }
-  return rows.sort((a, b) => b.points - a.points || a.name.localeCompare(b.name));
+  return [...(state.board || [])].sort(
+    (a, b) => b.points - a.points || a.name.localeCompare(b.name)
+  );
 }
 
 export function saveBoardEntry(state: CyberlexState, name: string): CyberlexState {
-  const clean = name.trim().slice(0, 60);
+  const clean = name.trim().slice(0, MAX_NAME_LENGTH);
   if (!clean) return state;
   const entry: LeaderboardEntry = {
     name: clean,
@@ -254,7 +240,13 @@ export function saveBoardEntry(state: CyberlexState, name: string): CyberlexStat
   );
   rows.push(entry);
   rows.sort((a, b) => b.points - a.points || a.name.localeCompare(b.name));
-  return { ...state, profile: clean, board: rows.slice(0, 25) };
+
+  const board = rows.slice(0, MAX_BOARD_ENTRIES);
+  if (!board.some((row) => row.name.toLowerCase() === clean.toLowerCase())) {
+    board[board.length - 1] = entry;
+    board.sort((a, b) => b.points - a.points || a.name.localeCompare(b.name));
+  }
+  return { ...state, profile: clean, board };
 }
 
 /* ------------------------------------------------------------------ */
@@ -275,39 +267,9 @@ export function exportProgress(state: CyberlexState): string {
     app: "cyberlex",
     version: EXPORT_VERSION,
     exportedAt: new Date().toISOString(),
-    state,
+    state: sanitizeState(state).state,
   };
   return JSON.stringify(envelope, null, 2);
-}
-
-function cleanRecord<T>(
-  raw: unknown,
-  map: (value: unknown) => T | undefined
-): Record<string, T> {
-  if (!raw || typeof raw !== "object" || Array.isArray(raw)) return {};
-  const out: Record<string, T> = {};
-  for (const [key, value] of Object.entries(raw as Record<string, unknown>)) {
-    const next = map(value);
-    if (next !== undefined) out[key] = next;
-  }
-  return out;
-}
-
-function cleanBoard(raw: unknown): LeaderboardEntry[] {
-  if (!Array.isArray(raw)) return [];
-  return raw
-    .filter((row): row is Record<string, unknown> => !!row && typeof row === "object" && !Array.isArray(row))
-    .map((row) => {
-      const name = typeof row.name === "string" ? row.name.trim().slice(0, 60) : "";
-      const points = finiteScore(row.points);
-      const modules = finiteScore(row.modules);
-      const cases = finiteScore(row.cases);
-      const updatedAt = finiteScore(row.updatedAt);
-      return { name, points, modules, cases, updatedAt };
-    })
-    .filter((row) => row.name.length > 0)
-    .sort((a, b) => b.points - a.points || a.name.localeCompare(b.name))
-    .slice(0, 25);
 }
 
 export type ImportResult = {
@@ -318,9 +280,14 @@ export type ImportResult = {
 /**
  * Accepts either the versioned envelope produced by `exportProgress` or a raw
  * state object (useful when moving an older device). Rejects payloads that do
- * not look like progress at all; clamps every score to a sane value.
+ * not look like progress at all; every field is sanitised before it reaches the
+ * store, including scores, leaderboard rows and video URLs.
  */
 export function importProgress(text: string): ImportResult {
+  if (typeof text !== "string" || text.length > MAX_IMPORT_CHARS) {
+    throw new Error("That progress file is too large. Use a file exported by CyberLex.");
+  }
+
   let parsed: unknown;
   try {
     parsed = JSON.parse(text);
@@ -330,6 +297,7 @@ export function importProgress(text: string): ImportResult {
   if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) {
     throw new Error("The progress file must contain a JSON object.");
   }
+
   const envelope = parsed as Record<string, unknown>;
   const raw =
     envelope.state && typeof envelope.state === "object" && !Array.isArray(envelope.state)
@@ -339,34 +307,16 @@ export function importProgress(text: string): ImportResult {
   if (!keys.some((key) => key in raw)) {
     throw new Error("No recognisable progress fields were found in that file.");
   }
+
   const warnings: string[] = [];
-  if (envelope.app && envelope.app !== "cyberlex") {
+  if (envelope.app !== undefined && envelope.app !== "cyberlex") {
     warnings.push("This file was not exported by CyberLex; only known fields were kept.");
   }
   if (typeof envelope.version === "number" && envelope.version > EXPORT_VERSION) {
     warnings.push("The file was exported by a newer version; unknown fields were ignored.");
   }
 
-  const scores = cleanRecord<number>(raw.scores, (value) =>
-    typeof value === "number" && Number.isFinite(value) ? Math.max(0, Math.round(value)) : undefined
-  );
-  const done = cleanRecord<boolean>(raw.done, (value) =>
-    typeof value === "boolean" ? value : undefined
-  );
-  const flipped = cleanRecord<boolean>(raw.flipped, (value) =>
-    typeof value === "boolean" ? value : undefined
-  );
-  const videos = cleanRecord<string>(raw.videos, (value) =>
-    typeof value === "string" && value.trim() ? value.trim().slice(0, 2048) : undefined
-  );
-  const profile =
-    typeof raw.profile === "string" && raw.profile.trim()
-      ? raw.profile.trim().slice(0, 60)
-      : undefined;
-  const theme = raw.theme === "light" || raw.theme === "dark" ? raw.theme : undefined;
-
-  return {
-    state: { done, scores, flipped, videos, profile, board: cleanBoard(raw.board), theme },
-    warnings,
-  };
+  const result = sanitizeState(raw);
+  warnings.push(...result.warnings);
+  return { state: result.state, warnings };
 }

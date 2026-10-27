@@ -9,6 +9,7 @@ import {
   exportProgress,
   importProgress,
   levelFor,
+  MAX_IMPORT_CHARS,
   MAX_POINTS,
   pointRows,
   reviewedCases,
@@ -123,8 +124,11 @@ export function ProgressView() {
   const cases = reviewedCases(state);
   const board = boardWithCurrent(state);
   const savedRow = state.profile
-    ? board.find((row) => row.name.trim().toLowerCase() === state.profile?.trim().toLowerCase())
+    ? (state.board || []).find(
+        (row) => row.name.trim().toLowerCase() === state.profile?.trim().toLowerCase()
+      )
     : undefined;
+  const snapshotIsStale = !!savedRow && savedRow.points !== points;
   const modulePct = Math.round((modules / MODULES.length) * 100);
   const casePct = Math.round((cases / CASES.length) * 100);
 
@@ -157,6 +161,14 @@ export function ProgressView() {
 
   const readImport = async (file: File | undefined) => {
     if (!file) return;
+    if (file.size > MAX_IMPORT_CHARS) {
+      setStatus({
+        kind: "error",
+        text: "That file is too large to be a CyberLex progress export (limit 1 MB).",
+      });
+      if (fileRef.current) fileRef.current.value = "";
+      return;
+    }
     try {
       const result = importProgress(await file.text());
       setState(result.state);
@@ -470,7 +482,7 @@ export function ProgressView() {
         </div>
         {status ? (
           <p
-            role="status"
+            role={status.kind === "error" ? "alert" : "status"}
             aria-live="polite"
             className="mt-3 rounded border p-2.5 text-[0.84rem]"
             style={
