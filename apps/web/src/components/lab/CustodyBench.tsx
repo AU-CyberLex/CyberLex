@@ -79,7 +79,7 @@ export function CustodyBench() {
           type="button"
           onClick={check}
           className="rounded border px-3 py-2 text-sm font-medium"
-          style={{ background: "var(--seal)", borderColor: "var(--seal)", color: "#fff" }}
+          style={{ background: "var(--accent)", borderColor: "var(--accent)", color: "var(--on-accent)" }}
         >
           Check the chain
         </button>

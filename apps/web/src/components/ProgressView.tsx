@@ -73,7 +73,7 @@ function BadgeTile({ badge }: { badge: Badge }) {
           style={{
             background: badge.earned ? tone.border : "var(--surface-2)",
             borderColor: badge.earned ? tone.border : "var(--rule)",
-            color: badge.earned ? "#fff" : "var(--muted)",
+            color: badge.earned ? "var(--on-strong)" : "var(--muted)",
           }}
         >
           {badge.mark}
@@ -397,7 +397,7 @@ export function ProgressView() {
             type="button"
             onClick={saveScore}
             className="rounded border px-3 py-2 text-sm font-medium"
-            style={{ background: "var(--seal)", borderColor: "var(--seal)", color: "#fff" }}
+            style={{ background: "var(--accent)", borderColor: "var(--accent)", color: "var(--on-accent)" }}
           >
             Save score
           </button>
