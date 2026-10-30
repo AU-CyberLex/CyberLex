@@ -34,7 +34,7 @@ export function Callout({
 }) {
   const styles =
     tone === "law"
-      ? { background: "var(--seal-soft)", borderColor: "var(--seal)" }
+      ? { background: "var(--accent-soft)", borderColor: "var(--accent)" }
       : tone === "fx"
         ? { background: "var(--forensic-soft)", borderColor: "var(--forensic)" }
         : { background: "var(--amber-soft)", borderColor: "var(--amber)" };
@@ -49,7 +49,7 @@ export function SecTag({ children }: { children: ReactNode }) {
   return (
     <span
       className="whitespace-nowrap rounded-sm border px-1.5 py-0.5 font-mono text-[0.78rem]"
-      style={{ color: "var(--seal)", borderColor: "var(--rule)", background: "var(--surface)" }}
+      style={{ color: "var(--accent-ink)", borderColor: "var(--accent-ink)", background: "var(--surface)" }}
     >
       {children}
     </span>

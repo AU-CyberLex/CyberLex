@@ -37,7 +37,9 @@ export function SiteHeader() {
     >
       <div className="mx-auto flex w-full max-w-[1180px] flex-wrap items-center gap-5 px-5 py-3">
         <Link href="/" className="mr-auto flex items-baseline gap-2 no-underline">
-          <b className="font-serif text-[1.3rem] font-semibold tracking-tight">CyberLex</b>
+          <b className="font-serif text-[1.3rem] font-semibold tracking-tight">
+            <span className="font-mono" style={{ color: "var(--accent-ink)" }}>&gt;_</span> CyberLex
+          </b>
           <span className="text-[0.72rem] uppercase tracking-[0.06em]" style={{ color: "var(--muted)" }}>
             Cyber law studio
           </span>
@@ -52,9 +54,9 @@ export function SiteHeader() {
               style={
                 isActive(l.href)
                   ? {
-                      color: "var(--text)",
+                      color: "var(--accent-ink)",
                       background: "var(--surface-2)",
-                      borderColor: "var(--rule)",
+                      borderColor: "var(--accent-ink)",
                       fontWeight: 500,
                     }
                   : { color: "var(--muted)", borderColor: "transparent" }

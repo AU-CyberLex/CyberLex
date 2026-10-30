@@ -35,7 +35,7 @@ export default function HomePage() {
             <Link
               href="/modules"
               className="rounded border px-4 py-2 text-sm font-medium no-underline"
-              style={{ background: "var(--seal)", borderColor: "var(--seal)", color: "#fff" }}
+              style={{ background: "var(--accent)", borderColor: "var(--accent)", color: "var(--on-accent)" }}
             >
               Start with the modules
             </Link>

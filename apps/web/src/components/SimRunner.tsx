@@ -39,7 +39,7 @@ export function SimRunner({ simId, title, steps }: { simId: string; title: strin
               setFinished(false);
             }}
             className="rounded border px-3 py-2 text-sm font-medium"
-            style={{ background: "var(--seal)", borderColor: "var(--seal)", color: "#fff" }}
+            style={{ background: "var(--accent)", borderColor: "var(--accent)", color: "var(--on-accent)" }}
           >
             Run it again
           </button>
@@ -124,7 +124,7 @@ export function SimRunner({ simId, title, steps }: { simId: string; title: strin
                   }
                 }}
                 className="rounded border px-4 py-2 text-sm font-medium"
-                style={{ background: "var(--seal)", borderColor: "var(--seal)", color: "#fff" }}
+                style={{ background: "var(--accent)", borderColor: "var(--accent)", color: "var(--on-accent)" }}
               >
                 Continue
               </button>

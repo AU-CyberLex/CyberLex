@@ -36,7 +36,7 @@ export function CertificateBench() {
               className="h-8 w-8 rounded-full border text-sm"
               style={
                 i === idx
-                  ? { background: "var(--seal)", borderColor: "var(--seal)", color: "#fff" }
+                  ? { background: "var(--accent)", borderColor: "var(--accent)", color: "var(--on-accent)" }
                   : { borderColor: "var(--rule)", background: "var(--surface-2)" }
               }
             >

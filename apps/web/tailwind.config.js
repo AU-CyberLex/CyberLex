@@ -5,12 +5,13 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        serif: ["var(--font-spectral)", "Georgia", "serif"],
+        serif: ["var(--font-plex-sans)", "system-ui", "sans-serif"],
         sans: ["var(--font-plex-sans)", "system-ui", "sans-serif"],
         mono: ["var(--font-plex-mono)", "monospace"],
       },
       colors: {
         seal: "var(--seal)",
+        accent: "var(--accent)",
         forensic: "var(--forensic)",
       },
     },
