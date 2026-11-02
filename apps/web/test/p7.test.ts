@@ -1,6 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { CASES, COC, MODULES, SIMS, VOL } from "@cyberlex/content";
+import { CASES, COC, MODULES, SIMS, VIDEOS, VOL } from "@cyberlex/content";
+import { embedUrl } from "@cyberlex/core";
 import {
   badgesFor,
   boardWithCurrent,
@@ -17,6 +18,7 @@ import {
 import {
   MAX_IMPORT_CHARS,
   MAX_POINTS,
+  clearLearningProgress,
   createEmptyState,
   sanitizeState,
   type CyberlexState,
@@ -227,4 +229,43 @@ test("importProgress rejects invalid payloads and reports warnings", () => {
 test("saveBoardEntry rejects an empty name without changing state", () => {
   const state = createEmptyState();
   assert.equal(saveBoardEntry(state, "   "), state);
+});
+
+test("clearLearningProgress wipes learning data but keeps links, theme and name", () => {
+  const full = fullState();
+  const state: CyberlexState = {
+    ...full,
+    videos: { access: MP4, identity: YT },
+    theme: "dark",
+    profile: "Aarav Mehta",
+    board: [{ name: "Aarav Mehta", points: 1100, modules: 9, cases: 12, updatedAt: 1 }],
+  };
+  const next = clearLearningProgress(state);
+  assert.deepEqual(next.done, {});
+  assert.deepEqual(next.scores, {});
+  assert.deepEqual(next.flipped, {});
+  assert.deepEqual(next.board, []);
+  assert.equal(totalPoints(next), 0);
+  assert.equal(next.videos.access, MP4);
+  assert.equal(next.videos.identity, YT);
+  assert.equal(next.theme, "dark");
+  assert.equal(next.profile, "Aarav Mehta");
+  assert.equal(badgesFor(next).some((b) => b.earned), false);
+});
+
+test("level progress stays inside 0..1 for out-of-range points", () => {
+  assert.equal(levelFor(-100).progress, 0);
+  assert.equal(levelFor(Infinity).progress, 1);
+  assert.equal(levelFor(Number.NaN).level, 1);
+});
+
+test("every module ships a lesson-video slot", () => {
+  for (const m of MODULES) {
+    const slot = VIDEOS[m.id];
+    assert.equal(typeof slot, "string", "missing video slot for " + m.id);
+    if (slot) assert.ok(embedUrl(slot), "default video for " + m.id + " must embed");
+  }
+  for (const key of Object.keys(VIDEOS)) {
+    assert.ok(MODULES.some((m) => m.id === key), "video slot for unknown module " + key);
+  }
 });

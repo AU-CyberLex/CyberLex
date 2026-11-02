@@ -2,6 +2,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { CASES, COC, MODULES, SIMS, VOL } from "@cyberlex/content";
 import { useStore } from "@/lib/store";
+import { clearLearningProgress } from "@/lib/progress";
 import {
   badgesFor,
   boardWithCurrent,
@@ -196,7 +197,7 @@ export function ProgressView() {
     ) {
       return;
     }
-    setState((s) => ({ ...s, done: {}, scores: {}, flipped: {}, board: [] }));
+    setState((s) => clearLearningProgress(s));
     setStatus({ kind: "ok", text: "Learning progress cleared. Lesson links and theme were kept." });
   };
 

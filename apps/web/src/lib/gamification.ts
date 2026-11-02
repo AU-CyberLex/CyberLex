@@ -130,13 +130,20 @@ const LEVELS = [
 ];
 
 export function levelFor(points: number): Level {
+  const safe = Number.isFinite(points)
+    ? Math.max(0, points)
+    : points === Infinity
+      ? Number.MAX_SAFE_INTEGER
+      : 0;
   let index = 0;
   for (let i = 0; i < LEVELS.length; i++) {
-    if (points >= LEVELS[i].min) index = i;
+    if (safe >= LEVELS[i].min) index = i;
   }
   const current = LEVELS[index];
   const next = LEVELS[index + 1] ?? null;
-  const progress = next ? Math.min(1, (points - current.min) / (next.min - current.min)) : 1;
+  const progress = next
+    ? Math.max(0, Math.min(1, (safe - current.min) / (next.min - current.min)))
+    : 1;
   return { level: index + 1, name: current.name, min: current.min, next: next?.min ?? null, progress };
 }
 
@@ -188,13 +195,12 @@ export function badgesFor(state: CyberlexState): Badge[] {
   const perfectDrill = MODULES.some((m, i) => drillScores[i] === m.quiz.length);
   const drillsSat = MODULES.filter((m) => !!state.done?.[m.id]).length;
   const firstSim = SIMS.some((s) => state.scores?.["sim-" + s.id] !== undefined);
-  const allSims = SIMS.every((s) => state.scores?.["sim-" + s.id] !== undefined);
   const perfectSim = SIMS.some((s, i) => simScores[i] === s.steps.length * 2);
 
   return [
     badge("first-module", "First authority", "Complete one statutory module.", "teal", modules, 1, "I"),
     badge("five-modules", "Doctrine five", "Complete five of the nine modules.", "teal", modules, 5, "V"),
-    badge("all-modules", "Nine of nine", "Complete every statutory module.", "teal", modules, 9, "IX"),
+    badge("all-modules", "Nine of nine", "Complete every statutory module.", "teal", modules, MODULES.length, "IX"),
     badge("perfect-drill", "Clean drill", "Score 3/3 on any applied drill.", "amber", perfectDrill ? 1 : 0, 1, "3"),
     badge("all-drills", "Every drill sat", "Attempt the drill in every module.", "amber", drillsSat, MODULES.length, "A"),
     badge("volatility", "Volatility order", "Sequence all eight sources correctly.", "navy", finiteScore(state.scores?.vol), VOL.length, "8"),

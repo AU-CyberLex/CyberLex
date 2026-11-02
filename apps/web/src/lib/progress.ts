@@ -66,6 +66,22 @@ export function createEmptyState(): CyberlexState {
   return { done: {}, scores: {}, flipped: {}, videos: {} };
 }
 
+/**
+ * "Clear all saved progress". Wipes completion, drill/lab/sim scores, case
+ * reviews and the local leaderboard, but explicitly keeps lesson links, the
+ * theme and the display name — the three things a learner did not earn and
+ * should not have to set up again (see docs/TRD.md TR-STATE-5).
+ */
+export function clearLearningProgress(state: CyberlexState): CyberlexState {
+  return {
+    ...createEmptyState(),
+    board: [],
+    videos: { ...state.videos },
+    theme: state.theme,
+    profile: state.profile,
+  };
+}
+
 /** Kept for callers that want a ready-made empty value. */
 export const EMPTY_STATE: CyberlexState = createEmptyState();
 
