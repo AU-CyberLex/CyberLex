@@ -388,10 +388,10 @@ export default function SignatureCheckPage() {
             <div className="mt-6">
 
               <Callout tone="law">
-                <b>Cross-examination.</b> "Did your forensic tool
+                <b>Cross-examination.</b> &ldquo;Did your forensic tool
                 identify this file by its extension or by its
                 header signature, and is that distinction recorded
-                in your report?"
+                in your report?&rdquo;
               </Callout>
 
             </div>
