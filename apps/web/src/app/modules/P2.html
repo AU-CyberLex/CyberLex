@@ -1,0 +1,315 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>cyberlex</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);--bg:#fff;--fg:#0a0a0a;--mute:#4d4d4d;--line:#d4d4d4;--card:#f2f2f2;--g:#39ff14;--gt:#0b7a1c}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#000;--fg:#fff;--mute:#a3a3a3;--line:#262626;--card:#0c0c0c;--gt:#39ff14}}
+:root[data-theme="dark"]{--bg:#000;--fg:#fff;--mute:#a3a3a3;--line:#262626;--card:#0c0c0c;--gt:#39ff14}
+*{box-sizing:border-box}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.6 "Space Grotesk",system-ui,sans-serif;min-height:100vh}
+.app{display:grid;grid-template-columns:250px 1fr;min-height:100vh}
+aside{border-right:1px solid var(--line);padding:22px 18px;position:sticky;top:0;height:100vh;display:flex;flex-direction:column;gap:4px}
+.brand{font-weight:700;font-size:18px;letter-spacing:-.02em;color:var(--fg);text-decoration:none;display:flex;gap:9px;align-items:center;margin-bottom:16px}
+.dot{width:12px;height:12px;background:var(--g);border-radius:3px}
+nav{display:flex;flex-direction:column;gap:4px}
+nav a{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:10px 12px;border-radius:8px;color:var(--fg);text-decoration:none;border:1px solid transparent}
+nav a:hover{border-color:var(--line)}
+nav a[aria-current="page"]{border-color:var(--fg);background:var(--card)}
+nav a .st{font:500 12px "JetBrains Mono",monospace;color:var(--mute)}
+nav a.read .st{color:var(--gt)}
+.meter{margin-top:auto;border-top:1px solid var(--line);padding-top:16px}
+.pct{font:700 40px "JetBrains Mono",monospace;color:var(--gt);line-height:1}
+.bar{height:8px;border-radius:4px;background:var(--line);overflow:hidden;margin:10px 0 8px}
+.bar i{display:block;height:100%;background:var(--g);width:0;transition:width .5s ease}
+.meter p{margin:0;color:var(--mute);font-size:13px}
+main{padding:40px clamp(18px,5vw,60px) 80px;max-width:840px;width:100%}
+h1{font-size:clamp(32px,5vw,46px);line-height:1.08;letter-spacing:-.03em;margin:0 0 10px}
+.lede{color:var(--mute);font-size:18px;margin:0 0 26px;max-width:58ch}
+figure{margin:0 0 28px}
+figure svg{width:100%;height:auto;display:block;border:1px solid var(--line);border-radius:12px;background:var(--card)}
+figcaption{color:var(--mute);font-size:14px;margin-top:8px}
+h2{font-size:14px;color:var(--mute);font-weight:600;margin:30px 0 4px}
+.prov{display:grid;grid-template-columns:104px 1fr;gap:14px;padding:14px 0;border-top:1px solid var(--line)}
+.prov:last-of-type{border-bottom:1px solid var(--line)}
+.prov p{margin:0}
+.c{font:500 13px "JetBrains Mono",monospace;background:var(--line);padding:2px 7px;border-radius:4px;white-space:nowrap;justify-self:start;height:fit-content}
+.refs{font-size:14px;color:var(--mute);padding-left:18px;margin:6px 0 0}
+.refs li{margin-bottom:6px}
+.refs a{color:var(--gt)}
+.note{color:var(--mute);font-size:13px;margin-top:34px;border-top:1px solid var(--line);padding-top:14px}
+.pager{display:flex;justify-content:space-between;gap:10px;margin-top:34px;flex-wrap:wrap}
+.meta{color:var(--mute);font-size:14px;margin:0 0 12px}
+.segs{display:flex;gap:6px;margin:0 0 14px}
+.seg{flex:1;height:6px;border-radius:3px;background:var(--line)}
+.seg.cur{background:var(--fg)}
+.seg.ok{background:var(--g)}
+.seg.no{background:repeating-linear-gradient(45deg,var(--mute) 0 3px,transparent 3px 6px)}
+.drill{border:1px solid var(--line);border-radius:12px;padding:22px}
+.q{font-size:20px;font-weight:600;line-height:1.35;margin:0 0 16px;letter-spacing:-.01em}
+.opt{display:flex;gap:12px;align-items:flex-start;width:100%;text-align:left;background:transparent;color:var(--fg);border:1px solid var(--line);border-radius:8px;padding:12px 14px;margin:0 0 8px;font:inherit;cursor:pointer}
+.opt:hover:not(:disabled){border-color:var(--mute)}
+.opt[aria-checked="true"]{border-color:var(--fg);box-shadow:inset 0 0 0 1px var(--fg)}
+.opt .k{font:600 13px "JetBrains Mono",monospace;color:var(--gt);min-width:16px;padding-top:2px}
+.opt.right{background:var(--g);border-color:var(--g);color:#000}
+.opt.right .k{color:#000}
+.opt.wrong{border-style:dashed;color:var(--mute);text-decoration:line-through}
+.fb{margin-top:14px;padding:14px 16px;border-radius:8px;background:var(--card);border:1px solid var(--line)}
+.fb strong{color:var(--gt)}
+.fb p{margin:6px 0 0}
+.row{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px;align-items:center}
+.go,.ghost{font:600 16px "Space Grotesk",sans-serif;border-radius:8px;padding:12px 18px;cursor:pointer;text-decoration:none;display:inline-block}
+.go{background:var(--g);color:#000;border:1px solid var(--g)}
+.ghost{background:transparent;color:var(--fg);border:1px solid var(--line)}
+.go:disabled{opacity:.35;cursor:not-allowed}
+.gate{border:1px dashed var(--line);border-radius:12px;padding:22px;color:var(--mute)}
+.gate a{color:var(--gt)}
+.big{font:700 72px "JetBrains Mono",monospace;color:var(--gt);margin:8px 0 0;line-height:1;animation:pop .45s ease-out}
+.big small{font-size:28px;color:var(--mute)}
+.badge{display:inline-block;border:1px solid var(--g);color:var(--gt);padding:6px 12px;border-radius:999px;font-size:14px;font-weight:600}
+.s-box{fill:var(--card);stroke:var(--fg);stroke-width:2}
+.s-line{fill:none;stroke:var(--fg);stroke-width:2}
+.s-dash{stroke-dasharray:6 5}
+.s-g{fill:var(--g)}
+.s-hid{fill:var(--line)}
+.s-txt{font:500 15px "JetBrains Mono",monospace;fill:var(--fg)}
+.s-mute{font:500 13px "JetBrains Mono",monospace;fill:var(--mute)}
+.s-gtxt{font:600 15px "JetBrains Mono",monospace;fill:var(--gt)}
+.s-ontxt{font:600 13px "JetBrains Mono",monospace;fill:#000}
+@keyframes pop{from{transform:scale(.6);opacity:0}to{transform:none;opacity:1}}
+:focus-visible{outline:2px solid var(--gt);outline-offset:2px}
+@media (max-width:760px){
+  .app{grid-template-columns:1fr}
+  aside{position:static;height:auto;border-right:0;border-bottom:1px solid var(--line);padding:14px 18px}
+  nav{flex-direction:row;overflow-x:auto;gap:6px}
+  nav a{white-space:nowrap}
+  .meter{margin-top:12px;border:0;padding:0}
+  .pct{font-size:28px}
+  .prov{grid-template-columns:1fr;gap:4px}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="app">
+<aside>
+  <a class="brand" href="#access"><span class="dot"></span>cyberlex</a>
+  <nav id="nav"></nav>
+  <div class="meter">
+    <div class="pct" id="pct">0%</div>
+    <div class="bar"><i id="fill"></i></div>
+    <p>Completion. Rank: <span id="rank">Recruit</span></p>
+  </div>
+</aside>
+<main id="main"></main>
+</div>
+<script>
+const T=[
+{id:'access',name:'Access',
+lede:`Getting into a system you have no right to enter. The civil claim is the baseline. Criminal liability needs dishonest or fraudulent intent.`,
+svg:`<svg viewBox="0 0 600 240" role="img" aria-label="An unlocked laptop copies a salary file from an HR folder without permission"><rect class="s-box" x="50" y="30" width="260" height="165" rx="10"/><rect class="s-box" x="30" y="195" width="300" height="14" rx="5"/><text class="s-txt" x="72" y="62">$ open /hr/salary</text><text class="s-mute" x="72" y="86">permission: none</text><text class="s-gtxt" x="72" y="118">copying salary.xlsx</text><rect class="s-line" x="72" y="134" width="216" height="10" rx="5"/><rect class="s-g" x="72" y="134" width="150" height="10" rx="5"/><line class="s-line" x1="330" y1="119" x2="358" y2="119"/><path class="s-g" d="M350 110 L366 119 L350 128Z"/><rect class="s-box" x="380" y="60" width="180" height="120" rx="10"/><text class="s-txt" x="402" y="106">HR folder</text><text class="s-mute" x="402" y="134">owner: HR</text></svg>`,
+cap:`Sample: an unlocked office laptop opens an HR folder without permission and copies a salary file.`,
+prov:[
+[`s.43(a)`,`Accessing a computer, network or data without permission. The owner can claim compensation, and the section does not ask about intent.`],
+[`s.43(b)`,`Downloading, copying or extracting data without permission. Same civil remedy.`],
+[`s.66`,`Any act under s.43 done dishonestly or fraudulently. Up to 3 years, a fine up to ₹5 lakh, or both.`]],
+refs:[`Information Technology Act, 2000, ss. 43 and 66, as amended in 2008.`,`Official text: India Code, indiacode.gov.in.`]},
+{id:'identity',name:'Identity',
+lede:`Logging in as someone else, or pretending to be them online to cheat. These are separate offences with the same penalty ceiling.`,
+svg:`<svg viewBox="0 0 600 240" role="img" aria-label="A copied profile with the same name and photo as a real account"><rect class="s-box" x="40" y="40" width="220" height="170" rx="14"/><circle class="s-line" cx="150" cy="100" r="34"/><text class="s-txt" x="150" y="168" text-anchor="middle">Priya</text><text class="s-mute" x="150" y="192" text-anchor="middle">original account</text><rect class="s-box s-dash" x="340" y="40" width="220" height="170" rx="14"/><circle class="s-g" cx="450" cy="100" r="34"/><text class="s-txt" x="450" y="168" text-anchor="middle">Priya</text><text class="s-mute" x="450" y="192" text-anchor="middle">copied name and photo</text><line class="s-line s-dash" x1="262" y1="125" x2="336" y2="125"/><text class="s-mute" x="299" y="112" text-anchor="middle">copied</text></svg>`,
+cap:`Sample: a copied name and photo used to set up a fake account and ask strangers for money.`,
+prov:[
+[`s.66C`,`Dishonest or fraudulent use of someone else's password, electronic signature or other unique identification feature. Up to 3 years and a fine up to ₹1 lakh.`],
+[`s.66D`,`Cheating by personation through a computer resource or communication device. Up to 3 years and a fine up to ₹1 lakh.`],
+[`Key test`,`66C is about misusing an identifier. 66D is about pretending to be someone in order to cheat.`]],
+refs:[`Information Technology Act, 2000, ss. 66C and 66D, as amended in 2008.`,`Official text: India Code, indiacode.gov.in.`]},
+{id:'obscene',name:'Obscene',
+lede:`Obscene and sexual material online has tiered penalties, and repeat offences go higher. Privacy breaches involving private images have their own section.`,
+svg:`<svg viewBox="0 0 600 260" role="img" aria-label="A post held behind a content warning on a phone screen"><rect class="s-box" x="210" y="14" width="180" height="232" rx="26"/><rect class="s-g" x="232" y="40" width="136" height="32" rx="8"/><text class="s-ontxt" x="300" y="61" text-anchor="middle">Content warning</text><rect class="s-hid" x="232" y="86" width="136" height="104" rx="10"/><text class="s-mute" x="300" y="142" text-anchor="middle">held, not shown</text><rect class="s-line" x="262" y="208" width="76" height="26" rx="13"/><text class="s-txt" x="300" y="226" text-anchor="middle">Report</text></svg>`,
+cap:`Sample: a flagged post held behind a warning screen. This page describes the offences in legal terms and shows no sample content.`,
+prov:[
+[`s.66E`,`Capturing, publishing or sending an image of a private area without consent, in circumstances that breach privacy. Up to 3 years, a fine up to ₹2 lakh, or both.`],
+[`s.67`,`Publishing or sending obscene material electronically. First conviction: up to 3 years and a fine up to ₹5 lakh. Later conviction: up to 5 years and a fine up to ₹10 lakh.`],
+[`s.67A`,`Sexually explicit material. First conviction: up to 5 years and a fine up to ₹10 lakh. Later conviction: up to 7 years and a fine up to ₹10 lakh.`],
+[`s.67B`,`Material depicting children in sexual acts. Same tiers as s.67A.`]],
+refs:[`Information Technology Act, 2000, ss. 66E, 67, 67A and 67B, as amended in 2008.`,`Official text: India Code, indiacode.gov.in.`]},
+{id:'intermediary',name:'Intermediary',
+lede:`Platforms keep their protection for user posts only while they stay a neutral conduit and act on real notices. The protection is conditional.`,
+svg:`<svg viewBox="0 0 600 240" role="img" aria-label="A notice arrives; removing the content keeps protection, leaving it up loses it"><rect class="s-box" x="20" y="40" width="150" height="56" rx="10"/><text class="s-txt" x="95" y="74" text-anchor="middle">User posts</text><rect class="s-box" x="225" y="40" width="150" height="56" rx="10"/><text class="s-txt" x="300" y="74" text-anchor="middle">Platform hosts</text><rect class="s-box" x="430" y="40" width="150" height="56" rx="10"/><text class="s-txt" x="505" y="74" text-anchor="middle">Notice arrives</text><line class="s-line" x1="170" y1="68" x2="223" y2="68"/><line class="s-line" x1="375" y1="68" x2="428" y2="68"/><path class="s-line" d="M505 96 V132 H300 V168"/><line class="s-line" x1="505" y1="132" x2="505" y2="168"/><rect class="s-g" x="225" y="168" width="150" height="54" rx="10"/><text class="s-ontxt" x="300" y="190" text-anchor="middle">Removed</text><text class="s-ontxt" x="300" y="208" text-anchor="middle">protection kept</text><rect class="s-box s-dash" x="430" y="168" width="150" height="54" rx="10"/><text class="s-txt" x="505" y="190" text-anchor="middle">Left up</text><text class="s-mute" x="505" y="208" text-anchor="middle">protection lost</text></svg>`,
+cap:`Sample: a notice arrives. Removing the content in time keeps the platform's protection. Leaving it up can cost that protection.`,
+prov:[
+[`s.79(1)`,`An intermediary is not liable for third-party content if its role is limited to providing access to it.`],
+[`s.79(2)`,`The protection needs three things: the platform does not start the transmission, does not pick the receiver, and does not change the content. It must also observe due diligence.`],
+[`s.79(3)`,`The protection is lost if the platform conspires, abets, aids or induces the offence, or does not remove content expeditiously after actual knowledge or a government notice.`],
+[`Case law`,`In Shreya Singhal v. Union of India (2015), the Supreme Court read actual knowledge in s.79(3)(b) to mean a court order or government notification.`],
+[`s.69A`,`The Central Government or an authorised officer can direct blocking on grounds such as sovereignty, public order and incitement to a cognizable offence.`]],
+refs:[`Information Technology Act, 2000, ss. 69A and 79.`,`Shreya Singhal v. Union of India (2015), Supreme Court of India.`,`Information Technology (Intermediary Guidelines and Digital Media Ethics Code) Rules, 2021, as amended in 2026. These rules set takedown duties and have changed recently. Check the current text and any pending draft amendments.`]}
+];
+const QS=[
+{q:`Sam opens his company's HR folder on an unlocked laptop without permission and copies a salary file. He had no plan to misuse it. What is his main exposure under the IT Act?`,
+o:[`A criminal case under [s.66] with 3 years of jail`,`Liability to pay compensation under [s.43], with no intent needed`,`No liability, because the laptop was unlocked`,`Liability under [s.79] as an intermediary`],a:1,
+w:`Opening the folder is [s.43(a)] and copying the file is [s.43(b)]. Both give rise to compensation. Criminal liability under [s.66] needs dishonest or fraudulent intent, and the scenario rules that out.`},
+{q:`Which single element moves an act from [s.43] into [s.66]?`,
+o:[`The computer must belong to the government`,`The loss must be more than ₹5 lakh`,`The act must happen on a public network`,`The act must be done dishonestly or fraudulently`],a:3,
+w:`[s.66] applies when an act listed in [s.43] is done dishonestly or fraudulently. The ₹5 lakh figure is the fine ceiling, not a loss threshold. The section says nothing about government systems or public networks.`},
+{q:`A court convicts someone under [s.66]. Which punishment matches the statute?`,
+o:[`1 year and a fine of ₹1 lakh`,`7 years with no fine`,`3 years, or a fine up to ₹5 lakh, or both`,`10 years and a fine of ₹10 lakh`],a:2,
+w:`[s.66] allows imprisonment up to 3 years, a fine up to ₹5 lakh, or both. The word "or" means a court can impose jail, a fine, or both.`},
+{q:`Meera makes a fake profile using a classmate's name and photos, then asks people to send her money. Which provision best fits the impersonation and cheating?`,
+o:[`[s.43(a)], unauthorised access alone`,`[s.66D], cheating by personation`,`[s.67A], sexually explicit material`,`[s.79(3)], intermediary liability`],a:1,
+w:`[s.66D] punishes cheating by pretending to be someone else through a computer resource. [s.43(a)] covers access without permission, not impersonation to cheat. [s.67A] and [s.79] do not fit a money-trap scam.`},
+{q:`Ravi logs into a colleague's account with the colleague's password and approves a payment to himself. Which provision fits?`,
+o:[`[s.66C], dishonest use of another's password`,`[s.66F], cyber terrorism`,`[s.72], breach of confidentiality`,`[s.79], intermediary safe harbour`],a:0,
+w:`[s.66C] covers dishonest or fraudulent use of another person's password, electronic signature or other unique identification feature. Approving a payment with the colleague's login is that use.`},
+{q:`Which statement about [s.66C] is accurate?`,
+o:[`It needs the victim to lose money`,`It applies only to government websites`,`Its maximum term is 10 years`,`It punishes dishonest use of another person's password or unique identifier, up to 3 years and a fine up to ₹1 lakh`],a:3,
+w:`[s.66C] carries up to 3 years and a fine up to ₹1 lakh. The offence turns on dishonest or fraudulent use of the identifier. The section does not mention a loss or limit itself to government sites.`},
+{q:`Karan takes an intimate photo of a classmate in a changing room without her consent and posts it in a group chat. Which provision best fits?`,
+o:[`[s.66E], privacy violation`,`[s.66C], identity theft`,`[s.43(b)], data copying`,`[s.69A], government blocking`],a:0,
+w:`[s.66E] covers capturing or sharing an image of a private area without consent, in circumstances that breach privacy. The facts here are the kind it targets. Depending on the content, [s.67] or [s.67A] may also apply.`},
+{q:`A website hosts adult sexually explicit videos and lets anyone download them. Which section fits best?`,
+o:[`[s.66E], privacy violation`,`[s.79(2)], due diligence`,`[s.67A], sexually explicit material`,`[s.66D], personation`],a:2,
+w:`[s.67A] covers material containing sexually explicit acts. [s.66E] needs an image of a private area taken or shared without consent. Whether the website itself is liable is a separate question, answered under [s.79].`},
+{q:`Under [s.67], what moves a person to the higher punishment tier?`,
+o:[`Posting the content at night`,`A second or subsequent conviction`,`Writing the content in a regional language`,`Posting from a server outside India`],a:1,
+w:`[s.67] rises to up to 5 years and a fine up to ₹10 lakh on a second or subsequent conviction. Time of day, language and server location are not part of the section.`},
+{q:`A platform gets a private email about a defamatory post, but no court order or government notice. Under [s.79(3)(b)] as read in Shreya Singhal, does it lose protection?`,
+o:[`Yes, any complaint counts as actual knowledge`,`Yes, but only after 24 hours`,`No, actual knowledge means a court order or government notification`,`It depends on whether the poster is a minor`],a:2,
+w:`Shreya Singhal read "actual knowledge" in [s.79(3)(b)] as a court order or a government notification. A private email alone does not take the platform out of the safe harbour under this clause.`},
+{q:`Which of these is NOT a condition under [s.79(2)]?`,
+o:[`Not initiating the transmission`,`Not selecting the receiver`,`Not modifying the information`,`Checking every post before it goes live`],a:3,
+w:`[s.79(2)] requires the intermediary not to initiate the transmission, select the receiver or modify the information, and to observe due diligence. A duty to check every post before it goes live is not among those conditions in the Act itself.`},
+{q:`Under [s.69A], who can direct that a website be blocked?`,
+o:[`Any police constable on patrol`,`The platform, on its own choice`,`The Central Government or an officer it authorises, on specified grounds`,`Any High Court, with no reasons given`],a:2,
+w:`[s.69A] lets the Central Government or an authorised officer order blocking on grounds such as sovereignty, public order, and incitement to a cognizable offence. Shreya Singhal upheld this section.`}
+];
+const BADGE=['Gatekeeper','Identity Checked','Content Filter','Safe Harbour'];
+const RANKS=[[0,'Recruit'],[40,'Analyst'],[70,'Investigator'],[100,'Cyber Counsel']];
+const NOTE=`<p class="note">Citations are to the Information Technology Act, 2000, as amended. Later amendments, including the Jan Vishwas Act, 2023 and the DPDP Act, 2023, may change wording. Check the official text before relying on a point.</p>`;
+let S={};
+try{S=JSON.parse(localStorage.getItem('cyberlex-v2'))||{}}catch(e){}
+S.read=S.read||{};S.quiz=S.quiz||{};
+let qs=null;
+const $=id=>document.getElementById(id);
+const main=$('main');
+const chip=s=>s.replace(/\[(s\.[^\]]+)\]/g,'<span class="c">$1</span>');
+const cur=()=>location.hash.slice(1)||'access';
+const reads=()=>T.filter(t=>S.read[t.id]).length;
+const right=()=>Object.keys(S.quiz).filter(k=>S.quiz[k]).length;
+const pct=()=>Math.min(100,reads()*10+right()*5);
+const rank=p=>RANKS.filter(r=>p>=r[0]).pop()[1];
+
+function side(){
+  const c=cur(),p=pct();
+  $('nav').innerHTML=T.map(t=>`<a href="#${t.id}" class="${S.read[t.id]?'read':''}"${c===t.id?' aria-current="page"':''}><span>${t.name}</span><span class="st">${S.read[t.id]?'Read':'Unread'}</span></a>`).join('')
+    +`<a href="#quiz"${c==='quiz'?' aria-current="page"':''}><span>Quiz</span><span class="st">${right()}/12</span></a>`;
+  $('pct').textContent=p+'%';$('fill').style.width=p+'%';$('rank').textContent=rank(p);
+}
+function save(){try{localStorage.setItem('cyberlex-v2',JSON.stringify(S))}catch(e){}side()}
+
+function topic(i){
+  const t=T[i],last=i===T.length-1;
+  main.innerHTML=`<h1>${t.name}</h1><p class="lede">${t.lede}</p>
+  <figure>${t.svg}<figcaption>${t.cap}</figcaption></figure>
+  <h2>The law</h2>
+  ${t.prov.map(([s,x])=>`<div class="prov"><span class="c">${s}</span><p>${x}</p></div>`).join('')}
+  <h2>References</h2><ul class="refs">${t.refs.map(r=>`<li>${r}</li>`).join('')}</ul>
+  <div class="pager">${i>0?`<a class="ghost" href="#${T[i-1].id}">Previous topic</a>`:'<span></span>'}
+  <button class="go" data-act="read" data-i="${i}">${S.read[t.id]?(last?'Go to quiz':'Continue'):(last?'Mark as read, go to quiz':'Mark as read and continue')}</button></div>${NOTE}`;
+}
+
+function quiz(){
+  if(T.some(t=>!S.read[t.id])){
+    const u=T.find(t=>!S.read[t.id]);
+    main.innerHTML=`<h1>Quiz</h1><p class="lede">Twelve questions, three from each topic.</p><div class="gate">Read all four topics to unlock the quiz. Next up: <a href="#${u.id}">${u.name}</a>.</div>${NOTE}`;
+    return;
+  }
+  if(!qs){
+    main.innerHTML=`<h1>Quiz</h1><p class="lede">Twelve drills, three from each topic. Each correct answer adds 5% to your completion.</p><div class="row"><button class="go" data-act="start">Start quiz</button></div>${NOTE}`;
+    return;
+  }
+  if(qs.done){resultView();return}
+  qView();
+}
+
+function qView(){
+  const q=QS[qs.i],n=QS.length;
+  const segs=QS.map((_,j)=>`<span class="seg ${j<qs.i?(qs.res[j]?'ok':'no'):j===qs.i?'cur':''}"></span>`).join('');
+  let fb='';
+  if(qs.chk){
+    const ok=qs.pick===q.a;
+    const head=ok?(qs.gain?'Correct. +5% completion':'Correct'):`Not quite. It is ${'ABCD'[q.a]}.`;
+    fb=`<div class="fb"><strong>${head}</strong><p>${chip(q.w)}</p></div>`;
+  }
+  const opts=q.o.map((t,j)=>{
+    let c='';
+    if(qs.chk){if(j===q.a)c='right';else if(j===qs.pick)c='wrong'}
+    return `<button class="opt ${c}" role="radio" aria-checked="${qs.pick===j}" data-act="pick" data-i="${j}" ${qs.chk?'disabled':''}><span class="k">${'ABCD'[j]}</span><span>${chip(t)}</span></button>`;
+  }).join('');
+  const btn=qs.chk
+    ?`<button class="go" data-act="nextq">${qs.i<n-1?'Next question':'See results'}</button>`
+    :`<button class="go" data-act="check" ${qs.pick==null?'disabled':''}>Check answer</button>`;
+  main.innerHTML=`<h1>Quiz</h1><p class="meta">Question ${qs.i+1} of ${n}. ${T[Math.floor(qs.i/3)].name}</p><div class="segs">${segs}</div>
+  <div class="drill"><p class="q">${chip(q.q)}</p><div role="radiogroup" aria-label="Answers">${opts}</div>${fb}</div>
+  <div class="row">${btn}</div>${NOTE}`;
+  const sel=main.querySelector('[aria-checked="true"]');
+  if(sel&&!qs.chk)sel.focus();
+}
+
+function checkQ(){
+  if(!qs||qs.pick==null||qs.chk)return;
+  const ok=qs.pick===QS[qs.i].a;
+  qs.chk=true;qs.res[qs.i]=ok;qs.gain=0;
+  if(ok&&!S.quiz[qs.i]){S.quiz[qs.i]=1;qs.gain=1}
+  save();qView();
+}
+
+function nextQ(){
+  if(qs.i<QS.length-1){qs.i++;qs.pick=null;qs.chk=false;qs.gain=0;qView()}
+  else{qs.done=true;resultView()}
+}
+
+function resultView(){
+  const run=qs.res.filter(Boolean).length,p=pct();
+  const badges=T.map((t,k)=>[0,1,2].every(j=>S.quiz[k*3+j])?`<span class="badge">${BADGE[k]}</span>`:'').join('');
+  main.innerHTML=`<h1>Quiz complete</h1>
+  <p class="lede">${run===12?'Clean run. Every answer is right.':'Run it again to clear the rest. Correct answers stay saved.'}</p>
+  <p class="big">${run}<small>/12</small></p>
+  <p class="lede" style="margin-top:14px">Completion ${p}%. Rank: ${rank(p)}.</p>
+  <div class="row">${badges}</div>
+  <div class="row"><button class="go" data-act="restart">Run quiz again</button><a class="ghost" href="#access">Review topics</a></div>${NOTE}`;
+}
+
+function view(){
+  const c=cur(),ti=T.findIndex(t=>t.id===c);
+  side();
+  if(c==='quiz')quiz();else topic(ti<0?0:ti);
+  window.scrollTo(0,0);
+}
+
+document.addEventListener('click',e=>{
+  const el=e.target.closest('[data-act]');
+  if(!el)return;
+  const a=el.dataset.act;
+  if(a==='read'){
+    const i=+el.dataset.i;
+    S.read[T[i].id]=1;save();
+    location.hash='#'+(i<T.length-1?T[i+1].id:'quiz');
+  }
+  else if(a==='pick'){if(qs&&!qs.chk){qs.pick=+el.dataset.i;qView()}}
+  else if(a==='check')checkQ();
+  else if(a==='nextq')nextQ();
+  else if(a==='start'){qs={i:0,pick:null,chk:false,res:[],gain:0,done:false};view()}
+  else if(a==='restart'){qs=null;view()}
+});
+addEventListener('hashchange',view);
+view();
+</script>
+</body>
+</html>
