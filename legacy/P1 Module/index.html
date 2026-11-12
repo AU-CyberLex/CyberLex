@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- SEO -->
+  <title>CyberNova — Gamified Cyber Forensics &amp; Cyber Law Platform</title>
+  <meta name="description"
+        content="CyberNova is a gamified learning platform for law students to master cyber forensics and Indian cyber law — IT Act 2000, DPDP Act 2023, digital evidence, forensic simulations." />
+  <meta name="keywords"
+        content="cyber law, cyber forensics, IT Act, DPDP Act, digital evidence, law students, gamified learning, CyberNova" />
+  <meta name="robots" content="index, follow" />
+
+  <!-- Open Graph -->
+  <meta property="og:title"       content="CyberNova — Gamified Cyber Forensics Platform" />
+  <meta property="og:description" content="Learn Indian cyber law through interactive forensic labs and case simulations." />
+  <meta property="og:type"        content="website" />
+
+  <!-- Favicon (SVG emoji — no file needed) -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>" />
+
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <!-- ══════════════════════════════════════════════════════
+       HEADER  (P1)
+  ══════════════════════════════════════════════════════════ -->
+  <header id="header" role="banner">
+
+    <!-- Logo -->
+    <a class="logo"
+       href="#"
+       id="logo-link"
+       onclick="navigate('');return false;"
+       aria-label="CyberNova — Go to home">
+      ⚡ CyberNova
+    </a>
+
+    <!-- Desktop nav -->
+    <nav aria-label="Primary navigation">
+      <ul class="nav-links" role="list">
+        <li><button class="nav-link" id="nav-home"     data-route=""        onclick="navigate('')">Home</button></li>
+        <li><button class="nav-link" id="nav-modules"  data-route="modules" onclick="navigate('modules')">Modules</button></li>
+        <li><button class="nav-link" id="nav-labs"     data-route="labs"    onclick="navigate('labs')">Forensic Labs</button></li>
+        <li><button class="nav-link" id="nav-sims"     data-route="sims"    onclick="navigate('sims')">Investigations</button></li>
+        <li><button class="nav-link" id="nav-cases"    data-route="cases"   onclick="navigate('cases')">Cases</button></li>
+        <li><button class="nav-link" id="nav-videos"   data-route="videos"  onclick="navigate('videos')">Videos</button></li>
+        <li><button class="nav-link" id="nav-progress" data-route="progress" onclick="navigate('progress')">Progress</button></li>
+      </ul>
+    </nav>
+
+    <!-- Points chip -->
+    <div class="nav-points" aria-live="polite" aria-label="Current points">
+      <span class="live-dot" aria-hidden="true"></span>
+      <span id="nav-points-val">0 pts</span>
+    </div>
+
+    <!-- Hamburger -->
+    <button class="hamburger"
+            id="hamburger-btn"
+            aria-label="Toggle navigation menu"
+            aria-expanded="false"
+            aria-controls="mobile-menu"
+            onclick="toggleMobileMenu()">
+      ☰
+    </button>
+  </header>
+
+  <!-- ══════════════════════════════════════════════════════
+       MOBILE DRAWER  (P1)
+  ══════════════════════════════════════════════════════════ -->
+  <nav id="mobile-menu"
+       class="mobile-menu"
+       aria-label="Mobile navigation"
+       role="navigation">
+    <button class="nav-link" data-route=""        onclick="navigate('');closeMobileMenu()">⚡ Home</button>
+    <button class="nav-link" data-route="modules" onclick="navigate('modules');closeMobileMenu()">📚 Modules</button>
+    <button class="nav-link" data-route="labs"    onclick="navigate('labs');closeMobileMenu()">🔬 Forensic Labs</button>
+    <button class="nav-link" data-route="sims"    onclick="navigate('sims');closeMobileMenu()">🕵️ Investigations</button>
+    <button class="nav-link" data-route="cases"   onclick="navigate('cases');closeMobileMenu()">⚖️ Cases</button>
+    <button class="nav-link" data-route="videos"  onclick="navigate('videos');closeMobileMenu()">🎬 Videos</button>
+    <button class="nav-link" data-route="progress" onclick="navigate('progress');closeMobileMenu()">📊 Progress</button>
+  </nav>
+
+  <!-- ══════════════════════════════════════════════════════
+       MAIN APP  (router mounts pages here)
+  ══════════════════════════════════════════════════════════ -->
+  <main id="app" role="main" aria-live="polite" aria-atomic="true">
+    <!-- Rendered by app.js router -->
+  </main>
+
+  <!-- ══════════════════════════════════════════════════════
+       FOOTER  (P1)
+  ══════════════════════════════════════════════════════════ -->
+  <footer id="footer" role="contentinfo">
+    <div class="footer-inner">
+      <span class="footer-logo">⚡ CyberNova</span>
+      <span class="footer-meta">
+        Gamified Cyber Forensics &amp; Cyber Law Platform &nbsp;·&nbsp; Free for Students
+      </span>
+    </div>
+  </footer>
+
+  <!-- ══════════════════════════════════════════════════════
+       TOAST CONTAINER  (P1)
+  ══════════════════════════════════════════════════════════ -->
+  <div id="toast-root" aria-live="polite" aria-atomic="true"></div>
+
+  <!-- ══════════════════════════════════════════════════════
+       SCRIPTS  (order matters)
+  ══════════════════════════════════════════════════════════ -->
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+
+</body>
+</html>
